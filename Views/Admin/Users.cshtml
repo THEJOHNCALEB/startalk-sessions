@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Admin — Users";
+    var users = (List<StarTalkSessions.Models.UserModel>)ViewBag.Users ?? new();
+    var me = User.Identity?.Name;
+}
+
+@await Html.PartialAsync("_AdminNav")
+
+<section class="mx-auto max-w-app px-4 py-8 sm:px-6">
+    <div class="flex items-end justify-between gap-4">
+        <div>
+            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">People</span>
+            <h1 class="mt-1 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Users</h1>
+            <p class="mt-1 text-sm text-neutral-500">@users.Count accounts · @users.Count(u => u.IsAdmin) admins · @users.Count(u => u.IsActive) active</p>
+        </div>
+    </div>
+
+    @if (TempData["AdminSuccess"] != null)
+    {
+        <div class="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">@TempData["AdminSuccess"]</div>
+    }
+
+    <ul class="mt-8 divide-y divide-brand-100 rounded-2xl border border-brand-200 bg-white">
+        @foreach (var u in users)
+        {
+            <li class="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex min-w-0 items-center gap-3">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-700 text-sm font-bold text-white">@(u.FullName.Length >= 1 ? u.FullName[..1].ToUpperInvariant() : "?")</span>
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <strong class="truncate text-sm text-brand-900">@u.FullName</strong>
+                            @if (u.IsAdmin)
+                            {
+                                <span class="rounded-full bg-brand-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">Admin</span>
+                            }
+                            @if (!u.IsActive)
+                            {
+                                <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-red-600">Disabled</span>
+                            }
+                        </div>
+                        <p class="truncate text-xs text-neutral-500">@u.Email @(!string.IsNullOrWhiteSpace(u.Phone) ? $"· {u.Phone}" : "") · Joined @u.CreatedAt.ToString("MMM d, yyyy")</p>
+                    </div>
+                </div>
+                <div class="flex shrink-0 flex-wrap items-center gap-2">
+                    <form method="post" action="/Admin/UserToggleActive">
+                        <input type="hidden" name="id" value="@u.Id" />
+                        <button type="submit" class="rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:border-brand-600">@(u.IsActive ? "Disable" : "Enable")</button>
+                    </form>
+                    @if (u.Email != me)
+                    {
+                        <form method="post" action="/Admin/UserToggleAdmin">
+                            <input type="hidden" name="id" value="@u.Id" />
+                            <button type="submit" class="rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:border-brand-600">@(u.IsAdmin ? "Remove admin" : "Make admin")</button>
+                        </form>
+                        <form method="post" action="/Admin/UserDelete" onsubmit="return confirm('Delete this user permanently?')">
+                            <input type="hidden" name="id" value="@u.Id" />
+                            <button type="submit" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50">Delete</button>
+                        </form>
+                    }
+                </div>
+            </li>
+        }
+        @if (!users.Any())
+        {
+            <li class="px-6 py-10 text-center text-sm text-neutral-400">No users yet.</li>
+        }
+    </ul>
+</section>

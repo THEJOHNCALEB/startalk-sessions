@@ -1,0 +1,51 @@
+services:
+  furniture-sass:
+    image: ${DOCKER_USERNAME:?err}/furniture-sass:latest
+    container_name: furniture-sass
+    restart: unless-stopped
+    ports:
+      - "${PORT:-6200}:6200"
+    environment:
+      # The app binds Kestrel to 0.0.0.0:{PORT} (see Program.cs). Defaults to 6200.
+      - PORT=${PORT:-6200}
+      - DB_CONNECT=${DB_CONNECT:?err}
+
+      # --- Store branding ---
+      - STORE_NAME=${STORE_NAME:-Furniture}
+      - STORE_TAGLINE=${STORE_TAGLINE:-Designed for Living. Built to Last.}
+      - SUPPORT_EMAIL=${SUPPORT_EMAIL:-info@solutionconcept.org}
+      - SUPPORT_PHONE=${SUPPORT_PHONE:-+234 800 000 0000}
+      - SITE_URL=${SITE_URL:-https://solutionconcept.org}
+      - STUDIO_ADDRESS_1=${STUDIO_ADDRESS_1:-Solution Concept Furniture and Design}
+      - STUDIO_ADDRESS_2=${STUDIO_ADDRESS_2:-Zone 5, Airport Road, Lugbe}
+
+      # --- Admin account ---
+      - ADMIN_EMAIL=${ADMIN_EMAIL:?err}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:?err}
+      - ADMIN_NAME=${ADMIN_NAME:-Furniture Studio}
+
+      # --- Email (Resend) - optional ---
+      - RESEND_API_KEY=${RESEND_API_KEY:-}
+      - RESEND_APITOKEN=${RESEND_APITOKEN:-}
+      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-info@solutionconcept.org}
+      - RESEND_FROM_NAME=${RESEND_FROM_NAME:-Furniture}
+
+      # --- WhatsApp - optional ---
+      - WHATSAPP_NUMBER=${WHATSAPP_NUMBER:-}
+      - WHATSAPP_COUNTRY_CODE=${WHATSAPP_COUNTRY_CODE:-234}
+      - WHATSAPP_API_TOKEN=${WHATSAPP_API_TOKEN:-}
+      - WHATSAPP_NUMBER_ID=${WHATSAPP_NUMBER_ID:-}
+
+      # --- Google AdSense - optional ---
+      - ADSENSE_CLIENT_ID=${ADSENSE_CLIENT_ID:-ca-pub-2447961066740044}
+      - NEXT_PUBLIC_ADSENSE_CLIENT_ID=${NEXT_PUBLIC_ADSENSE_CLIENT_ID:-ca-pub-2447961066740044}
+      - ADSENSE_SLOT_HEADER=${ADSENSE_SLOT_HEADER:-}
+      - ADSENSE_SLOT_SIDEBAR=${ADSENSE_SLOT_SIDEBAR:-}
+      - ADSENSE_SLOT_INLINE=${ADSENSE_SLOT_INLINE:-}
+      - ADSENSE_SLOT_FOOTER=${ADSENSE_SLOT_FOOTER:-}
+      - ADSENSE_SLOT_DETAIL=${ADSENSE_SLOT_DETAIL:-}
+
+      # --- AI Support Assistant - optional ---
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}

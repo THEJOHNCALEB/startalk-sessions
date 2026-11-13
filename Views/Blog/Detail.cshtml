@@ -1,0 +1,61 @@
+@model StarTalkSessions.Models.BlogPost
+@{
+    ViewData["Title"] = Model.Title;
+    var more = (List<StarTalkSessions.Models.BlogPost>)ViewBag.More ?? new();
+}
+
+<article class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <nav class="text-xs text-neutral-400" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-brand-900">Home</a><span class="mx-1">/</span><a href="/blog" class="hover:text-brand-900">Journal</a><span class="mx-1">/</span><span class="text-neutral-600">@Model.Tag</span>
+    </nav>
+
+    <header class="mt-6">
+        <div class="flex flex-wrap items-center gap-x-2 text-sm text-neutral-400">
+            <span class="rounded-full bg-brand-700 px-2.5 py-0.5 text-xs font-semibold text-white">@Model.Tag</span>
+            <span>@Model.Author · @Model.CreatedAt.ToString("MMM d, yyyy")</span>
+            <span class="text-neutral-300">·</span>
+            <span>@Model.ReadTime</span>
+        </div>
+        <h1 class="mt-4 text-3xl font-bold leading-tight tracking-tight text-brand-900 sm:text-4xl">@Model.Title</h1>
+        <p class="mt-3 text-lg leading-relaxed text-neutral-500">@Model.Excerpt</p>
+    </header>
+
+    <div class="mt-8 overflow-hidden rounded-2xl border border-brand-200">
+        <img src="@Model.CoverImage" alt="@Model.Title" class="h-72 w-full object-cover sm:h-96" />
+    </div>
+
+    <div class="article-body mt-8 space-y-5 text-[17px] leading-relaxed text-neutral-700">
+        @foreach (var para in Model.Content.Split("\n\n", StringSplitOptions.RemoveEmptyEntries))
+        {
+            <p>@para.Replace("\n", " ")</p>
+        }
+    </div>
+</article>
+
+@if (more.Any())
+{
+    <section class="border-t border-brand-100 bg-brand-50">
+        <div class="mx-auto max-w-app px-4 py-14 sm:px-6">
+            <div class="flex items-end justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">Keep reading</span>
+                    <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900">More from the journal</h2>
+                </div>
+            </div>
+            <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach (var post in more)
+                {
+                    <a href="/blog/@post.Slug" class="group flex flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white transition hover:border-brand-300 hover:shadow-lg">
+                        <div class="overflow-hidden">
+                            <img src="@post.CoverImage" alt="@post.Title" loading="lazy" class="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        </div>
+                        <div class="p-5">
+                            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">@post.Tag · @post.ReadTime</span>
+                            <h3 class="mt-2 text-base font-bold tracking-tight text-brand-900">@post.Title</h3>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+}

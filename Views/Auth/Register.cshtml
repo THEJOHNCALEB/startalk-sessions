@@ -1,0 +1,52 @@
+@{
+    ViewData["Title"] = "Create account";
+}
+
+<section class="flex min-h-[70vh] items-center justify-center px-4 py-16">
+    <div class="w-full max-w-md">
+        <a href="/" class="text-xl font-black tracking-tight text-brand-900">@ViewBag.StoreName</a>
+        <h1 class="mt-6 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Create your account</h1>
+        <p class="mt-2 text-sm text-neutral-500">Wishlists sync across devices. Naira-based pricing by default.</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">@ViewBag.Error</div>
+        }
+
+        <form asp-controller="Auth" asp-action="Register" method="post" class="mt-8 space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="firstName" class="mb-1.5 block text-sm font-medium text-neutral-700">First name</label>
+                    <input type="text" id="firstName" name="firstName" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" required autofocus />
+                </div>
+                <div>
+                    <label for="lastName" class="mb-1.5 block text-sm font-medium text-neutral-700">Last name</label>
+                    <input type="text" id="lastName" name="lastName" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" required />
+                </div>
+            </div>
+            <div>
+                <label for="email" class="mb-1.5 block text-sm font-medium text-neutral-700">Email</label>
+                <input type="email" id="email" name="email" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" required />
+            </div>
+            <div>
+                <label for="phone" class="mb-1.5 block text-sm font-medium text-neutral-700">Phone / WhatsApp</label>
+                <input type="tel" id="phone" name="phone" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" placeholder="Optional" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="password" class="mb-1.5 block text-sm font-medium text-neutral-700">Password</label>
+                    <input type="password" id="password" name="password" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" required minlength="6" />
+                </div>
+                <div>
+                    <label for="confirmPassword" class="mb-1.5 block text-sm font-medium text-neutral-700">Confirm</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" required minlength="6" />
+                </div>
+            </div>
+            <button type="submit" class="w-full rounded-lg bg-brand-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-500">Create account</button>
+        </form>
+
+        <p class="mt-6 text-center text-sm">
+            <a asp-controller="Auth" asp-action="Login" class="font-medium text-brand-900 underline underline-offset-2">Already have an account? Sign in</a>
+        </p>
+    </div>
+</section>

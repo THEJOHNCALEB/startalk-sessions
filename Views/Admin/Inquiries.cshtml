@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Admin — Contact";
+    var inquiries = (List<StarTalkSessions.Models.Inquiry>)ViewBag.Inquiries ?? new();
+}
+
+@await Html.PartialAsync("_AdminNav")
+
+<section class="mx-auto max-w-app px-4 py-8 sm:px-6">
+    <div class="flex items-end justify-between gap-4">
+        <div>
+            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">Inbox</span>
+            <h1 class="mt-1 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Contact &amp; project inquiries</h1>
+        </div>
+        <span class="rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-neutral-600">@inquiries.Count(i => i.Status != "Done") open</span>
+    </div>
+
+    @if (TempData["AdminSuccess"] != null)
+    {
+        <div class="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">@TempData["AdminSuccess"]</div>
+    }
+
+    <ul class="mt-8 space-y-4">
+        @foreach (var i in inquiries)
+        {
+            <li class="rounded-2xl border border-brand-200 bg-white p-6">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h3 class="text-base font-semibold text-brand-900">@i.Name</h3>
+                            <span class="@(i.Status == "Done" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700") rounded-full px-2.5 py-0.5 text-xs font-medium">@i.Status</span>
+                        </div>
+                        <p class="mt-1 text-sm text-neutral-500">@i.Type · <a href="mailto:@i.Email" class="underline underline-offset-2">@i.Email</a>@(!string.IsNullOrWhiteSpace(i.Phone) ? $" · {i.Phone}" : "")</p>
+                        <p class="mt-2 text-sm leading-relaxed text-neutral-700">@i.Message</p>
+                        @if (!string.IsNullOrWhiteSpace(i.AttachmentName))
+                        {
+                            <p class="mt-2 text-xs text-neutral-400">📎 @i.AttachmentName</p>
+                        }
+                    </div>
+                    <div class="flex shrink-0 items-center gap-2">
+                        <span class="text-xs text-neutral-400">@i.CreatedAt.ToString("MMM d, yyyy · h:mm tt")</span>
+                        <form method="post" action="/Admin/InquiryToggle">
+                            <input type="hidden" name="id" value="@i.Id" />
+                            <button type="submit" class="rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:border-brand-600">@(i.Status == "Done" ? "Reopen" : "Mark done")</button>
+                        </form>
+                        <form method="post" action="/Admin/InquiryDelete" onsubmit="return confirm('Delete this inquiry?')">
+                            <input type="hidden" name="id" value="@i.Id" />
+                            <button type="submit" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+        }
+        @if (!inquiries.Any())
+        {
+            <li class="rounded-2xl border border-brand-200 bg-white px-6 py-12 text-center text-sm text-neutral-400">Your inbox is empty — nothing to do. 🎉</li>
+        }
+    </ul>
+</section>

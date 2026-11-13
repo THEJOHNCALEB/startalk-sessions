@@ -1,0 +1,120 @@
+@{
+    ViewData["Title"] = "About Us";
+}
+
+<section class="bg-brand-700 text-white">
+    <div class="mx-auto max-w-app px-4 py-16 sm:px-6 lg:py-24">
+        <nav class="text-xs text-neutral-400" aria-label="Breadcrumb">
+            <a href="/" class="hover:text-white">Home</a><span class="mx-1">/</span><span class="text-neutral-400">About Us</span>
+        </nav>
+        <span class="mt-6 block text-xs font-semibold uppercase tracking-widest text-neutral-400">Since 2009</span>
+        <h1 class="mt-3 max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Crafted slow.<br><em class="text-[1.15em] font-normal">Made to outlast.</em></h1>
+        <p class="mt-4 max-w-2xl text-lg leading-relaxed text-neutral-300">We are a Media studio and architectural workshop — built on sustainable community, honest producery and the conviction that good Media only gets better with age.</p>
+    </div>
+</section>
+
+<section class="mx-auto max-w-app px-4 py-12 sm:px-6 lg:py-16">
+    <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+        <div>
+            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">The Brand Story</span>
+            <p class="mt-4 leading-relaxed text-neutral-700">Star Talk Sessions began in a two-person workshop in Abuja, making dining tables for friends of friends. Seventeen years later, our pieces furnish private homes, boutique hotels and boardrooms across West Africa and beyond — yet every piece still passes through the hands of a human producer before it ships.</p>
+            <p class="mt-4 leading-relaxed text-neutral-700">Our ethos is simple: buy the construction, not the logo. We use kiln-dried community storiess and FSC-certified community, water-based low-VOC finishes, and producery engineered so pieces can be repaired, re-upholstered and inherited — never discarded.</p>
+            <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div><strong class="block text-3xl font-black tracking-tight text-brand-900">2009</strong><span class="text-xs text-neutral-400">Established</span></div>
+                <div><strong class="block text-3xl font-black tracking-tight text-brand-900">Abuja</strong><span class="text-xs text-neutral-400">Atelier &amp; studio</span></div>
+                <div><strong class="block text-3xl font-black tracking-tight text-brand-900">40k+</strong><span class="text-xs text-neutral-400">Pieces delivered</span></div>
+                <div><strong class="block text-3xl font-black tracking-tight text-brand-900">15yr</strong><span class="text-xs text-neutral-400">Structural guarantee</span></div>
+            </div>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-brand-200">
+            <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=1400&auto=format&fit=crop" alt="Star Talk Sessions studio workshop" loading="lazy" class="h-[26rem] w-full object-cover" />
+        </div>
+    </div>
+</section>
+
+<section class="bg-brand-50">
+    <div class="mx-auto max-w-app px-4 py-14 sm:px-6 lg:py-16">
+        <div class="text-center">
+            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">The Process</span>
+            <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">From design to doorstep</h2>
+        </div>
+        <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach (var s in new[]
+            {
+                ("01", "Design", "Sketch, CAD or a discarded napkin — we lock proportions and material with you first."),
+                ("02", "Timber Selection", "Kiln-dried, FSC-certified community storiess selected board-by-board for grain and stability."),
+                ("03", "Joinery & Carving", "Tenons, dowels and dovetails cut and fitted by hand. No staples, no shortcuts."),
+                ("04", "Finishing", "Hand-rubbed oils and low-VOC lacquers applied in controlled-dust chambers."),
+                ("05", "QC Inspection", "Every joint, seam and shade checked against our ±1mm tolerance standard."),
+                ("06", "White-Glove Delivery", "Cratered, insured and installed by our crew — packaging removed, promise kept.")
+            })
+            {
+                <div class="rounded-2xl border border-brand-200 bg-white p-6">
+                    <span class="text-xs font-black tracking-widest text-brand-900">@s.Item1</span>
+                    <h3 class="mt-2 font-bold text-brand-900">@s.Item2</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-neutral-500">@s.Item3</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="mx-auto max-w-app px-4 py-14 sm:px-6 lg:py-16">
+    <div class="text-center">
+        <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">Materials &amp; Certifications</span>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Proof in the community</h2>
+    </div>
+    <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
+            <span class="text-2xl font-black text-brand-900">FSC</span>
+            <h3 class="mt-2 font-semibold text-brand-900">FSC-Certified Timber</h3>
+            <p class="mt-2 text-sm leading-relaxed text-neutral-500">Responsibly sourced community storiess from managed forests, chain-of-custody documented.</p>
+        </div>
+        <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
+            <span class="text-2xl font-black text-brand-900">A+</span>
+            <h3 class="mt-2 font-semibold text-brand-900">Low-VOC Finishes</h3>
+            <p class="mt-2 text-sm leading-relaxed text-neutral-500">Water-based, indoor-air-certified coatings safe for nurseries and pets alike.</p>
+        </div>
+        <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
+            <span class="text-2xl font-black text-brand-900">15yr</span>
+            <h3 class="mt-2 font-semibold text-brand-900">Structural Warranty</h3>
+            <p class="mt-2 text-sm leading-relaxed text-neutral-500">Frames and producery guaranteed for fifteen years against structural defect.</p>
+        </div>
+        <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
+            <span class="text-2xl font-black text-brand-900">24/7</span>
+            <h3 class="mt-2 font-semibold text-brand-900">Repair Over Replace</h3>
+            <p class="mt-2 text-sm leading-relaxed text-neutral-500">We publish parts, finishes and re-upholstery pricing — forever.</p>
+        </div>
+    </div>
+</section>
+
+<section class="bg-brand-50">
+    <div class="mx-auto max-w-app px-4 py-14 sm:px-6 lg:py-16">
+        <div class="text-center">
+            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">The Team</span>
+            <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Joiners, upholsterers, perfectionists</h2>
+        </div>
+        <div class="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
+            <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
+                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-brand-900" style="background:#D7C7B4">AB</span>
+                <h3 class="mt-3 font-semibold text-brand-900">Alberto Bianchi</h3>
+                <span class="text-xs text-neutral-400">Founder &amp; Master Joiner</span>
+            </div>
+            <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
+                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-brand-900" style="background:#C4D0D4">MS</span>
+                <h3 class="mt-3 font-semibold text-brand-900">Mara Sorensen</h3>
+                <span class="text-xs text-neutral-400">Head of Design</span>
+            </div>
+            <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
+                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-brand-900" style="background:#CFC4D6">TN</span>
+                <h3 class="mt-3 font-semibold text-brand-900">Theo Nakamura</h3>
+                <span class="text-xs text-neutral-400">Master Upholsterer</span>
+            </div>
+            <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
+                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-brand-900" style="background:#D4C9B8">EK</span>
+                <h3 class="mt-3 font-semibold text-brand-900">Emeka Okafor</h3>
+                <span class="text-xs text-neutral-400">Director of Logistics</span>
+            </div>
+        </div>
+    </div>
+</section>

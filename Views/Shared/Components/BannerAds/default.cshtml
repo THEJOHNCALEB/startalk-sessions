@@ -1,0 +1,36 @@
+@model StarTalkSessions.ViewComponents.BannerAdsViewModel
+
+@if (Model.HasContent)
+{
+    <div class="my-4" data-ad-zone="@Model.Placement">
+        @foreach (var ad in Model.Ads)
+        {
+            <a href="/Ads/Go/@ad.Id" target="_blank" rel="noopener sponsored nofollow"
+               data-ad-view="/Ads/View/@ad.Id"
+               class="group block overflow-hidden rounded-2xl border border-brand-100 bg-white transition hover:border-brand-300 hover:shadow-md">
+                @if ((@ad.ImageUrl ?? "").EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)
+                    || (@ad.ImageUrl ?? "").EndsWith(".webm", StringComparison.OrdinalIgnoreCase))
+                {
+                    <video src="@ad.ImageUrl" class="h-auto w-full" autoplay muted loop playsinline preload="metadata"></video>
+                }
+                else
+                {
+                    <img src="@ad.ImageUrl" alt="@ad.Title" loading="lazy" class="h-auto w-full object-cover" />
+                }
+            </a>
+        }
+
+        @if (Model.Ads.Count == 0 && Model.AdSenseEnabled && !string.IsNullOrWhiteSpace(Model.AdSenseSlot))
+        {
+            <div class="adsense-slot" data-ad-slot="@Model.AdSenseSlot">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="@StarTalkSessions.Utils.Store.AdSenseClientId"
+                     data-ad-slot="@Model.AdSenseSlot"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        }
+    </div>
+}

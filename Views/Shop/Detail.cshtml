@@ -1,0 +1,340 @@
+@model StarTalkSessions.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+    var related = (List<StarTalkSessions.Models.Product>)ViewBag.Related ?? new();
+    var img = Model.Images.FirstOrDefault() ?? "";
+    var wa = FunctionsWhatsApp();
+    var whatsappNumber = ViewBag.WhatsappNumber?.ToString() ?? "";
+    var supportPhone = ViewBag.SupportPhone?.ToString() ?? "";
+}
+
+<section class="mx-auto max-w-app px-4 py-8 sm:px-6 lg:py-12">
+    <nav class="text-xs text-neutral-400" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-brand-900">Home</a><span class="mx-1">/</span><a href="/shop" class="hover:text-brand-900">Shop</a><span class="mx-1">/</span><span class="text-neutral-600">@Model.CategoryName</span>
+    </nav>
+
+    <div class="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-2">
+        @* ---------- Gallery ---------- *@
+        <div>
+    @{
+        var videoExts = new[] { ".mp4", ".webm", ".mov", ".m4v" };
+        Func<string, bool> isVid = u => !string.IsNullOrWhiteSpace(u) && videoExts.Any(e => u.EndsWith(e, StringComparison.OrdinalIgnoreCase));
+        var mainMedia = Model.Images.FirstOrDefault() ?? "";
+        var mainIsVideo = isVid(mainMedia);
+    }
+    <div class="flex items-center justify-center overflow-hidden rounded-2xl border border-brand-200 bg-brand-50" data-zoom>
+        @if (mainIsVideo)
+        {
+            <video src="@mainMedia" controls preload="metadata" class="h-auto max-h-[40rem] w-full bg-brand-50" id="mainImage" data-main-image playsinline></video>
+        }
+        else
+        {
+            <img src="@mainMedia" alt="@Model.Name" id="mainImage" data-main-image loading="lazy" data-open-lightbox
+                 class="h-auto max-h-[40rem] w-full cursor-zoom-in object-contain" />
+        }
+    </div>
+    <div class="mt-3 flex items-center justify-between gap-3">
+        @if (Model.Images.Count > 1)
+        {
+            <div class="flex gap-2 overflow-x-auto" data-thumbs>
+                @for (var i = 0; i < Model.Images.Count; i++)
+                {
+                    <button type="button" class="thumb h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 @(i == 0 ? "border-brand-600" : "border-transparent") transition" data-thumb="@Model.Images[i]" aria-label="Image @(i + 1)">
+                        @if (isVid(Model.Images[i]))
+                        {
+                            <video src="@Model.Images[i]" muted playsinline preload="metadata" class="h-full w-full object-cover"></video>
+                        }
+                        else
+                        {
+                            <img src="@Model.Images[i]" alt="" loading="lazy" class="h-full w-full object-cover" />
+                        }
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            <span></span>
+        }
+        <span class="shrink-0 text-xs text-neutral-400">Tap image for full resolution</span>
+    </div>
+</div>
+
+        @* ---------- Info ---------- *@
+        <div>
+            <span hidden data-pdp-meta='@Newtonsoft.Json.JsonConvert.SerializeObject(new { slug = Model.Slug, name = Model.Name, image = img, price = (double)Model.EffectivePrice, category = Model.CategoryName, url = $"/shop/{Model.Slug}" })'></span>
+            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">@Model.CategoryName</span>
+            <h1 class="mt-2 text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">@Model.Name</h1>
+
+            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-neutral-500">
+                <span class="text-amber-400">@StarRow(Model.Rating)</span>
+                <span class="text-neutral-800">@Model.Rating.ToString("0.0")</span>
+                <span>. @Model.ReviewCount reviews</span>
+                <span class="text-neutral-300">·</span>
+                <span>SKU @Model.Sku</span>
+            </div>
+
+            <p class="mt-4 leading-relaxed text-neutral-600">@Model.ShortDescription</p>
+
+            <div class="mt-6 flex items-baseline gap-3" data-pdp-price data-base="@Model.Price" data-compare="@(Model.CompareAtPrice ?? 0)">
+                @if (Model.Price > 0)
+                {
+                    <span class="price text-3xl font-black text-brand-900" data-usd="@Model.Price"></span>
+                    @if (Model.CompareAtPrice.HasValue)
+                    {
+                        <span class="price-compare text-lg text-neutral-400 line-through" data-usd="@Model.CompareAtPrice"></span>
+                    }
+                }
+                else
+                {
+                    <span class="text-2xl font-bold text-brand-900">Request Custom Quote</span>
+                }
+            </div>
+
+            <div class="mt-3">
+                @if (Model.Stock > 0)
+                {
+                    <p class="text-sm text-emerald-600"><span class="mr-1 inline-block h-2 w-2 rounded-full bg-emerald-500"></span>In stock — ships in @Model.LeadTime</p>
+                }
+                else if (Model.IsCustomizable)
+                {
+                    <p class="text-sm text-emerald-600"><span class="mr-1 inline-block h-2 w-2 rounded-full bg-emerald-500"></span>Made to order — @Model.LeadTime</p>
+                }
+                else
+                {
+                    <p class="text-sm text-neutral-500"><span class="mr-1 inline-block h-2 w-2 rounded-full bg-neutral-300"></span>Currently on backorder</p>
+                }
+            </div>
+
+            <div class="mt-6 space-y-5" data-config>
+                <input type="hidden" data-var-field="material" />
+                <input type="hidden" data-var-field="finish" />
+                <input type="hidden" data-var-field="size" />
+
+                @if (Model.Materials.Any())
+                {
+                    <div>
+                        <div class="mb-2 flex items-center justify-between">
+                            <span class="text-sm font-medium text-brand-900">Material / Fabric</span>
+                            <span class="muted text-sm text-neutral-400" data-var-label="material">Select…</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach (var mat in Model.Materials)
+                            {
+                                <button type="button" class="flex items-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm text-neutral-700 transition hover:border-brand-600" data-opt="material" data-name="@mat.Name" data-delta="@mat.PriceDelta">
+                                    <span class="h-3 w-3 rounded-full border border-brand-200" style="background:@mat.Swatch"></span>
+                                    <span>@mat.Name</span>
+                                    @if (mat.PriceDelta > 0)
+                                    {
+                                        <span class="text-xs text-neutral-400" data-usd="@mat.PriceDelta"></span>
+                                    }
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (Model.Finishes.Any())
+                {
+                    <div>
+                        <div class="mb-2 flex items-center justify-between">
+                            <span class="text-sm font-medium text-brand-900">Finish</span>
+                            <span class="text-sm text-neutral-400" data-var-label="finish">Select…</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach (var fin in Model.Finishes)
+                            {
+                                <button type="button" class="flex items-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm text-neutral-700 transition hover:border-brand-600" data-opt="finish" data-name="@fin.Name" data-delta="@fin.PriceDelta">
+                                    <span class="h-3 w-3 rounded-full border border-brand-200" style="background:@fin.Swatch"></span>
+                                    <span>@fin.Name</span>
+                                    @if (fin.PriceDelta > 0)
+                                    {
+                                        <span class="text-xs text-neutral-400" data-usd="@fin.PriceDelta"></span>
+                                    }
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (Model.Sizes.Any())
+                {
+                    <div>
+                        <div class="mb-2 flex items-center justify-between">
+                            <span class="text-sm font-medium text-brand-900">Dimensions</span>
+                            <span class="text-sm text-neutral-400" data-var-label="size">Select…</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach (var sz in Model.Sizes)
+                            {
+                                <button type="button" class="rounded-lg border border-brand-200 px-3 py-2 text-sm text-neutral-700 transition hover:border-brand-600" data-opt="size" data-name="@sz.Name" data-delta="@sz.PriceDelta">
+                                    <span>@sz.Name</span>
+                                    @if (sz.PriceDelta > 0)
+                                    {
+                                        <span class="text-xs text-neutral-400" data-usd="@sz.PriceDelta"></span>
+                                    }
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="mt-8 flex flex-col gap-2 sm:flex-row">
+                <input type="hidden" data-item-json='@Newtonsoft.Json.JsonConvert.SerializeObject(new { slug = Model.Slug, name = Model.Name, image = img, price = (double)Model.Price, category = Model.CategoryName, url = $"/shop/{Model.Slug}" })' />
+                @if (Model.Price > 0)
+                {
+                    <button type="button" class="flex-1 rounded-lg bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-500" data-add-config-cart>Add to Cart</button>
+                    <button type="button" class="flex-1 rounded-lg border border-brand-200 px-6 py-3 text-sm font-semibold text-brand-900 transition hover:border-brand-600" data-buy-now>Buy Now</button>
+                }
+                else
+                {
+                    <a href="/custom-furniture" class="flex-1 rounded-lg bg-brand-700 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-brand-500">Request a Quote</a>
+                }
+                <button type="button" class="rounded-lg border border-brand-200 px-4 py-3 text-neutral-700 transition hover:border-brand-600" data-wishlist-toggle="@Model.Slug" aria-label="Add to wishlist">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.6-9.2-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.2 11C19 15.4 12 20 12 20z"/></svg>
+                </button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-3 text-sm">
+                <a class="inline-flex items-center gap-2 text-neutral-700 hover:text-brand-900" href="@wa" target="_blank" rel="noopener">WhatsApp consult</a>
+                <a class="inline-flex items-center gap-2 text-neutral-700 hover:text-brand-900" href="tel:@supportPhone.Replace(" ", "")">Call studio</a>
+            </div>
+
+            <ul class="mt-6 space-y-2 border-t border-brand-100 pt-5 text-sm text-neutral-600">
+                <li class="flex items-center gap-2">International white-glove delivery</li>
+                <li class="flex items-center gap-2">@Model.Warranty</li>
+                <li class="flex items-center gap-2">@Model.LeadTime lead time</li>
+            </ul>
+        </div>
+    </div>
+
+    @* ---------- Delivery / warranty ---------- *@
+    <div class="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2" id="shipping">
+        <div class="rounded-2xl border border-brand-200 bg-white p-6" id="warranty">
+            <h3 class="text-base font-semibold text-brand-900">Delivery &amp; lead times</h3>
+            <div data-shipping-calc class="mt-4">
+                <div class="flex gap-2">
+                    <input type="text" placeholder="Enter postal / ZIP code" aria-label="Postal code" data-ship-postal class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none focus:border-brand-600" />
+                    <button type="button" data-ship-estimate class="shrink-0 rounded-lg border border-brand-200 px-4 py-2.5 text-sm font-semibold text-neutral-700 transition hover:border-brand-600">Estimate</button>
+                </div>
+                <div class="mt-3 space-y-1 text-sm" data-ship-result></div>
+                <ul class="mt-4 space-y-2 text-sm text-neutral-600">
+                    <li><strong class="text-brand-900">Ready to ship:</strong> @Model.LeadTime after payment</li>
+                    <li><strong class="text-brand-900">Packaging:</strong> Plywood crates, corner-protected and fully insured</li>
+                    <li><strong class="text-brand-900">Assembly:</strong> Included — our crew installs and removes packaging</li>
+                </ul>
+            </div>
+        </div>
+        <div class="rounded-2xl border border-brand-200 bg-white p-6">
+            <h3 class="text-base font-semibold text-brand-900">Warranty &amp; returns</h3>
+            <p class="mt-4 text-sm leading-relaxed text-neutral-600">@Model.Warranty. 14 days to change your mind — unassembled pieces returned at our cost. Structural defects are repaired or replaced for the lifetime of the product.</p>
+        </div>
+    </div>
+
+    @* ---------- Accordion ---------- *@
+    <div class="mt-6 divide-y divide-brand-200 rounded-2xl border border-brand-200 bg-white" data-accordion>
+        <div class="acc-item">
+            <button type="button" class="acc-head flex w-full items-center justify-between px-6 py-4 text-left" data-acc>
+                <span class="text-sm font-semibold text-brand-900">Specifications &amp; Dimensions</span><span class="text-lg text-neutral-400">+</span>
+            </button>
+            <div class="acc-body px-6 pb-6">
+                <table class="w-full text-sm">
+                    <tr class="border-t border-brand-100"><th class="py-2 pr-4 text-left font-medium text-neutral-400">Dimensions</th><td class="py-2 text-neutral-700">@Model.Dimensions</td></tr>
+                    <tr class="border-t border-brand-100"><th class="py-2 pr-4 text-left font-medium text-neutral-400">Weight</th><td class="py-2 text-neutral-700">@Model.Weight</td></tr>
+                    <tr class="border-t border-brand-100"><th class="py-2 pr-4 text-left font-medium text-neutral-400">Construction</th><td class="py-2 text-neutral-700">Kiln-dried community stories frame, precision producery, corner blocks</td></tr>
+                    <tr class="border-t border-brand-100"><th class="py-2 pr-4 text-left font-medium text-neutral-400">Composition</th><td class="py-2 text-neutral-700">@string.Join(" / ", Model.Materials.Select(m => m.Name))</td></tr>
+                    <tr class="border-t border-brand-100"><th class="py-2 pr-4 text-left font-medium text-neutral-400">Warranty</th><td class="py-2 text-neutral-700">@Model.Warranty</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="acc-item">
+            <button type="button" class="acc-head flex w-full items-center justify-between px-6 py-4 text-left" data-acc>
+                <span class="text-sm font-semibold text-brand-900">Materials &amp; Care</span><span class="text-lg text-neutral-400">+</span>
+            </button>
+            <div class="acc-body px-6 pb-6">
+                <p class="text-sm leading-relaxed text-neutral-600">@Model.CareInstructions</p>
+                <p class="mt-2 text-sm text-neutral-400">FSC-certified community. Water-based, low-VOC finishes designed to be renewed, not replaced.</p>
+            </div>
+        </div>
+        <div class="acc-item">
+            <button type="button" class="acc-head flex w-full items-center justify-between px-6 py-4 text-left" data-acc>
+                <span class="text-sm font-semibold text-brand-900">Delivery &amp; Lead Times</span><span class="text-lg text-neutral-400">+</span>
+            </button>
+            <div class="acc-body px-6 pb-6">
+                <p class="text-sm leading-relaxed text-neutral-600">@Model.LeadTime from order confirmation. International deliveries are fully insured and trackable end-to-end with a dedicated logistics coordinator on WhatsApp.</p>
+            </div>
+        </div>
+        <div class="acc-item">
+            <button type="button" class="acc-head flex w-full items-center justify-between px-6 py-4 text-left" data-acc>
+                <span class="text-sm font-semibold text-brand-900">Warranty &amp; Returns</span><span class="text-lg text-neutral-400">+</span>
+            </button>
+            <div class="acc-body px-6 pb-6">
+                <p class="text-sm leading-relaxed text-neutral-600">@Model.Warranty. Returns accepted within 14 days of delivery for unassembled pieces. Custom-made items are bespoke and non-returnable unless defective.</p>
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("BannerAds", new { placement = "detail" })
+</section>
+
+@* ---------- Related + recently viewed ---------- *@
+@if (related.Any() || true)
+{
+    <section class="border-t border-brand-100 bg-brand-50">
+        <div class="mx-auto max-w-app px-4 py-14 sm:px-6">
+            @if (related.Any())
+            {
+                <div class="flex items-end justify-between">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">Complete the room</span>
+                        <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900">Pairs well with</h2>
+                    </div>
+                </div>
+                <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    @foreach (var p in related)
+                    {
+                        @await Html.PartialAsync("_ProductCard", p)
+                    }
+                </div>
+            }
+            <div class="mt-12 flex items-end justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">You may also like</span>
+                    <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900">Recently viewed</h2>
+                </div>
+            </div>
+            <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" data-recent-viewed></div>
+        </div>
+    </section>
+}
+
+@* ---------- Mobile sticky bar ---------- *@
+<div class="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-brand-200 bg-white/95 p-3 backdrop-blur md:hidden" data-mobile-sticky>
+    <a href="@wa" target="_blank" rel="noopener" class="flex flex-1 items-center justify-center rounded-lg border border-brand-200 px-3 py-2.5 text-sm font-semibold text-brand-900">WhatsApp</a>
+    <a href="tel:@supportPhone.Replace(" ", "")" class="flex flex-1 items-center justify-center rounded-lg border border-brand-200 px-3 py-2.5 text-sm font-semibold text-brand-900">Call</a>
+    @if (Model.Price > 0)
+    {
+        <button type="button" class="flex flex-1 items-center justify-center rounded-lg bg-brand-700 px-3 py-2.5 text-sm font-semibold text-white" data-add-config-cart-sm>Add to Cart</button>
+    }
+    else
+    {
+        <a href="/custom-furniture" class="flex flex-1 items-center justify-center rounded-lg bg-brand-700 px-3 py-2.5 text-sm font-semibold text-white">Request a Quote</a>
+    }
+</div>
+
+@functions {
+    private string FunctionsWhatsApp()
+    {
+        string number = ViewBag.WhatsappNumber?.ToString() ?? StarTalkSessions.Utils.Store.WhatsappNumber;
+        var message = $"Hi {StarTalkSessions.Utils.Store.Name} — I'd like a consultation about the {Model.Name} ({Model.Sku}). Can you share more details?";
+        var digits = StarTalkSessions.Utils.Functions.WhatsAppDigits(number);
+        return $"https://wa.me/{digits}?text={Uri.EscapeDataString(message)}";
+    }
+
+    private string StarRow(double rating)
+    {
+        var full = (int)Math.Round(rating);
+        return new string('★', Math.Max(0, full)) + new string('☆', Math.Max(0, 5 - Math.Max(0, full)));
+    }
+}

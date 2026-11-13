@@ -1,0 +1,413 @@
+@{
+    ViewData["Title"] = "Stories that move people forward";
+
+    var storeName = (ViewBag.StoreName as string) ?? "Star Talk Sessions";
+    var brandStatement = (ViewBag.StoreTagline as string) ?? "Stories that move people forward.";
+
+    var categories = (List<StarTalkSessions.Models.Category>)ViewBag.Categories ?? new();
+    var bestsellers = (List<StarTalkSessions.Models.Product>)ViewBag.Bestsellers ?? new();
+
+    var heroImage = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2400&auto=format&fit=crop";
+
+    var categoryFallback = new[]
+    {
+        "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop"
+    };
+
+    var inspired = new[]
+    {
+        new {
+            Heading = "Conversations that connect",
+            Body = "Long-form conversations with people building, creating and changing the world around them.",
+            Cta = "Explore the podcast",
+            Href = "/media",
+            Image = "https://images.unsplash.com/photo-1595514535415-dae8580c416c?q=80&w=1400&auto=format&fit=crop",
+            Alt = "Podcast microphones in a studio",
+            Flip = false
+        },
+        new {
+            Heading = "Stories with a wider reach",
+            Body = "Podcast, radio, television and live broadcast — one platform for ideas that deserve attention.",
+            Cta = "Enter the media room",
+            Href = "/media",
+            Image = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=1400&auto=format&fit=crop",
+            Alt = "A live broadcast studio",
+            Flip = true
+        },
+        new {
+            Heading = "People are the programme",
+            Body = "Meet the voices, artists and leaders bringing new energy to our communities.",
+            Cta = "Apply to be a guest",
+            Href = "/guest",
+            Image = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop",
+            Alt = "Young people learning together",
+            Flip = false
+        },
+        new {
+            Heading = "Impact beyond the studio",
+            Body = "Education, skills, healthcare and community outreach — attention that becomes action.",
+            Cta = "See our impact",
+            Href = "/impact",
+            Image = "https://images.unsplash.com/photo-1504159506876-f8338247a14a?q=80&w=1400&auto=format&fit=crop",
+            Alt = "A community gathering",
+            Flip = true
+        },
+        new {
+            Heading = "Build the next chapter",
+            Body = "Sponsors, collaborators and partners can help us take meaningful stories further.",
+            Cta = "Partner with us",
+            Href = "/partner",
+            Image = "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1400&auto=format&fit=crop",
+            Alt = "A creative team in conversation",
+            Flip = false
+        }
+    };
+}
+
+<style>
+    /* ---------- Landing primitives ---------- */
+    .fs-rule {
+        display: flex; align-items: center; justify-content: center; gap: 1.25rem;
+        color: #000; font-size: .8125rem; font-weight: 700;
+        letter-spacing: .22em; text-transform: uppercase;
+    }
+    .fs-rule::before, .fs-rule::after {
+        content: ""; flex: 1 1 0%; max-width: 7rem; height: 1px; background: currentColor; opacity: .55;
+    }
+    .fs-rule--red { color: #D8A33E; }
+    .fs-rule--red::before, .fs-rule--red::after { background: #D8A33E; opacity: 1; }
+
+    /* ---------- Hero ---------- */
+    .fs-hero {
+        position: relative; width: 100%;
+        min-height: min(86vh, 760px); display: flex; align-items: center; justify-content: center;
+        overflow: hidden; background: #0A0A0A; isolation: isolate;
+    }
+    .fs-hero__img {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; object-position: center;
+    }
+    .fs-hero__scrim {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,.46) 0%, rgba(0,0,0,.30) 45%, rgba(0,0,0,.62) 100%);
+    }
+    .fs-hero__copy {
+        position: relative; z-index: 2; width: 100%; max-width: 60rem;
+        padding: 6rem 1.5rem; text-align: center;
+    }
+    .fs-hero__kicker {
+        margin: 0 0 1.5rem; color: #fff; opacity: .8;
+        font-size: .6875rem; font-weight: 700; letter-spacing: .28em; text-transform: uppercase;
+    }
+    .fs-hero__title {
+        margin: 0; color: #fff; font-family: 'Instrument Serif', ui-serif, Georgia, serif;
+        font-size: clamp(2.75rem, 9vw, 6.5rem); line-height: .98; letter-spacing: -.02em;
+        text-shadow: 0 2px 40px rgba(0,0,0,.55);
+    }
+    .fs-hero__title-in {
+        display: block; animation: fsRise .9s cubic-bezier(.16, 1, .3, 1) backwards;
+    }
+    .fs-hero__action { margin-top: 2.5rem; animation: fsRise .9s cubic-bezier(.16, 1, .3, 1) .18s backwards; }
+
+    @@keyframes fsRise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+    /* ---------- Section A: brand statement ---------- */
+    .fs-statement { padding: clamp(3.5rem, 9vw, 7rem) 1.5rem; text-align: center; }
+    .fs-statement__mark {
+        display: block; width: 3.5rem; height: 3px; margin: 0 auto 2rem; background: #D8A33E;
+    }
+    .fs-statement__name {
+        margin: 0; color: #000; font-family: 'Instrument Serif', ui-serif, Georgia, serif;
+        font-size: clamp(2.25rem, 7vw, 4.5rem); line-height: 1; letter-spacing: -.02em;
+    }
+    .fs-statement__tagline {
+        margin: 1.25rem 0 0; color: #000;
+        font-size: .8125rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+    }
+    .fs-statement__body {
+        margin: 2rem auto 0; max-width: 62ch; color: #4A4A4A;
+        font-size: 1rem; line-height: 1.7;
+    }
+    .fs-statement__body + .fs-statement__body { margin-top: .35rem; }
+    .fs-statement__cta { margin-top: 2.25rem; }
+
+    /* ---------- Section B: shop by category ---------- */
+    .fs-cat-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem 1.5rem; }
+    .fs-cat__media { display: block; overflow: hidden; background: #EDEDED; }
+    .fs-cat__media img {
+        display: block; width: 100%; height: 100%; aspect-ratio: 4 / 5; object-fit: cover;
+        transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+    }
+    .fs-cat:hover .fs-cat__media img { transform: scale(1.04); }
+    .fs-cat__cta { display: flex; justify-content: center; margin-top: 1.25rem; }
+
+    /* ---------- Section C: design service ---------- */
+    .fs-split { display: grid; grid-template-columns: 1fr; }
+    .fs-split__media { position: relative; min-height: 20rem; background: #EDEDED; }
+    .fs-split__media img { display: block; width: 100%; height: 100%; min-height: 20rem; object-fit: cover; }
+    .fs-split__panel { display: flex; flex-direction: column; justify-content: center; padding: clamp(2.5rem, 6vw, 5rem); }
+    .fs-split__heading {
+        margin: 0; color: #000; font-family: 'Instrument Serif', ui-serif, Georgia, serif;
+        font-size: clamp(1.875rem, 4.4vw, 3rem); line-height: 1.08; letter-spacing: -.015em;
+    }
+    .fs-split__body { margin: 1.5rem 0 0; max-width: 52ch; color: #4A4A4A; font-size: .9375rem; line-height: 1.75; }
+    .fs-split__cta { margin-top: 2rem; align-self: flex-start; }
+
+    /* ---------- Section D: bestsellers rail ---------- */
+    .fs-rail-head {
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
+    .fs-rail-nav { display: none; gap: .5rem; }
+    .fs-rail-btn {
+        display: flex; align-items: center; justify-content: center;
+        width: 44px; height: 44px; border: 1px solid #0A0A0A; border-radius: 0;
+        background: #fff; color: #0A0A0A;
+        transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .fs-rail-btn:hover:not(:disabled) { background: #000; color: #fff; }
+    .fs-rail-btn:disabled { opacity: .25; cursor: default; }
+    .fs-rail-btn svg { width: 18px; height: 18px; }
+    .fs-rail { overflow: hidden; }
+    .fs-rail__track {
+        display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory;
+        scrollbar-width: none; -ms-overflow-style: none;
+        scroll-behavior: smooth; padding-bottom: .25rem;
+    }
+    .fs-rail__track::-webkit-scrollbar { display: none; }
+    .fs-rail__item { flex: 0 0 78%; scroll-snap-align: start; display: flex; }
+    .fs-rail__item > * { width: 100%; }
+    .fs-rail__all { display: flex; justify-content: center; margin-top: 2.5rem; }
+
+    /* ---------- Section E: get inspired (zig-zag) ---------- */
+    .fs-zig { display: flex; flex-direction: column; border-top: 1px solid #E4E4E4; }
+    .fs-zig:first-of-type { border-top: 0; }
+    .fs-zig__media { position: relative; overflow: hidden; background: #EDEDED; }
+    .fs-zig__media img {
+        display: block; width: 100%; height: 100%; min-height: 17rem;
+        object-fit: cover; transition: transform .8s cubic-bezier(.16, 1, .3, 1);
+    }
+    .fs-zig:hover .fs-zig__media img { transform: scale(1.03); }
+    .fs-zig__copy {
+        display: flex; flex-direction: column; justify-content: center;
+        padding: clamp(2.25rem, 5vw, 4.5rem) clamp(1.25rem, 5vw, 4.5rem);
+    }
+    .fs-zig__heading {
+        margin: 0; color: #000; font-family: 'Instrument Serif', ui-serif, Georgia, serif;
+        font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.1; letter-spacing: -.015em;
+    }
+    .fs-zig__body { margin: 1.25rem 0 0; max-width: 48ch; color: #4A4A4A; font-size: .9375rem; line-height: 1.75; }
+    .fs-zig__cta { margin-top: 2rem; align-self: flex-start; }
+
+    /* ---------- Section F: catalog callout ---------- */
+    .fs-cat2 { display: grid; grid-template-columns: 1fr; background: #F3F4F6; }
+    .fs-cat2__box {
+        display: flex; flex-direction: column; justify-content: center;
+        padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4.5rem);
+    }
+    .fs-cat2__heading {
+        margin: 0; color: #000; font-family: 'Instrument Serif', ui-serif, Georgia, serif;
+        font-size: clamp(1.875rem, 4.4vw, 3rem); line-height: 1.08; letter-spacing: -.015em;
+    }
+    .fs-cat2__body { margin: 1.5rem 0 0; max-width: 44ch; color: #4A4A4A; font-size: .9375rem; line-height: 1.75; }
+    .fs-cat2__cta { margin-top: 2rem; align-self: flex-start; }
+    .fs-cat2__media { position: relative; min-height: 18rem; background: #E5E7EB; }
+    .fs-cat2__media img { display: block; width: 100%; height: 100%; min-height: 18rem; object-fit: cover; }
+
+    .fs-foot-link {
+        display: inline-block; color: #0A0A0A; border-bottom: 1px solid #0A0A0A;
+        padding-bottom: 1px; transition: color .2s ease, border-color .2s ease;
+    }
+    .fs-foot-link:hover, .fs-foot-link:focus-visible { color: #D8A33E; border-color: #D8A33E; }
+
+    /* ---------- Breakpoints ---------- */
+    @@media (min-width: 560px) {
+        .fs-cat-grid { grid-template-columns: repeat(2, 1fr); }
+        .fs-rail__item { flex-basis: 46%; }
+    }
+    @@media (min-width: 900px) {
+        .fs-cat-grid { grid-template-columns: repeat(3, 1fr); }
+        .fs-rail__item { flex-basis: 31%; }
+        .fs-rail-nav { display: flex; }
+
+        .fs-split { grid-template-columns: 1fr 1fr; }
+
+        .fs-zig { flex-direction: row; align-items: stretch; }
+        .fs-zig__media, .fs-zig__copy { flex: 0 0 50%; }
+        .fs-zig--flip { flex-direction: row-reverse; }
+
+        .fs-cat2 { grid-template-columns: 1fr 1fr; }
+        .fs-cat2__media { min-height: 30rem; }
+    }
+    @@media (min-width: 1280px) {
+        .fs-rail__item { flex-basis: 23.5%; }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .fs-hero__title-in, .fs-hero__action { animation: none !important; }
+        .fs-rail__track { scroll-behavior: auto; }
+        .fs-cat:hover .fs-cat__media img,
+        .fs-zig:hover .fs-zig__media img { transform: none; }
+    }
+</style>
+
+
+@* ================= Hero ================= *@
+<section class="fs-hero">
+    <img class="fs-hero__img" src="@heroImage" alt="Audience gathered at a live broadcast" fetchpriority="high" />
+    <div class="fs-hero__scrim" aria-hidden="true"></div>
+    <div class="fs-hero__copy">
+        <p class="fs-hero__kicker">Broadcasting from Federal University of Technology, Minna</p>
+        <h1 class="fs-hero__title">
+            <span class="fs-hero__title-in">Welcome to @storeName</span>
+        </h1>
+        <div class="fs-hero__action">
+            <a href="/media" class="fs-btn">Watch the latest</a>
+        </div>
+    </div>
+</section>
+
+
+@* ================= Section A — Brand statement ================= *@
+<section class="fs-statement">
+    <div class="mx-auto max-w-app px-4 sm:px-6">
+        <span class="fs-statement__mark" aria-hidden="true"></span>
+        <h2 class="fs-statement__name">@storeName</h2>
+        <p class="fs-statement__tagline">@brandStatement</p>
+        <p class="fs-statement__body">
+            We create space for honest conversations, bold ideas and stories that move people forward.
+        </p>
+        <p class="fs-statement__body">
+            From podcast and radio to television, live broadcasts and community action, Star Talk Sessions keeps the conversation moving.
+        </p>
+        <div class="fs-statement__cta">
+            <a href="/about" class="fs-btn">Discover our mission</a>
+        </div>
+    </div>
+</section>
+
+
+@* ================= Section B — Explore our platforms ================= *@
+@if (categories.Any())
+{
+    <section class="border-t border-neutral-200 py-16 sm:py-20 lg:py-28">
+        <div class="mx-auto max-w-app px-4 sm:px-6">
+            <h2 class="fs-rule">Explore our platforms</h2>
+
+            <div class="fs-cat-grid mt-12 sm:mt-16">
+                @for (var i = 0; i < categories.Count; i++)
+                {
+                    var cat = categories[i];
+                    var catImage = string.IsNullOrWhiteSpace(cat.ImageUrl) ? categoryFallback[i % categoryFallback.Length] : cat.ImageUrl;
+                    <article class="fs-cat">
+                        <a class="fs-cat__media" href="/shop?category=@cat.Slug" tabindex="-1" aria-hidden="true">
+                            <img src="@catImage" alt="" loading="lazy" decoding="async" />
+                        </a>
+                        <div class="fs-cat__cta">
+                            <a href="/shop?category=@cat.Slug" class="fs-btn">@cat.Name</a>
+                        </div>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+
+@* ================= Section C — Editorial platform ================= *@
+<section class="fs-split bg-[#F9F6F0]">
+    <div class="fs-split__media">
+        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1600&auto=format&fit=crop"
+             alt="A broadcast studio with layered lighting" loading="lazy" decoding="async" />
+    </div>
+    <div class="fs-split__panel">
+        <h2 class="fs-split__heading">We create the room for meaningful conversations</h2>
+        <p class="fs-split__body">
+            Our producers bring together voices, ideas and audiences across multiple platforms. One editorial home,
+            many ways to listen, watch and take part.
+        </p>
+        <a href="/programmes" class="fs-btn fs-split__cta">Explore our programmes</a>
+    </div>
+</section>
+
+
+@* ================= Section D — Featured sessions ================= *@
+@if (bestsellers.Any())
+{
+    <section class="py-16 sm:py-20 lg:py-28">
+        <div class="mx-auto max-w-app px-4 sm:px-6">
+            <div class="fs-rail-head">
+                <h2 class="fs-rule flex-1">Featured sessions</h2>
+                <div class="fs-rail-nav" data-carousel-nav>
+                    <button type="button" class="fs-rail-btn" data-carousel-prev aria-label="Previous products">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7"/></svg>
+                    </button>
+                    <button type="button" class="fs-rail-btn" data-carousel-next aria-label="Next products">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="fs-rail" data-carousel>
+                <div class="fs-rail__track" data-carousel-track>
+                    @foreach (var p in bestsellers)
+                    {
+                        <div class="fs-rail__item">
+                            @await Html.PartialAsync("_ProductCard", p)
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (ViewBag.BestsellersTotal is int bt && bt > bestsellers.Count)
+            {
+                <div class="fs-rail__all">
+                    <a href="/media" class="fs-btn">Explore the media room</a>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+
+@* ================= Section E — Inside Star Talk Sessions ================= *@
+<section class="border-t border-neutral-200">
+    <div class="mx-auto max-w-app px-4 pt-16 sm:px-6 sm:pt-20 lg:pt-28">
+        <h2 class="fs-rule fs-rule--red">Inside Star Talk Sessions</h2>
+    </div>
+
+    <div class="mx-auto mt-12 max-w-app sm:mt-16">
+        @for (var i = 0; i < inspired.Length; i++)
+        {
+            var block = inspired[i];
+            <article class="fs-zig @(block.Flip ? "fs-zig--flip" : "")">
+                <figure class="fs-zig__media">
+                    <img src="@block.Image" alt="@block.Alt" loading="lazy" decoding="async" />
+                </figure>
+                <div class="fs-zig__copy">
+                    <h3 class="fs-zig__heading">@block.Heading</h3>
+                    <p class="fs-zig__body">@block.Body</p>
+                    <a href="@block.Href" class="fs-btn fs-zig__cta">@block.Cta</a>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+
+
+@* ================= Section F — Stay connected ================= *@
+<section class="fs-cat2">
+    <div class="fs-cat2__box">
+        <h2 class="fs-cat2__heading">Stay in the conversation</h2>
+        <p class="fs-cat2__body">
+            Get new episodes, live broadcast alerts, event invites and impact stories in your inbox.
+        </p>
+        <a href="/contact" class="fs-btn fs-cat2__cta">Contact the team</a>
+    </div>
+    <div class="fs-cat2__media">
+        <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1400&auto=format&fit=crop"
+             alt="A notebook beside a microphone" loading="lazy" decoding="async" />
+    </div>
+</section>

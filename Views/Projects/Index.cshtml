@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Projects & Installations";
+    var projects = (List<StarTalkSessions.Models.Project>)ViewBag.Projects ?? new();
+    var segments = (string[])ViewBag.Segments ?? Array.Empty<string>();
+    var activeSegment = (string)ViewBag.ActiveSegment;
+}
+
+<section class="border-b border-brand-100">
+    <div class="mx-auto max-w-app px-4 py-10 sm:px-6">
+        <nav class="text-xs text-neutral-400" aria-label="Breadcrumb">
+            <a href="/" class="hover:text-brand-900">Home</a><span class="mx-1">/</span><span class="text-neutral-600">Projects</span>
+        </nav>
+        <span class="mt-4 block text-xs font-semibold uppercase tracking-widest text-neutral-400">Portfolio</span>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">Spaces we've furnished</h1>
+        <p class="mt-2 max-w-2xl text-neutral-500">Every project is a collaboration — from a single villa to a 120-key hotel.</p>
+    </div>
+</section>
+
+<section class="mx-auto max-w-app px-4 py-8 sm:px-6 lg:py-12">
+    <div class="flex flex-wrap gap-2">
+        <a href="/projects" class="@(string.IsNullOrWhiteSpace(activeSegment) || activeSegment == "all" ? "bg-brand-700 text-white" : "border border-brand-200 text-neutral-600 hover:border-brand-600") rounded-full px-4 py-1.5 text-sm font-semibold transition">All</a>
+        @foreach (var s in segments)
+        {
+            <a href="/projects?segment=@Uri.EscapeDataString(s)" class="@(activeSegment == s ? "bg-brand-700 text-white" : "border border-brand-200 text-neutral-600 hover:border-brand-600") rounded-full px-4 py-1.5 text-sm font-semibold transition">@s</a>
+        }
+    </div>
+
+    @if (projects.Any())
+    {
+        <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
+            @foreach (var prj in projects)
+            {
+                <a href="/projects/@prj.Slug" class="group flex flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white transition hover:border-brand-300 hover:shadow-lg">
+                    <div class="relative overflow-hidden">
+                        <img src="@prj.CoverImage" alt="@prj.Title" loading="lazy" class="h-60 w-full object-cover transition-transform duration-500 group-hover:scale-105 md:h-72" />
+                        <span class="absolute left-4 top-4 rounded-full bg-brand-700/90 px-3 py-1 text-xs font-semibold text-white">@prj.Segment</span>
+                    </div>
+                    <div class="flex flex-1 flex-col p-6">
+                        <div class="flex flex-wrap gap-x-1 text-xs text-neutral-400">
+                            <span>@prj.Location</span><span class="text-neutral-300">·</span><span>@prj.Year</span><span class="text-neutral-300">·</span><span>@prj.Client</span>
+                        </div>
+                        <h2 class="mt-2 text-xl font-bold tracking-tight text-brand-900">@prj.Title</h2>
+                        <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-500">@prj.Brief</p>
+                        <span class="mt-auto pt-4 text-sm font-semibold text-brand-900 underline decoration-neutral-300 underline-offset-4 transition group-hover:decoration-brand-900">View case study →</span>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="mt-8 rounded-2xl border border-brand-200 bg-white px-6 py-16 text-center">
+            <h3 class="text-lg font-semibold text-brand-900">No projects in this segment yet</h3>
+            <a href="/projects" class="mt-6 inline-flex rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-500">View all projects</a>
+        </div>
+    }
+</section>

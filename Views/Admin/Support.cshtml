@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Admin — Support Chat";
+    var tickets = (List<StarTalkSessions.Models.SupportTicket>)ViewBag.Tickets ?? new();
+    var openCount = ViewBag.OpenCount is int o ? o : 0;
+    var humanCount = ViewBag.HumanCount is int h ? h : 0;
+    var aiRemote = ViewBag.AiRemoteEnabled is true;
+}
+
+@await Html.PartialAsync("_AdminNav")
+
+<section class="mx-auto max-w-app px-4 py-8 sm:px-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">Live chat</span>
+            <h1 class="mt-1 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Support conversations</h1>
+            <p class="mt-1 text-sm text-neutral-500">AI assistant answers instantly; you can take over any thread and reply personally.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+            <span class="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-700">@openCount on AI</span>
+            <span class="rounded-full bg-violet-100 px-3 py-1 font-semibold text-violet-700">@humanCount waiting on you</span>
+            <span class="rounded-full bg-neutral-100 px-3 py-1 font-semibold text-neutral-500">@(aiRemote ? "AI connected" : "AI on local fallback")</span>
+        </div>
+    </div>
+
+    @if (TempData["AdminSuccess"] != null)
+    {
+        <div class="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">@TempData["AdminSuccess"]</div>
+    }
+
+    <ul class="mt-8 space-y-4">
+        @foreach (var t in tickets)
+        {
+            var resolved = t.Status == "Resolved";
+            var onAi = t.Status == "Open" && t.AiAssigned;
+            <li class="rounded-2xl border border-brand-200 bg-white p-6 transition hover:border-brand-400">
+                <a href="/Admin/SupportDetail?id=@t.Id" class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h3 class="text-base font-semibold text-brand-900">@t.Subject</h3>
+                            @if (resolved)
+                            {
+                                <span class="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-500">Resolved</span>
+                            }
+                            else if (onAi)
+                            {
+                                <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">AI responding</span>
+                            }
+                            else
+                            {
+                                <span class="rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-medium text-violet-700">Needs you</span>
+                            }
+                        </div>
+                        <p class="mt-1 text-sm text-neutral-500">@t.Name · <a href="mailto:@t.Email" class="underline underline-offset-2">@t.Email</a></p>
+                        <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-700">@t.LastBody</p>
+                    </div>
+                    <div class="flex shrink-0 flex-col items-start gap-2 sm:items-end">
+                        <span class="text-xs text-neutral-400">@t.UpdatedAt.ToString("MMM d, yyyy · h:mm tt")</span>
+                        <span class="text-xs text-neutral-400">@t.Messages.Count msgs · @t.AiMessageCount from AI</span>
+                    </div>
+                </a>
+            </li>
+        }
+        @if (!tickets.Any())
+        {
+            <li class="rounded-2xl border border-brand-200 bg-white px-6 py-12 text-center text-sm text-neutral-400">No support conversations yet. They'll appear here as customers chat in.</li>
+        }
+    </ul>
+</section>

@@ -1,0 +1,10 @@
+@model List<StarTalkSessions.Utils.Currency>
+<div class="flex items-center gap-1.5" data-currency>
+    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
+    <select aria-label="Currency" class="bg-transparent text-xs outline-none">
+        @foreach (var c in Model)
+        {
+            <option value="@c.Code" data-symbol="@c.Symbol">@c.Code @c.Symbol</option>
+        }
+    </select>
+</div>

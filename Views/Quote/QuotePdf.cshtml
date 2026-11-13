@@ -1,0 +1,80 @@
+@{
+    Layout = null;
+    var quote = (StarTalkSessions.Models.CustomQuote)ViewBag.Quote;
+    if (quote == null) { throw new InvalidOperationException("Quote not found."); }
+    var today = DateTime.Now; var validUntil = today.AddDays(30);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Star Talk Sessions Quote @quote.RefNumber</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; color: #111; font-size: 12px; line-height: 1.5; padding: 48px; }
+        .top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0a0a0a; padding-bottom: 24px; margin-bottom: 32px; }
+        .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+        .brand .mark { display: inline-block; background: #0a0a0a; color: #fff; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 4px; margin-right: 8px; }
+        .meta { text-align: right; font-size: 11px; color: #555; }
+        .meta strong { display: block; font-size: 18px; color: #111; margin-top: 2px; }
+        h1 { font-size: 22px; letter-spacing: -0.02em; margin-bottom: 12px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 40px; margin-bottom: 24px; }
+        .field span { color: #888; text-transform: uppercase; font-size: 9px; letter-spacing: 0.06em; display: block; margin-bottom: 2px; }
+        .field strong { font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; margin: 8px 0 24px; }
+        th { text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: #666; border-bottom: 1px solid #ddd; padding: 8px; }
+        td { padding: 8px; border-bottom: 1px solid #eee; }
+        .note { background: #fafafa; border: 1px solid #eee; border-radius: 6px; padding: 14px 16px; margin-top: 24px; }
+        .foot { display: flex; justify-content: space-between; margin-top: 40px; color: #888; font-size: 10px; border-top: 1px solid #eee; padding-top: 16px; }
+        .print-band { background: #0a0a0a; color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 16px; }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <div>
+            <div class="brand"><span class="mark">S</span>@StarTalkSessions.Utils.Store.Name</div>
+            <div style="color:#888;margin-top:4px;">@StarTalkSessions.Utils.Store.AddressFormatted</div>
+        </div>
+        <div class="meta">
+            BESPOKE QUOTATION
+            <strong>@quote.RefNumber</strong>
+            Issued @today.ToString("MMM d, yyyy") · Valid until @validUntil.ToString("MMM d, yyyy")
+        </div>
+    </div>
+
+    <h1>Custom Media quotation</h1>
+
+    <div class="grid">
+        <div class="field"><span>Prepared for</span><strong>@quote.Name</strong></div>
+        <div class="field"><span>Email</span><strong>@quote.Email</strong></div>
+        <div class="field"><span>Phone / WhatsApp</span><strong>@(quote.Phone ?? "—")</strong></div>
+        <div class="field"><span>Status</span><strong>@quote.Status</strong></div>
+        <div class="field"><span>Category</span><strong>@quote.Category</strong></div>
+        <div class="field"><span>Style</span><strong>@(quote.Style ?? "To advise")</strong></div>
+        <div class="field"><span>Dimensions (W × H × D, @quote.DimensionUnit)</span><strong>@string.Join(" × ", quote.Width, quote.Height, quote.Depth)</strong></div>
+        <div class="field"><span>Budget range</span><strong>@(quote.Budget ?? "To advise")</strong></div>
+        <div class="field"><span>Wood species</span><strong>@(quote.Wood ?? "To advise")</strong></div>
+        <div class="field"><span>Fabric grade</span><strong>@(quote.Fabric ?? "To advise")</strong></div>
+        <div class="field"><span>Hardware finish</span><strong>@(quote.Hardware ?? "To advise")</strong></div>
+        <div class="field"><span>Cushion density</span><strong>@(quote.CushionDensity ?? "To advise")</strong></div>
+        <div class="field"><span>Desired delivery</span><strong>@(quote.DeliveryBy ?? "To advise")</strong></div>
+        <div class="field"><span>References attached</span><strong>@(quote.ReferenceFiles.Any() ? string.Join(", ", quote.ReferenceFiles) : "None")</strong></div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(quote.Notes))
+    {
+        <p><strong>Notes:</strong> @quote.Notes</p>
+    }
+
+    <div class="print-band">This quote is subject to studio review and confirmation.</div>
+
+    <div class="note">
+        <strong>What happens next:</strong> A studio designer will review your brief, propose a material and producery spec within one business day, and confirm a fixed price plus production timeline. Prices are quoted in USD and include white-glove delivery, assembly and packaging removal.
+    </div>
+
+    <div class="foot">
+        <span>@StarTalkSessions.Utils.Store.Name · @validUntil.ToString("MMM d, yyyy") validity</span>
+        <span>@StarTalkSessions.Utils.Store.SupportEmail · @StarTalkSessions.Utils.Store.SiteUrl.Replace("https://", "")</span>
+    </div>
+</body>
+</html>

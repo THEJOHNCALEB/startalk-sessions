@@ -1,0 +1,19 @@
+@{
+    var ctrl = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+}
+<div class="border-b border-brand-200 bg-white">
+    <div class="mx-auto flex max-w-app flex-wrap items-center gap-1 overflow-x-auto px-4 py-3 sm:px-6">
+        <a href="/Admin" class="@(ctrl == "Index" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Overview</a>
+        <a href="/Admin/Blogs" class="@(ctrl == "Blogs" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Blogs</a>
+        <a href="/Admin/Support" class="@(ctrl is "Support" or "SupportDetail" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Support</a>
+        <a href="/Admin/Inquiries" class="@(ctrl == "Inquiries" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Contact</a>
+        <a href="/Admin/Quotes" class="@(ctrl == "Quotes" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Quotes</a>
+        <a href="/Admin/Orders" class="@(ctrl == "Orders" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Orders</a>
+        <a href="/Admin/Users" class="@(ctrl == "Users" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Users</a>
+        <a href="/Admin/Advertisements" class="@(ctrl == "Advertisements" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Ads</a>
+        <a href="/Admin/Media" class="@(ctrl == "Media" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Media</a>
+        <div class="ml-auto flex items-center gap-2">
+            <a href="/" class="text-sm text-neutral-500 hover:text-brand-900">View site →</a>
+        </div>
+    </div>
+</div>

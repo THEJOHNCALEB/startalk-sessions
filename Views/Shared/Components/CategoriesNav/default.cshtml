@@ -1,0 +1,5 @@
+@model List<StarTalkSessions.Models.Category>
+@foreach (var c in Model)
+{
+    <a href="/shop?category=@c.Slug">@c.Name</a>
+}
