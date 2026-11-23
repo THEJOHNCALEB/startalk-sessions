@@ -8,10 +8,12 @@ namespace StarTalkSessions.Controllers
     public class HomeController : Controller
     {
         private readonly CategoryDatabaseAccess _categoryDb;
+        private readonly HomeContentDatabaseAccess _homeDb;
 
-        public HomeController(CategoryDatabaseAccess categoryDb)
+        public HomeController(CategoryDatabaseAccess categoryDb, HomeContentDatabaseAccess homeDb)
         {
             _categoryDb = categoryDb;
+            _homeDb = homeDb;
         }
 
         public async Task<IActionResult> Index(CancellationToken ctl)
@@ -26,6 +28,12 @@ namespace StarTalkSessions.Controllers
                 .ThenBy(c => c.Name)
                 .Take(categoryPreview)
                 .ToList();
+
+            ViewBag.HomeContent = (await _homeDb.QueryManyAsync(x => x.IsActive, ctl))
+                .OrderBy(x => x.SortOrder)
+                .ThenBy(x => x.CreatedAt)
+                .GroupBy(x => x.Section ?? "", StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
 
             return View();
         }

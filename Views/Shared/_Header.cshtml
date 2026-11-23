@@ -2,7 +2,8 @@
     var isAuthed = User.Identity?.IsAuthenticated == true;
     var isAdmin = isAuthed && User.IsInRole("Admin");
     var userName = isAuthed ? (User.FindFirst("Name")?.Value ?? "Account") : "";
-    var storeName = (ViewBag.StoreName as string) ?? "Star Talk Sessions";
+    var profileHref = isAuthed ? (isAdmin ? "/Admin" : "/account") : "/auth/login";
+    var storeName = (ViewBag.StoreName as string) ?? "StarTalk";
     var here = (Context.Request.Path.Value ?? "/").TrimEnd('/').ToLowerInvariant();
     if (here.Length == 0) { here = "/"; }
     Func<string, bool> isCurrent = href => href == "/" ? here == "/" : (here + "/").StartsWith(href + "/");
@@ -10,25 +11,12 @@
     var primaryLinks = new[]
     {
         new { Href = "/", Label = "Home" },
-        new { Href = "/media", Label = "Media" },
-        new { Href = "/programmes", Label = "Programmes" },
+        new { Href = "/media", Label = "Shows" },
+        new { Href = "/programmes", Label = "Episodes" },
         new { Href = "/events", Label = "Schedule" },
-        new { Href = "/media", Label = "Topics" },
         new { Href = "/humanity", Label = "Live" },
         new { Href = "/about", Label = "About" },
         new { Href = "/contact", Label = "Contact" }
-    };
-
-    var subLinks = new[]
-    {
-        new { Href = "/", Label = "Featured" },
-        new { Href = "/media", Label = "History" },
-        new { Href = "/media", Label = "Global News" },
-        new { Href = "/programmes", Label = "Culture" },
-        new { Href = "/impact", Label = "Climate" },
-        new { Href = "/humanity", Label = "Community" },
-        new { Href = "/events", Label = "Events" },
-        new { Href = "/partner", Label = "Partner with us" }
     };
 }
 
@@ -87,7 +75,7 @@
 
                 @if (isAuthed)
                 {
-                    <div class="group/account relative">
+                    <div class="group/account relative ed-util__account">
                         <button type="button" class="ed-btn" aria-label="Account">
                             @(userName.Length >= 1 ? userName[..1].ToUpperInvariant() : "A")
                         </button>
@@ -110,6 +98,9 @@
                     <a href="/auth/register" class="ed-util__cta ed-btn">Register</a>
                     <a href="/auth/login" class="ed-text-btn">Sign in</a>
                 }
+                <a href="@profileHref" class="ed-icon-btn ed-util__profile" aria-label="@(isAuthed ? "Account" : "Sign in")">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                </a>
             </div>
         </div>
     </div>
@@ -124,17 +115,7 @@
         </div>
     </nav>
 
-    @* ---------- Sub navigation ---------- *@
-    <nav class="ed-subnav" aria-label="Sections">
-        <div class="ed-shell ed-subnav__inner">
-            @foreach (var link in subLinks)
-            {
-                <a href="@link.Href" class="ed-subnav__link @(isCurrent(link.Href) ? "is-active" : "")">@link.Label</a>
-            }
-        </div>
-    </nav>
-
-    @* ---------- Mobile navigation ---------- *@
+    @* ---------- Single navigation drawer for small screens ---------- *@
     <div class="ed-mobile-nav" id="ed-mobile-nav" data-nav>
         <nav class="ed-mobile-nav__inner" aria-label="Mobile navigation">
             @foreach (var link in primaryLinks)
@@ -170,28 +151,28 @@
             }
             toggle.addEventListener('click', function () { setOpen(!sheet.classList.contains('is-open')); });
             sheet.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
-            window.addEventListener('resize', function () { if (window.innerWidth >= 1024) setOpen(false); });
+            window.addEventListener('resize', function () { if (window.innerWidth >= 768) setOpen(false); });
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && sheet.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
             });
         }
 
-        var region = document.querySelector('[data-region]');
-        var regionToggle = document.querySelector('[data-region-toggle]');
-        var regionPanel = document.querySelector('[data-region-panel]');
-        if (region && regionToggle && regionPanel) {
+        document.querySelectorAll('[data-region]').forEach(function (region) {
+            var regionToggle = region.querySelector('[data-region-toggle]');
+            var regionPanel = region.querySelector('[data-region-panel]');
+            if (!regionToggle || !regionPanel) return;
             var code = region.querySelector('[data-region-code]');
             var saved = localStorage.getItem('sts_currency');
             if (code && saved) code.textContent = saved;
-            function setRegion(open) {
+            var setRegion = function (open) {
                 regionPanel.classList.toggle('is-open', open);
                 regionToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-            }
+            };
             regionToggle.addEventListener('click', function () { setRegion(!regionPanel.classList.contains('is-open')); });
             document.addEventListener('click', function (e) { if (!region.contains(e.target)) setRegion(false); });
             document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setRegion(false); });
             var sel = regionPanel.querySelector('[data-currency] select');
             if (sel && saved) sel.value = saved;
-        }
+        });
     })();
 </script>

@@ -16,7 +16,7 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    Console.WriteLine($"Star Talk Sessions running on 0.0.0.0:{portNumber}");
+    Console.WriteLine($"StarTalk running on 0.0.0.0:{portNumber}");
     options.Listen(System.Net.IPAddress.Any, portNumber);
 });
 
@@ -55,6 +55,7 @@ builder.Services.AddTransient<ServiceDatabaseAccess>();
 builder.Services.AddTransient<InquiryDatabaseAccess>();
 builder.Services.AddTransient<NewsletterDatabaseAccess>();
 builder.Services.AddTransient<BannerAdDatabaseAccess>();
+builder.Services.AddTransient<HomeContentDatabaseAccess>();
 builder.Services.AddTransient<SupportTicketDatabaseAccess>();
 
 builder.Services.AddHttpClient();
@@ -93,6 +94,7 @@ app.MapControllerRoute(
 );
 
 await SeedDatabaseAsync(app.Services);
+await SeedHomeContentAsync(app.Services);
 
 app.Run();
 
@@ -117,17 +119,17 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         return;
     }
 
-    logger.LogInformation("Seeding Star Talk Sessions catalog...");
+    logger.LogInformation("Seeding StarTalk catalogue...");
 
     var categories = new List<Category>
     {
         new() { Name = "Podcast", Slug = "podcast", Description = "Long-form conversations with people shaping the future.", ImageUrl = "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=1600&auto=format&fit=crop", SortOrder = 1 },
         new() { Name = "Radio", Slug = "radio", Description = "A live pulse of ideas, music and community.", ImageUrl = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=1600&auto=format&fit=crop", SortOrder = 2 },
         new() { Name = "Television", Slug = "television", Description = "Visual stories built for the big screen and the small one.", ImageUrl = "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=1600&auto=format&fit=crop", SortOrder = 3 },
-        new() { Name = "News", Slug = "news", Description = "Clear reporting and context for a changing world.", ImageUrl = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1600&auto=format&fit=crop", SortOrder = 4 },
+        new() { Name = "Interviews", Slug = "interviews", Description = "Long conversations with people worth listening to.", ImageUrl = "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=1600&auto=format&fit=crop", SortOrder = 4 },
         new() { Name = "Videos", Slug = "videos", Description = "Short films, field reports and stories from the community.", ImageUrl = "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1600&auto=format&fit=crop", SortOrder = 5 },
         new() { Name = "Live Broadcast", Slug = "live-broadcast", Description = "Meet the moment through live conversations and events.", ImageUrl = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1600&auto=format&fit=crop", SortOrder = 6 },
-        new() { Name = "Star Talk Store", Slug = "star-talk-store", Description = "Limited shirts, caps, books and future brand collaborations.", ImageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1600&auto=format&fit=crop", SortOrder = 7 },
+        new() { Name = "Merch", Slug = "merch", Description = "Shirts, caps and books from the studio.", ImageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1600&auto=format&fit=crop", SortOrder = 7 },
         new() { Name = "Community", Slug = "community", Description = "Education, skills, healthcare and community outreach.", ImageUrl = "https://images.unsplash.com/photo-1504159506876-f8338247a14a?q=80&w=1600&auto=format&fit=crop", SortOrder = 8 }
     };
     foreach (var c in categories) await categoryDb.InsertAsync(c, ctl);
@@ -506,7 +508,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
     var testimonials = new List<Testimonial>
     {
         new() { Name = "Alina V.", Role = "Homeowner", Location = "Vienna, AT", Rating = 5, Tag = "Custom Commission", Content = "The hand-built dining table is the most beautiful object in our home. The joinery is flawless and the oil finish smells incredible. Worth every week of the wait.", CreatedAt = DateTime.Now.AddDays(-20) },
-        new() { Name = "Marcus T.", Role = "Interior Designer", Location = "London, UK", Rating = 5, Tag = "Trade Partner", Content = "I've specified Star Talk Sessions across three hotel projects now. Their tolerance, finish control and delivery communication are the best I've encountered in a decade of trade work.", CreatedAt = DateTime.Now.AddDays(-45) },
+        new() { Name = "Marcus T.", Role = "Interior Designer", Location = "London, UK", Rating = 5, Tag = "Trade Partner", Content = "I've specified StarTalk across three hotel projects now. Their tolerance, finish control and delivery communication are the best I've encountered in a decade of trade work.", CreatedAt = DateTime.Now.AddDays(-45) },
         new() { Name = "Sofia R.", Role = "Creative Director", Location = "Dubai, AE", Rating = 4, Tag = "Office Refit", Content = "They kitted our entire studio in cohesive walnut and steel. The integrated cable management actually works — no cable dystopia. Our clients comment on the space constantly.", CreatedAt = DateTime.Now.AddDays(-60) },
         new() { Name = "Adaeze O.", Role = "Homeowner", Location = "Abuja, NG", Rating = 5, Tag = "Custom Commission", Content = "The dining table is the centre of our home. Solid iroko, finished by hand, and it has not moved a millimetre through two rainy seasons.", CreatedAt = DateTime.Now.AddDays(-15) },
         new() { Name = "Daniel & Ewa K.", Role = "Homeowners", Location = "Lagos, NG", Rating = 5, Tag = "White-Glove Delivery", Content = "Two couches, a console and a king bed delivered, assembled and the packaging removed — all by the same two polite technicians. Seamless.", CreatedAt = DateTime.Now.AddDays(-90) }
@@ -517,7 +519,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
     {
         new()
         {
-            Title = "Custom Star Talk Sessions Manufacturing", Slug = "custom-manufacturing", Icon = "hammer", Eyebrow = "Atelier",
+            Title = "Custom StarTalk Manufacturing", Slug = "custom-manufacturing", Icon = "hammer", Eyebrow = "Atelier",
             Description = "From a single bespoke statement piece to a serialized media program, our joiners craft contract-grade media to blueprints or a hand sketch.",
             Features = new List<string> { "Single pieces to bulk production", "Any wood species, fabric or finish", "CAD-to-shipping project management", "±1mm joinery tolerance" },
             SortOrder = 1
@@ -557,7 +559,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
     {
         new()
         {
-            Title = "How to Choose a Sofa That Actually Lasts", Slug = "choose-a-sofa-that-lasts", Tag = "Buying Guide", Author = "Star Talk Sessions Studio",
+            Title = "How to Choose a Sofa That Actually Lasts", Slug = "choose-a-sofa-that-lasts", Tag = "Buying Guide", Author = "StarTalk Studio",
             ReadTime = "6 min read", CoverImage = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1600&auto=format&fit=crop",
             Excerpt = "Frame construction, cushion density and fabric rub-count — the three numbers that separate a ten-year sofa from a two-year sofa.",
             Content = "A great sofa is 85% unseen. The kiln-dried hardwood frame, the webbing tension, the cushion fill blend and the fabric's Martindale rub count do the heavy lifting long after the studio lighting fades.\n\nLook first at the frame: hard maple or kiln-dried hardwood with dowelled and corner-blocked joinery. Avoid particleboard and plastics at the load points.\n\nCushion fill matters more than you think. A high-resilience foam core wrapped in down gives support and softness; full-down seats look luxurious but sag within two seasons.\n\nFinally, flip the fabric label. Interiors-grade fabrics should exceed 30,000 rubs (Martindale). Bouclé, performance velvets and crypton-treated wools all clear the bar while staying impossible to stain.\n\nOur advice: buy the construction, not the leather sales pitch. The frame outlasts the upholstery by decades, and re-upholstery is always cheaper than replacement.",
@@ -565,7 +567,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Title = "The Quiet Luxury Trend Is a Return to Craft", Slug = "quiet-luxury-craft", Tag = "Trends", Author = "Star Talk Sessions Studio",
+            Title = "The Quiet Luxury Trend Is a Return to Craft", Slug = "quiet-luxury-craft", Tag = "Trends", Author = "StarTalk Studio",
             ReadTime = "4 min read", CoverImage = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1600&auto=format&fit=crop",
             Excerpt = "Why the loudest interiors in the world are now the quietest — and why that's better for your media's longevity.",
             Content = "Quiet luxury is the aesthetic of subtraction: fewer pieces, better materials, visible craftsmanship and zero logos. For media, this means solid wood instead of veneers, hand-stitched upholstery instead of bonded leather, and joinery that asks to be touched.\n\nIt is also a sustainability play. A single smoked-oak table that lasts fifty years beats three particleboard tables that last five. Invest in fewer, better objects — then let them age.\n\nThis season's tilt continues toward warm neutrals, sculptural silhouettes and timeless finishes that ignore trend cycles entirely.",
@@ -573,7 +575,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Title = "Caring for Solid Wood: A Field Guide", Slug = "caring-for-solid-wood", Tag = "Care Guides", Author = "Star Talk Sessions Studio",
+            Title = "Caring for Solid Wood: A Field Guide", Slug = "caring-for-solid-wood", Tag = "Care Guides", Author = "StarTalk Studio",
             ReadTime = "5 min read", CoverImage = "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=1600&auto=format&fit=crop",
             Excerpt = "Dust, humidity and sunlight are the three enemies of a hardwood table. Here is exactly what to do — and what never to do.",
             Content = "Solid wood breathes. It expands and contracts with humidity, which is why we build floating joinery into our tabletops. Your job is to keep humidity between 40–55% and to avoid extreme swings.\n\nClean with a barely damp microfiber cloth — never soaking wet, never detergents. For oiled finishes, re-apply a food-safe oil every six to twelve months. For lacquers, simply dust.\n\nUse coasters and trivets; hot dishes can cloud any finish. And keep tables out of direct, prolonged sunlight, which fades and greys wood unevenly.\n\nIf a scratch appears, embrace it — or spend ten minutes with fine-grit paper and a matching stain. Oiled wood is endlessly renewable.",
@@ -584,7 +586,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
 
     var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL") ?? "info@solutionconcept.org";
     var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? "StarTalk@123456";
-    var adminName = Environment.GetEnvironmentVariable("ADMIN_NAME") ?? "Star Talk Sessions";
+    var adminName = Environment.GetEnvironmentVariable("ADMIN_NAME") ?? "StarTalk";
     var existingAdmin = await userDb.QueryOneAsync(u => u.Email == adminEmail && u.IsAdmin, ctl);
     if (existingAdmin == null)
     {
@@ -603,5 +605,38 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         logger.LogInformation("Default admin seeded: {Email}", adminEmail);
     }
 
-    logger.LogInformation("Star Talk Sessions seed complete: {ProductCount} products, {ProjectCount} projects.", products.Count, projects.Count);
+    logger.LogInformation("StarTalk seed complete: {ProductCount} products, {ProjectCount} projects.", products.Count, projects.Count);
+}
+
+async Task SeedHomeContentAsync(IServiceProvider services)
+{
+    using var scope = services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var db = scope.ServiceProvider.GetRequiredService<HomeContentDatabaseAccess>();
+    var ctl = CancellationToken.None;
+
+    if ((await db.QueryManyAsync(x => true, ctl)).Count > 0) return;
+
+    var items = new List<HomeContent>
+    {
+        new() { Section = "hero", Kicker = "The Long View · New episode", Title = "What happens when a city never sleeps?", Summary = "A conversation with the people who keep the night alive — the workers, artists and makers behind the hours most of us never see.", Duration = "33 mins", ImageUrl = "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 1 },
+        new() { Section = "spotlight", Kicker = "StarTalk Live · Tonight", Title = "The room is open: an hour with the people in it", Summary = "Join the conversation as it happens. Send a question, hear the answer, and stay for the discussion that follows.", Duration = "Live · 60 mins", ImageUrl = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop", TargetUrl = "/events", SortOrder = 1 },
+        new() { Section = "recommended", Kicker = "The Long View", Title = "Who gets to tell the story of a city?", Duration = "33 mins", ImageUrl = "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 1 },
+        new() { Section = "recommended", Kicker = "The Listening Room", Title = "What we lose when we stop listening", Duration = "27 mins", ImageUrl = "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 2 },
+        new() { Section = "recommended", Kicker = "Field Notes", Title = "On the road with the people who build our roads", Duration = "41 mins", ImageUrl = "https://images.unsplash.com/photo-1500534623283-312aade485b7?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 3 },
+        new() { Section = "recommended", Kicker = "The Room", Title = "A conversation with the next generation", Duration = "24 mins", ImageUrl = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 4 },
+        new() { Section = "recommended", Kicker = "Culture Desk", Title = "The sound of a new African city", Duration = "38 mins", ImageUrl = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 5 },
+        new() { Section = "recommended", Kicker = "The Climate File", Title = "What the rain is telling us", Duration = "29 mins", ImageUrl = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 6 },
+        new() { Section = "archive", Kicker = "History", Title = "The stories the maps left out", Duration = "46 mins", ImageUrl = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 1 },
+        new() { Section = "archive", Kicker = "The Long View", Title = "Letters from the independence years", Duration = "32 mins", ImageUrl = "https://images.unsplash.com/photo-1490604001847-b712b0c2f967?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 2 },
+        new() { Section = "archive", Kicker = "Humanity", Title = "The teachers who stayed", Duration = "28 mins", ImageUrl = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 3 },
+        new() { Section = "archive", Kicker = "Impact", Title = "After the cameras leave", Duration = "35 mins", ImageUrl = "https://images.unsplash.com/photo-1504159506876-f8338247a14a?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 4 },
+        new() { Section = "archive", Kicker = "Culture Desk", Title = "How a song becomes an anthem", Duration = "31 mins", ImageUrl = "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 5 },
+        new() { Section = "archive", Kicker = "Studio Sessions", Title = "Inside the cutting room", Duration = "22 mins", ImageUrl = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 6 },
+        new() { Section = "channel", Badge = "CV", Tone = "conversation", Title = "The Conversation", Summary = "Long-form talks with the people shaping culture, ideas and everyday life.", Schedule = "Weekdays · 18:00", TargetUrl = "/media", SortOrder = 1 },
+        new() { Section = "channel", Badge = "LV", Tone = "live", Title = "StarTalk Live", Summary = "Unscripted conversations with the audience in the room and online.", Schedule = "Fridays · 20:00", TargetUrl = "/events", SortOrder = 2 }
+    };
+
+    foreach (var item in items) await db.InsertAsync(item, ctl);
+    logger.LogInformation("Homepage content seeded: {Count} items.", items.Count);
 }

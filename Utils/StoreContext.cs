@@ -7,8 +7,8 @@ namespace StarTalkSessions.Utils
         public static string Name =>
             Environment.GetEnvironmentVariable("STORE_NAME") ?? "Star Talk Sessions";
 
-        public static string Tagline =>
-            Environment.GetEnvironmentVariable("STORE_TAGLINE") ?? "Stories that move people forward.";
+    public static string Tagline =>
+        Environment.GetEnvironmentVariable("STORE_TAGLINE") ?? "Conversations worth staying for.";
 
         /// <summary>Canonical public site URL, no trailing slash. Used in emails and share links.</summary>
         public static string SiteUrl =>

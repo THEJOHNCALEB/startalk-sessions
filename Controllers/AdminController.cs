@@ -18,6 +18,7 @@ namespace StarTalkSessions.Controllers
         private readonly NewsletterDatabaseAccess _newsDb;
         private readonly ProductDatabaseAccess _productDb;
         private readonly BannerAdDatabaseAccess _adsDb;
+        private readonly HomeContentDatabaseAccess _homeDb;
         private readonly SupportTicketDatabaseAccess _supportDb;
         private readonly AiSupportService _ai;
         private readonly NotificationService _notifications;
@@ -27,7 +28,7 @@ namespace StarTalkSessions.Controllers
             BlogDatabaseAccess blogDb, InquiryDatabaseAccess inquiryDb,
             CustomQuoteDatabaseAccess quoteDb, NewsletterDatabaseAccess newsDb,
             ProductDatabaseAccess productDb, BannerAdDatabaseAccess adsDb,
-            SupportTicketDatabaseAccess supportDb, AiSupportService ai,
+            HomeContentDatabaseAccess homeDb, SupportTicketDatabaseAccess supportDb, AiSupportService ai,
             NotificationService notifications, IWebHostEnvironment env)
         {
             _orderDb = orderDb;
@@ -38,6 +39,7 @@ namespace StarTalkSessions.Controllers
             _newsDb = newsDb;
             _productDb = productDb;
             _adsDb = adsDb;
+            _homeDb = homeDb;
             _supportDb = supportDb;
             _ai = ai;
             _notifications = notifications;
@@ -476,6 +478,88 @@ namespace StarTalkSessions.Controllers
             }
             TempData["AdminSuccess"] = "Banner ad deleted.";
             return RedirectToAction(nameof(Advertisements));
+        }
+
+        // ---------- Homepage content ----------
+        [HttpGet]
+        public async Task<IActionResult> HomeContent(Guid? edit, CancellationToken ctl)
+        {
+            this.SetStore();
+            var all = (await _homeDb.QueryManyAsync(x => true, ctl))
+                .OrderBy(x => x.Section)
+                .ThenBy(x => x.SortOrder)
+                .ThenBy(x => x.Title)
+                .ToList();
+            ViewBag.Content = all;
+            ViewBag.Editing = edit.HasValue ? all.FirstOrDefault(x => x.Id == edit.Value) : null;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HomeContentSave(Guid? id, string section, string kicker, string title,
+            string summary, string duration, string badge, string tone, string schedule, string imageUrl,
+            string targetUrl, int sortOrder, IFormFile image, CancellationToken ctl)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                TempData["AdminError"] = "Title is required.";
+                return RedirectToAction(nameof(HomeContent));
+            }
+
+            var sections = new[] { "hero", "spotlight", "recommended", "archive", "channel" };
+            var normalized = sections.Contains(section?.ToLowerInvariant() ?? "") ? section.ToLowerInvariant() : "recommended";
+
+            var savedImage = (imageUrl ?? "").Trim();
+            if (image != null && image.Length > 0)
+            {
+                savedImage = MediaStore.Save(image, _env) ?? "";
+                if (string.IsNullOrWhiteSpace(savedImage))
+                {
+                    TempData["AdminError"] = "Unsupported image type.";
+                    return RedirectToAction(nameof(HomeContent));
+                }
+            }
+
+            var item = id.HasValue ? await _homeDb.QueryOneAsync(x => x.Id == id.Value, ctl) : null;
+            var creating = item == null;
+            item ??= new HomeContent();
+            item.Section = normalized;
+            item.Kicker = (kicker ?? "").Trim();
+            item.Title = title.Trim();
+            item.Summary = (summary ?? "").Trim();
+            item.Duration = (duration ?? "").Trim();
+            item.Badge = (badge ?? "").Trim();
+            item.Tone = (tone ?? "live").Trim();
+            item.Schedule = (schedule ?? "").Trim();
+            item.ImageUrl = savedImage;
+            item.TargetUrl = (targetUrl ?? "/media").Trim();
+            item.SortOrder = sortOrder;
+
+            if (creating) await _homeDb.InsertAsync(item, ctl);
+            else await _homeDb.UpdateAsync(item, ctl);
+
+            TempData["AdminSuccess"] = creating ? "Homepage item created." : "Homepage item updated.";
+            return RedirectToAction(nameof(HomeContent));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HomeContentToggle(Guid id, CancellationToken ctl)
+        {
+            var item = await _homeDb.QueryOneAsync(x => x.Id == id, ctl);
+            if (item != null)
+            {
+                item.IsActive = !item.IsActive;
+                await _homeDb.UpdateAsync(item, ctl);
+            }
+            return RedirectToAction(nameof(HomeContent));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HomeContentDelete(Guid id, CancellationToken ctl)
+        {
+            await _homeDb.DeleteAsync(id, ctl);
+            TempData["AdminSuccess"] = "Homepage item deleted.";
+            return RedirectToAction(nameof(HomeContent));
         }
     }
 }

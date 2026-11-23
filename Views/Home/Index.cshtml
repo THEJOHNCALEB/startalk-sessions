@@ -1,236 +1,238 @@
+@using StarTalkSessions.Models
 @{
-    ViewData["Title"] = "Star Talk Sessions";
-    ViewBag.PageTitle = "Star Talk Sessions";
-    ViewBag.PageSubtitle = "Stories that move people forward.";
+    ViewData["Title"] = "Shows and episodes";
 
-    var categories = (List<StarTalkSessions.Models.Category>)ViewBag.Categories ?? new();
+    var categories = (List<Category>)ViewBag.Categories ?? new();
+    var content = ViewBag.HomeContent as Dictionary<string, List<HomeContent>> ?? new();
+    Func<string, List<HomeContent>> section = key => content.TryGetValue(key, out var list) ? list : new();
 
-    var recommended = new[]
-    {
-        new { Slug = "the-long-view-01", Series = "The Long View", Title = "The city after dark: who owns the night?", Duration = "33 mins", Image = "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "global-news-02", Series = "Global News", Title = "Election night, three continents, one feed", Duration = "27 mins", Image = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "field-notes-03", Series = "Field Notes", Title = "Reporting from the edge of the floodplain", Duration = "41 mins", Image = "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "the-room-04", Series = "The Room", Title = "A conversation with the next generation", Duration = "24 mins", Image = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "culture-desk-05", Series = "Culture Desk", Title = "The sound of a new African city", Duration = "38 mins", Image = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "climate-file-06", Series = "The Climate File", Title = "What the rain is telling us", Duration = "29 mins", Image = "https://images.unsplash.com/photo-1500534623283-312aade485b7?q=80&w=800&auto=format&fit=crop" }
-    };
+    var hero = section("hero").FirstOrDefault();
+    var spotlight = section("spotlight").FirstOrDefault();
+    var recommended = section("recommended");
+    var archive = section("archive");
+    var channels = section("channel");
 
-    var archive = new[]
-    {
-        new { Slug = "history-01", Series = "History", Title = "The stories the maps left out", Duration = "46 mins", Image = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "history-02", Series = "History", Title = "Letters from the independence years", Duration = "32 mins", Image = "https://images.unsplash.com/photo-1490604001847-b712b0c2f967?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "humanity-03", Series = "Humanity", Title = "The teachers who stayed", Duration = "28 mins", Image = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "impact-04", Series = "Impact", Title = "After the cameras leave", Duration = "35 mins", Image = "https://images.unsplash.com/photo-1504159506876-f8338247a14a?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "culture-05", Series = "Culture", Title = "How a song becomes an anthem", Duration = "31 mins", Image = "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop" },
-        new { Slug = "studio-06", Series = "Studio Sessions", Title = "Inside the cutting room", Duration = "22 mins", Image = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop" }
-    };
-
-    var channels = new[]
-    {
-        new { Badge = "GN", Title = "Global News", Description = "The day's reporting, context and analysis.", Schedule = "Weekdays · 06:00", Href = "/media" },
-        new { Badge = "SL", Title = "StarTalk Live", Description = "Conversations as they happen, in the room.", Schedule = "Daily · 18:00", Href = "/events" },
-        new { Badge = "CW", Title = "Culture Weekly", Description = "Music, film and the ideas shaping culture.", Schedule = "Fridays · 20:00", Href = "/programmes" },
-        new { Badge = "HF", Title = "Humanity FM", Description = "Stories of people building something better.", Schedule = "Sundays · 10:00", Href = "/humanity" }
-    };
+    Func<string, string> image = url => string.IsNullOrWhiteSpace(url) ? "/images/logo.png" : url;
 }
 
-@* ---------- Full-bleed featured hero ---------- *@
-<section class="ed-spotlight">
-    <svg class="ed-spotlight__wave" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 160 Q 15 100 30 160 T 60 160 T 90 160 T 120 160 T 150 160 T 180 160 T 210 160 T 240 160 T 270 160 T 300 160 T 330 160 T 360 160 T 390 160 T 420 160 T 450 160 T 480 160 T 510 160 T 540 160 T 570 160 T 600 160 T 630 160 T 660 160 T 690 160 T 720 160 T 750 160 T 780 160 T 810 160 T 840 160 T 870 160 T 900 160 T 930 160 T 960 160 T 990 160 T 1020 160 T 1050 160 T 1080 160 T 1110 160 T 1140 160 T 1170 160 T 1200 160 T 1230 160 T 1260 160 T 1290 160 T 1320 160 T 1350 160 T 1380 160 T 1410 160 T 1440 160"
-              fill="none" stroke="#FFFFFF" stroke-width="1" />
-        <path d="M0 160 Q 24 60 48 160 T 96 160 T 144 160 T 192 160 T 240 160 T 288 160 T 336 160 T 384 160 T 432 160 T 480 160 T 528 160 T 576 160 T 624 160 T 672 160 T 720 160 T 768 160 T 816 160 T 864 160 T 912 160 T 960 160 T 1008 160 T 1056 160 T 1104 160 T 1152 160 T 1200 160 T 1248 160 T 1296 160 T 1344 160 T 1392 160 T 1440 160"
-              fill="none" stroke="#FFFFFF" stroke-width=".5" opacity=".7" />
-    </svg>
+@* ---------- Featured hero ---------- *@
+@if (hero != null)
+{
+    <section class="ed-spotlight">
+        <svg class="ed-spotlight__wave" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 160 Q 15 100 30 160 T 60 160 T 90 160 T 120 160 T 150 160 T 180 160 T 210 160 T 240 160 T 270 160 T 300 160 T 330 160 T 360 160 T 390 160 T 420 160 T 450 160 T 480 160 T 510 160 T 540 160 T 570 160 T 600 160 T 630 160 T 660 160 T 690 160 T 720 160 T 750 160 T 780 160 T 810 160 T 840 160 T 870 160 T 900 160 T 930 160 T 960 160 T 990 160 T 1020 160 T 1050 160 T 1080 160 T 1110 160 T 1140 160 T 1170 160 T 1200 160 T 1230 160 T 1260 160 T 1290 160 T 1320 160 T 1350 160 T 1380 160 T 1410 160 T 1440 160"
+                  fill="none" stroke="#FFFFFF" stroke-width="1" />
+            <path d="M0 160 Q 24 60 48 160 T 96 160 T 144 160 T 192 160 T 240 160 T 288 160 T 336 160 T 384 160 T 432 160 T 480 160 T 528 160 T 576 160 T 624 160 T 672 160 T 720 160 T 768 160 T 816 160 T 864 160 T 912 160 T 960 160 T 1008 160 T 1056 160 T 1104 160 T 1152 160 T 1200 160 T 1248 160 T 1296 160 T 1344 160 T 1392 160 T 1440 160"
+                  fill="none" stroke="#FFFFFF" stroke-width=".5" opacity=".7" />
+        </svg>
 
-    <div class="ed-shell ed-spotlight__inner">
-        <div>
-            <p class="ed-spotlight__kicker">Global News · Latest episode</p>
-            <h2 class="ed-spotlight__title">Election night, three continents, one feed</h2>
-            <p class="ed-spotlight__desc">Our correspondents report live as results arrive from three capitals — and explain what the numbers actually mean for the people who voted.</p>
-            <div class="ed-spotlight__actions">
-                <button type="button" class="ed-audio-play" data-play aria-label="Play episode" aria-pressed="false">
-                    <svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" /></svg>
-                </button>
-                <span class="ed-spotlight__duration">33 mins</span>
-                <button type="button" class="ed-save" data-wishlist-toggle="featured-global-news" aria-pressed="false">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg>
-                    <span class="ed-save__label--save">Save</span>
-                    <span class="ed-save__label--saved">Saved</span>
-                </button>
+        <div class="ed-shell ed-spotlight__inner">
+            <a class="ed-spotlight__art" href="@hero.TargetUrl" aria-label="@hero.Title">
+                <img src="@image(hero.ImageUrl)" alt="@hero.Title" fetchpriority="high" />
+                <span class="ed-spotlight__art-badge" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M4 14v-4m4 8V6m4 12V9m4 5v-8m4 8V4" /></svg>
+                </span>
+            </a>
+
+            <svg class="ed-spotlight__wave-mobile" viewBox="0 0 300 136" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 68L15 60L30 50L45 58L60 44L75 54L90 40L105 60L120 52L135 64L150 68L165 64L180 52L195 60L210 40L225 54L240 44L255 58L270 50L285 60L300 68" fill="none" stroke="#FFFFFF" stroke-width="1.2" />
+            </svg>
+
+            <div class="ed-spotlight__copy">
+                <p class="ed-spotlight__kicker">@hero.Kicker</p>
+                <h2 class="ed-spotlight__title">@hero.Title</h2>
+                <p class="ed-spotlight__desc">@hero.Summary</p>
+                <div class="ed-spotlight__actions">
+                    <a class="ed-audio-play" href="@hero.TargetUrl" aria-label="Play episode">
+                        <svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" /></svg>
+                    </a>
+                    <span class="ed-spotlight__duration">@hero.Duration</span>
+                    <button type="button" class="ed-save" data-wishlist-toggle="@hero.Id" aria-pressed="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg>
+                        <span class="ed-save__label--save">Save</span>
+                        <span class="ed-save__label--saved">Saved</span>
+                    </button>
+                </div>
             </div>
         </div>
+    </section>
+}
 
-        <div class="ed-spotlight__art">
-            <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop" alt="Newsroom broadcast desk" fetchpriority="high" />
-            <span class="ed-spotlight__art-badge" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M4 14v-4m4 8V6m4 12V9m4 5v-8m4 8V4" /></svg>
-            </span>
-        </div>
-    </div>
-</section>
+@* ---------- Recommended episodes ---------- *@
+@if (recommended.Count > 0)
+{
+    <section class="ed-section">
+        <div class="ed-shell">
+            <div class="ed-section__head">
+                <h2 class="ed-section__title"><a href="/media">Recommended today <span class="ed-section__chevron">&gt;</span></a></h2>
+                <div class="ed-carousel-nav" data-carousel-nav>
+                    <button type="button" class="ed-carousel-btn" data-carousel-prev aria-label="Previous episodes">
+                        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg>
+                    </button>
+                    <button type="button" class="ed-carousel-btn" data-carousel-next aria-label="Next episodes">
+                        <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                </div>
+            </div>
 
-@* ---------- Recommended today ---------- *@
-<section class="ed-section">
-    <div class="ed-shell">
-        <div class="ed-section__head">
-            <h2 class="ed-section__title"><a href="/media">Recommended today <span class="ed-section__chevron">&gt;</span></a></h2>
-            <div class="ed-carousel-nav" data-carousel-nav>
-                <button type="button" class="ed-carousel-btn" data-carousel-prev aria-label="Previous episodes">
-                    <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg>
-                </button>
-                <button type="button" class="ed-carousel-btn" data-carousel-next aria-label="Next episodes">
-                    <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
-                </button>
+            <div class="ed-rail" data-carousel>
+                <div class="ed-rail__track" data-carousel-track>
+                    @foreach (var ep in recommended)
+                    {
+                        <article class="ed-episode">
+                            <a class="ed-episode__thumb" href="@ep.TargetUrl" tabindex="-1" aria-hidden="true">
+                                <img src="@image(ep.ImageUrl)" alt="" loading="lazy" decoding="async" />
+                                <span class="ed-episode__badge"><svg viewBox="0 0 24 24"><path d="M4 14v-4m4 8V6m4 12V9m4 5v-8m4 8V4" /></svg></span>
+                            </a>
+                            <p class="ed-episode__kicker">@ep.Kicker</p>
+                            <h3 class="ed-episode__title"><a href="@ep.TargetUrl">@ep.Title</a></h3>
+                            <div class="ed-episode__meta">
+                                <button type="button" class="ed-save" data-wishlist-toggle="@ep.Id" aria-pressed="false">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg>
+                                    <span class="ed-save__label--save">Save</span>
+                                    <span class="ed-save__label--saved">Saved</span>
+                                </button>
+                                <span>@ep.Duration</span>
+                            </div>
+                        </article>
+                    }
+                </div>
             </div>
         </div>
-
-        <div class="ed-rail" data-carousel>
-            <div class="ed-rail__track" data-carousel-track>
-                @foreach (var ep in recommended)
-                {
-                    <article class="ed-episode">
-                        <a class="ed-episode__thumb" href="/media" tabindex="-1" aria-hidden="true">
-                            <img src="@ep.Image" alt="" loading="lazy" decoding="async" />
-                            <span class="ed-episode__badge"><svg viewBox="0 0 24 24"><path d="M4 14v-4m4 8V6m4 12V9m4 5v-8m4 8V4" /></svg></span>
-                        </a>
-                        <p class="ed-episode__kicker">@ep.Series</p>
-                        <h3 class="ed-episode__title"><a href="/media">@ep.Title</a></h3>
-                        <div class="ed-episode__meta">
-                            <button type="button" class="ed-save" data-wishlist-toggle="@ep.Slug" aria-pressed="false">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg>
-                                <span class="ed-save__label--save">Save</span>
-                                <span class="ed-save__label--saved">Saved</span>
-                            </button>
-                            <span>@ep.Duration</span>
-                        </div>
-                    </article>
-                }
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
+}
 
 @* ---------- Mid-page spotlight ---------- *@
-<section class="ed-spotlight" style="margin-top:32px">
-    <svg class="ed-spotlight__wave" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 160 Q 18 92 36 160 T 72 160 T 108 160 T 144 160 T 180 160 T 216 160 T 252 160 T 288 160 T 324 160 T 360 160 T 396 160 T 432 160 T 468 160 T 504 160 T 540 160 T 576 160 T 612 160 T 648 160 T 684 160 T 720 160 T 756 160 T 792 160 T 828 160 T 864 160 T 900 160 T 936 160 T 972 160 T 1008 160 T 1044 160 T 1080 160 T 1116 160 T 1152 160 T 1188 160 T 1224 160 T 1260 160 T 1296 160 T 1332 160 T 1368 160 T 1404 160 T 1440 160"
-              fill="none" stroke="#FFFFFF" stroke-width="1" />
-    </svg>
+@if (spotlight != null)
+{
+    <section class="ed-spotlight ed-spotlight--mid">
+        <svg class="ed-spotlight__wave" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 160 Q 18 92 36 160 T 72 160 T 108 160 T 144 160 T 180 160 T 216 160 T 252 160 T 288 160 T 324 160 T 360 160 T 396 160 T 432 160 T 468 160 T 504 160 T 540 160 T 576 160 T 612 160 T 648 160 T 684 160 T 720 160 T 756 160 T 792 160 T 828 160 T 864 160 T 900 160 T 936 160 T 972 160 T 1008 160 T 1044 160 T 1080 160 T 1116 160 T 1152 160 T 1188 160 T 1224 160 T 1260 160 T 1296 160 T 1332 160 T 1368 160 T 1404 160 T 1440 160"
+                  fill="none" stroke="#FFFFFF" stroke-width="1" />
+        </svg>
 
-    <div class="ed-shell ed-spotlight__inner">
-        <div>
-            <p class="ed-spotlight__kicker"><span class="ed-live-badge">Live channel</span> &nbsp; StarTalk Live</p>
-            <h2 class="ed-spotlight__title">The room is open: a live hour with the people making the news</h2>
-            <p class="ed-spotlight__desc">Listeners join the conversation in real time. Send a question, hear the answer, and stay for the analysis that follows.</p>
-            <div class="ed-spotlight__actions">
-                <button type="button" class="ed-audio-play" data-play aria-label="Play live channel" aria-pressed="false">
-                    <svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" /></svg>
-                </button>
-                <span class="ed-spotlight__duration">Live · 60 mins</span>
-                <a href="/events" class="ed-text-btn" style="color:#FFFFFF">See the schedule &gt;</a>
+        <div class="ed-shell ed-spotlight__inner">
+            <a class="ed-spotlight__art" href="@spotlight.TargetUrl" aria-label="@spotlight.Title">
+                <img src="@image(spotlight.ImageUrl)" alt="@spotlight.Title" loading="lazy" />
+                <span class="ed-spotlight__art-badge" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M4 14v-4m4 8V6m4 12V9m4 5v-8m4 8V4" /></svg>
+                </span>
+            </a>
+
+            <svg class="ed-spotlight__wave-mobile" viewBox="0 0 300 136" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 68L15 60L30 50L45 58L60 44L75 54L90 40L105 60L120 52L135 64L150 68L165 64L180 52L195 60L210 40L225 54L240 44L255 58L270 50L285 60L300 68" fill="none" stroke="#FFFFFF" stroke-width="1.2" />
+            </svg>
+
+            <div class="ed-spotlight__copy">
+                <p class="ed-spotlight__kicker">@spotlight.Kicker</p>
+                <h2 class="ed-spotlight__title">@spotlight.Title</h2>
+                <p class="ed-spotlight__desc">@spotlight.Summary</p>
+                <div class="ed-spotlight__actions">
+                    <a class="ed-audio-play" href="@spotlight.TargetUrl" aria-label="Play live show">
+                        <svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" /></svg>
+                    </a>
+                    <span class="ed-spotlight__duration">@spotlight.Duration</span>
+                    <a href="@spotlight.TargetUrl" class="ed-text-btn" style="color:#FFFFFF">See the schedule &gt;</a>
+                </div>
             </div>
         </div>
+    </section>
+}
 
-        <div class="ed-spotlight__art">
-            <img src="https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop" alt="Live broadcast studio" />
-            <span class="ed-spotlight__art-badge" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M4 14v-4m4 8V6m4 12V9m4 5v-8m4 8V4" /></svg>
-            </span>
-        </div>
-    </div>
-</section>
-
-@* ---------- Featured channels ---------- *@
-<section class="ed-channels">
-    <div class="ed-shell">
-        <div class="ed-section__head" style="border-top:0">
-            <h2 class="ed-section__title">Featured channels</h2>
-        </div>
-        <div class="ed-channels__grid">
-            @foreach (var channel in channels)
-            {
-                <article class="ed-channel">
-                    <div class="ed-channel__badge" aria-hidden="true">@channel.Badge</div>
-                    <div class="ed-channel__body">
-                        <h3 class="ed-channel__title"><a href="@channel.Href">@channel.Title</a></h3>
-                        <p class="ed-channel__desc">@channel.Description</p>
-                        <a class="ed-channel__schedule" href="@channel.Href">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>
-                            @channel.Schedule
-                        </a>
-                    </div>
-                </article>
-            }
-        </div>
-    </div>
-</section>
-
-@* ---------- History / archive rail ---------- *@
-<section class="ed-section" style="margin-top:32px">
-    <div class="ed-shell">
-        <div class="ed-section__head">
-            <h2 class="ed-section__title"><a href="/programmes">History <span class="ed-section__chevron">&gt;</span></a></h2>
-            <div class="ed-carousel-nav" data-carousel-nav>
-                <button type="button" class="ed-carousel-btn" data-carousel-prev aria-label="Previous episodes">
-                    <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg>
-                </button>
-                <button type="button" class="ed-carousel-btn" data-carousel-next aria-label="Next episodes">
-                    <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
-                </button>
+@* ---------- Featured shows ---------- *@
+@if (channels.Count > 0)
+{
+    <section class="ed-channels">
+        <div class="ed-shell">
+            <div class="ed-section__head" style="border-top:0">
+                <h2 class="ed-section__title">Featured shows</h2>
+                <a href="/media" class="ed-channels__all">All shows &gt;</a>
             </div>
-        </div>
-
-        <div class="ed-rail" data-carousel>
-            <div class="ed-rail__track" data-carousel-track>
-                @foreach (var ep in archive)
+            <div class="ed-channels__grid">
+                @for (var i = 0; i < channels.Count; i++)
                 {
-                    <article class="ed-episode">
-                        <a class="ed-episode__thumb" href="/programmes" tabindex="-1" aria-hidden="true">
-                            <img src="@ep.Image" alt="" loading="lazy" decoding="async" />
-                            <span class="ed-episode__badge"><svg viewBox="0 0 24 24"><path d="M4 14v-4m4 8V6m4 12V9m4 5v-8m4 8V4" /></svg></span>
-                        </a>
-                        <p class="ed-episode__kicker">@ep.Series</p>
-                        <h3 class="ed-episode__title"><a href="/programmes">@ep.Title</a></h3>
-                        <div class="ed-episode__meta">
-                            <button type="button" class="ed-save" data-wishlist-toggle="@ep.Slug" aria-pressed="false">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg>
-                                <span class="ed-save__label--save">Save</span>
-                                <span class="ed-save__label--saved">Saved</span>
-                            </button>
-                            <span>@ep.Duration</span>
+                    var channel = channels[i];
+                    <article class="ed-channel @(i >= 2 ? "ed-channel--extra" : "")">
+                        <div class="ed-channel__badge ed-channel__badge--@(string.IsNullOrWhiteSpace(channel.Tone) ? "default" : channel.Tone)" aria-hidden="true">@channel.Badge</div>
+                        <div class="ed-channel__body">
+                            <h3 class="ed-channel__title"><a href="@channel.TargetUrl">@channel.Title</a></h3>
+                            <p class="ed-channel__desc">@channel.Summary</p>
+                            <a class="ed-channel__schedule" href="@channel.TargetUrl">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>
+                                <span class="ed-channel__when">@channel.Schedule</span>
+                                <span class="ed-channel__label">Schedule</span>
+                            </a>
                         </div>
                     </article>
                 }
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+
+@* ---------- Archive rail ---------- *@
+@if (archive.Count > 0)
+{
+    <section class="ed-section ed-section--spaced">
+        <div class="ed-shell">
+            <div class="ed-section__head">
+                <h2 class="ed-section__title"><a href="/programmes">From the archive <span class="ed-section__chevron">&gt;</span></a></h2>
+                <div class="ed-carousel-nav" data-carousel-nav>
+                    <button type="button" class="ed-carousel-btn" data-carousel-prev aria-label="Previous episodes">
+                        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg>
+                    </button>
+                    <button type="button" class="ed-carousel-btn" data-carousel-next aria-label="Next episodes">
+                        <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ed-rail" data-carousel>
+                <div class="ed-rail__track" data-carousel-track>
+                    @foreach (var ep in archive)
+                    {
+                        <article class="ed-episode">
+                            <a class="ed-episode__thumb" href="@ep.TargetUrl" tabindex="-1" aria-hidden="true">
+                                <img src="@image(ep.ImageUrl)" alt="" loading="lazy" decoding="async" />
+                                <span class="ed-episode__badge"><svg viewBox="0 0 24 24"><path d="M4 14v-4m4 8V6m4 12V9m4 5v-8m4 8V4" /></svg></span>
+                            </a>
+                            <p class="ed-episode__kicker">@ep.Kicker</p>
+                            <h3 class="ed-episode__title"><a href="@ep.TargetUrl">@ep.Title</a></h3>
+                            <div class="ed-episode__meta">
+                                <button type="button" class="ed-save" data-wishlist-toggle="@ep.Id" aria-pressed="false">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg>
+                                    <span class="ed-save__label--save">Save</span>
+                                    <span class="ed-save__label--saved">Saved</span>
+                                </button>
+                                <span>@ep.Duration</span>
+                            </div>
+                        </article>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}
 
 @* ---------- Explore by category ---------- *@
-<section class="ed-section" style="margin-top:32px">
-    <div class="ed-shell">
-        <div class="ed-section__head">
-            <h2 class="ed-section__title">Explore by category</h2>
-        </div>
-
-        <div class="ed-category-grid">
-            @foreach (var cat in categories)
-            {
-                <a class="ed-category-tile" href="/media">
-                    <h3 class="ed-category-tile__title">@cat.Name</h3>
-                </a>
-            }
-            @if (categories.Count == 0)
-            {
-                foreach (var name in new[] { "Podcast", "Radio", "Television", "News", "Videos", "Live Broadcast", "Community", "Impact" })
+@if (categories.Count > 0)
+{
+    <section class="ed-section ed-section--spaced">
+        <div class="ed-shell">
+            <div class="ed-section__head">
+                <h2 class="ed-section__title">Explore by category</h2>
+            </div>
+            <div class="ed-category-grid">
+                @foreach (var cat in categories)
                 {
-                    <a class="ed-category-tile" href="/media"><h3 class="ed-category-tile__title">@name</h3></a>
+                    <a class="ed-category-tile" href="/media?category=@Uri.EscapeDataString(cat.Slug ?? "")">
+                        <h3 class="ed-category-tile__title">@cat.Name</h3>
+                    </a>
                 }
-            }
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 
 @section Scripts {
     <script>
@@ -251,16 +253,8 @@
                 });
             });
 
-            document.querySelectorAll('[data-play]').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    var playing = btn.getAttribute('aria-pressed') === 'true';
-                    btn.setAttribute('aria-pressed', playing ? 'false' : 'true');
-                    btn.setAttribute('data-playing', playing ? 'false' : 'true');
-                    btn.setAttribute('aria-label', playing ? 'Play episode' : 'Pause episode');
-                    btn.innerHTML = playing
-                        ? '<svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" /></svg>'
-                        : '<svg viewBox="0 0 12 14" aria-hidden="true"><path d="M2 1h3v12H2zM7 1h3v12H7z" /></svg>';
-                });
+            document.querySelectorAll('.ed-audio-play[href]').forEach(function (link) {
+                link.addEventListener('click', function (e) { e.preventDefault(); });
             });
 
             document.querySelectorAll('[data-wishlist-toggle]').forEach(function (btn) {
