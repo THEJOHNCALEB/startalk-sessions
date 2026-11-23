@@ -15,7 +15,7 @@
         <div class="mt-8 rounded-2xl border border-brand-200 bg-white px-6 py-16 text-center">
             <h3 class="text-lg font-semibold text-brand-900">No custom requests yet</h3>
             <p class="mt-1 text-sm text-neutral-500">Describe your dream piece and we'll quote it in a day.</p>
-            <a href="/custom-furniture" class="mt-6 inline-flex rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-500">Start a custom project</a>
+            <a href="/custom-session" class="mt-6 inline-flex rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-500">Start a custom project</a>
         </div>
     }
     else
@@ -37,7 +37,7 @@
                     <p class="mt-1 text-xs text-neutral-400">Dimensions (@q.DimensionUnit): @(string.IsNullOrEmpty(q.Width) ? "To propose" : $"{q.Width} × {q.Height} × {q.Depth} W×H×D")</p>
                     <div class="mt-4 flex flex-wrap items-center gap-3 border-t border-brand-100 pt-4">
                         <a href="/quote/pdf/@q.Id" class="rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:border-brand-600">Download quote PDF</a>
-                        <a href="/custom-furniture" class="text-xs font-semibold text-brand-900 underline underline-offset-4">Edit requirements →</a>
+                        <a href="/custom-session" class="text-xs font-semibold text-brand-900 underline underline-offset-4">Edit requirements →</a>
                     </div>
                 </div>
             }

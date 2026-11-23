@@ -18,7 +18,7 @@ namespace StarTalkSessions.Controllers
         }
 
         [HttpGet]
-        [Route("custom-furniture")]
+        [Route("custom-session")]
         public async Task<IActionResult> Index(CancellationToken ctl)
         {
             this.SetStore();
@@ -72,7 +72,7 @@ namespace StarTalkSessions.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            _ = _notifications.SendEmailAsync(model.Email, $"Custom furniture brief received — {model.RefNumber}", _notifications.QuoteConfirmationHtml(model));
+            _ = _notifications.SendEmailAsync(model.Email, $"Custom session brief received — {model.RefNumber}", _notifications.QuoteConfirmationHtml(model));
             _ = _notifications.NotifyWhatsAppAsync($"New custom brief {model.RefNumber} from {model.Name} ({model.Email}) — {model.Category} / {model.Style}.");
 
             return RedirectToAction("Confirmation", new { reference = model.RefNumber });

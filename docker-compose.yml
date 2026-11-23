@@ -1,7 +1,7 @@
 services:
-  furniture-sass:
-    image: ${DOCKER_USERNAME:?err}/furniture-sass:latest
-    container_name: furniture-sass
+  startalk-sessions:
+    image: ${DOCKER_USERNAME:?err}/startalk-sessions:latest
+    container_name: startalk-sessions
     restart: unless-stopped
     ports:
       - "${PORT:-6200}:6200"
@@ -11,24 +11,24 @@ services:
       - DB_CONNECT=${DB_CONNECT:?err}
 
       # --- Store branding ---
-      - STORE_NAME=${STORE_NAME:-Furniture}
-      - STORE_TAGLINE=${STORE_TAGLINE:-Designed for Living. Built to Last.}
-      - SUPPORT_EMAIL=${SUPPORT_EMAIL:-info@solutionconcept.org}
+      - STORE_NAME=${STORE_NAME:-Star Talk Sessions}
+      - STORE_TAGLINE=${STORE_TAGLINE:-Stories that move people forward.}
+      - SUPPORT_EMAIL=${SUPPORT_EMAIL:-info@startalksessions.org}
       - SUPPORT_PHONE=${SUPPORT_PHONE:-+234 800 000 0000}
-      - SITE_URL=${SITE_URL:-https://solutionconcept.org}
-      - STUDIO_ADDRESS_1=${STUDIO_ADDRESS_1:-Solution Concept Furniture and Design}
-      - STUDIO_ADDRESS_2=${STUDIO_ADDRESS_2:-Zone 5, Airport Road, Lugbe}
+      - SITE_URL=${SITE_URL:-https://startalksessions.org}
+      - STUDIO_ADDRESS_1=${STUDIO_ADDRESS_1:-Star Talk Studios, Minna}
+      - STUDIO_ADDRESS_2=${STUDIO_ADDRESS_2:-Federal University of Technology, Minna}
 
       # --- Admin account ---
       - ADMIN_EMAIL=${ADMIN_EMAIL:?err}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?err}
-      - ADMIN_NAME=${ADMIN_NAME:-Furniture Studio}
+      - ADMIN_NAME=${ADMIN_NAME:-Star Talk Sessions}
 
       # --- Email (Resend) - optional ---
       - RESEND_API_KEY=${RESEND_API_KEY:-}
       - RESEND_APITOKEN=${RESEND_APITOKEN:-}
-      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-info@solutionconcept.org}
-      - RESEND_FROM_NAME=${RESEND_FROM_NAME:-Furniture}
+      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-info@startalksessions.org}
+      - RESEND_FROM_NAME=${RESEND_FROM_NAME:-Star Talk Sessions}
 
       # --- WhatsApp - optional ---
       - WHATSAPP_NUMBER=${WHATSAPP_NUMBER:-}

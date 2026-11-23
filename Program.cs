@@ -24,12 +24,12 @@ builder.WebHost.UseUrls();
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthentication("FURN_COOKIE")
-    .AddCookie("FURN_COOKIE", options =>
+builder.Services.AddAuthentication("STS_COOKIE")
+    .AddCookie("STS_COOKIE", options =>
     {
         options.LoginPath = "/Auth/Login";
         options.AccessDeniedPath = "/Auth/Login";
-        options.Cookie.Name = "FURN_AUTH";
+        options.Cookie.Name = "STS_AUTH";
         options.Cookie.IsEssential = true;
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.LogoutPath = "/Auth/Logout";
@@ -145,7 +145,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
     {
         new()
         {
-            Name = "Luna Modular Sectional", Slug = "luna-modular-sectional", Sku = "FURN-SF-001", CategoryId = sofa.Id, CategoryName = sofa.Name,
+            Name = "Luna Modular Sectional", Slug = "luna-modular-sectional", Sku = "STS-SF-001", CategoryId = sofa.Id, CategoryName = sofa.Name,
             Price = 2890, CompareAtPrice = 3400, Style = "Luxury Contemporary",
             ShortDescription = "A deep-seated modular sectional with down-filled cushions and a low, sculptural profile.",
             Description = "The Luna Modular Sectional anchors any living room in quiet luxury. Segmented modules allow flexible configurations (L-shaped, U-shaped or split islands), while kiln-dried hardwood frames and feather-blend cushions deliver endless sit-comfort. Each module ships individually so it fits through standard doorways with ease.",
@@ -180,7 +180,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Name = "Aria Four-Poster Bed", Slug = "aria-four-poster-bed", Sku = "FURN-BD-002", CategoryId = bed.Id, CategoryName = bed.Name,
+            Name = "Aria Four-Poster Bed", Slug = "aria-four-poster-bed", Sku = "STS-BD-002", CategoryId = bed.Id, CategoryName = bed.Name,
             Price = 4200, Style = "Japanese Minimalist",
             ShortDescription = "A monumental sculpted-oak four-poster with integrated bedside lighting.",
             Description = "The Aria Four-Poster Bed is a meditation on proportion. Turned solid-oak posts, floating slat headboard and hidden ambient downlighting create a hotel-level sleeping sanctuary. Frame accepts standard platform or slatted foundations in King and Queen.",
@@ -213,7 +213,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Name = "Eden 8-Seat Dining Table", Slug = "eden-8-seat-dining-table", Sku = "FURN-DN-003", CategoryId = dining.Id, CategoryName = dining.Name,
+            Name = "Eden 8-Seat Dining Table", Slug = "eden-8-seat-dining-table", Sku = "STS-DN-003", CategoryId = dining.Id, CategoryName = dining.Name,
             Price = 2380, CompareAtPrice = 2600, Style = "Mid-Century Modern",
             ShortDescription = "A sculpted live-edge dining table in solid walnut with brass inlay.",
             Description = "The Eden table pairs a century-old walnut slab with precision-milled steel legs and brushed brass accents. Seats eight with ease, and the oil-wax finish deepens beautifully with age.",
@@ -246,7 +246,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Name = "Vertex Executive Desk", Slug = "vertex-executive-desk", Sku = "FURN-OF-004", CategoryId = office.Id, CategoryName = office.Name,
+            Name = "Vertex Executive Desk", Slug = "vertex-executive-desk", Sku = "STS-OF-004", CategoryId = office.Id, CategoryName = office.Name,
             Price = 1740, Style = "Industrial",
             ShortDescription = "A standing-height executive desk in powder-coated steel and blackened oak.",
             Description = "Designed for the modern studio, the Vertex desk offers silent cable management, a floating storage tray and dual sit-stand height positions. Its blackened oak top is sealed against coffee rings and late nights alike.",
@@ -279,7 +279,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Name = "Noir Walk-In Wardrobe System", Slug = "noir-walk-in-wardrobe", Sku = "FURN-WS-005", CategoryId = storage.Id, CategoryName = storage.Name,
+            Name = "Noir Walk-In Wardrobe System", Slug = "noir-walk-in-wardrobe", Sku = "STS-WS-005", CategoryId = storage.Id, CategoryName = storage.Name,
             Price = 3650, Style = "Luxury Contemporary",
             ShortDescription = "A fully modular wardrobe system with marble laminate and ambient LED.",
             Description = "The Noir system turns a blank wall into a dressing room. Powder-coated steel frames, warm LED channels and smoked-glass doors arrange into endless layouts with hanging, shelving and shoe display zones.",
@@ -312,7 +312,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Name = "Mono Media Console", Slug = "mono-media-console", Sku = "FURN-MD-006", CategoryId = media.Id, CategoryName = media.Name,
+            Name = "Mono Media Console", Slug = "mono-media-console", Sku = "STS-MD-006", CategoryId = media.Id, CategoryName = media.Name,
             Price = 990, CompareAtPrice = 1150, Style = "Japanese Minimalist",
             ShortDescription = "A floating console with woven rattan doors and hidden A/V compartments.",
             Description = "Mono keeps entertainment minimal. Sliding woven rattan panels conceal a wire-managed A/V bay, while the floating profile makes small spaces feel larger.",
@@ -344,7 +344,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Name = "Solara Teak Club Chair", Slug = "solara-teak-club-chair", Sku = "FURN-OD-007", CategoryId = outdoor.Id, CategoryName = outdoor.Name,
+            Name = "Solara Teak Club Chair", Slug = "solara-teak-club-chair", Sku = "STS-OD-007", CategoryId = outdoor.Id, CategoryName = outdoor.Name,
             Price = 640, Style = "Mid-Century Modern",
             ShortDescription = "A weatherproof teak club chair with sculpted comfort for raw coastal air.",
             Description = "The Solara breaks in beautifully. Sustainably harvested teak, marine-grade stainless hardware and a slatted profile that sheds rain make it an heirloom for patios, verandas and pool decks.",
@@ -376,7 +376,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Name = "Atelier Hand-Levelled Walnut Sideboard", Slug = "atelier-walnut-sideboard", Sku = "FURN-CC-008", CategoryId = custom.Id, CategoryName = custom.Name,
+            Name = "Atelier Hand-Levelled Walnut Sideboard", Slug = "atelier-walnut-sideboard", Sku = "STS-CC-008", CategoryId = custom.Id, CategoryName = custom.Name,
             Price = 0, Style = "Bespoke",
             ShortDescription = "Fully bespoke sideboard — dimensions, woods and hardware made entirely to your brief.",
             Description = "The Atelier program is our made-to-order workshop. From a hand sketch or a set of CAD drawings, our master joiners build exactly what your space demands — any dimension, any wood, any finish. Includes white-glove delivery and on-site installation.",
@@ -524,7 +524,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Title = "Turnkey Interior Furnishing", Slug = "turnkey-interiors", Icon = "grid", Eyebrow = "Full Service",
+            Title = "Turnkey Programme Production", Slug = "turnkey-productions", Icon = "grid", Eyebrow = "Full Service",
             Description = "We plan, source and install complete interiors — from space planning to the final styling cushion — for residences and commercial suites alike.",
             Features = new List<string> { "Space planning & moodboards", "Curated product programs", "Lighting and styling", "Single-point accountability" },
             SortOrder = 2
@@ -538,7 +538,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
         },
         new()
         {
-            Title = "Hotel & Hospitality Furnishing", Slug = "hospitality", Icon = "moon", Eyebrow = "Hospitality",
+            Title = "Hospitality & Venue Partnerships", Slug = "hospitality", Icon = "moon", Eyebrow = "Hospitality",
             Description = "Fire-retardant, high-abuse hospitality media with the softness of home — built to contract grade for lodges and hotel groups.",
             Features = new List<string> { "FR fabrics & contract seating", "Tolerance-matched production runs", "Replacement-part programmes", "Lobby to guest-room scope" },
             SortOrder = 4
@@ -583,7 +583,7 @@ async Task SeedDatabaseAsync(IServiceProvider services)
     foreach (var b in posts) await blogDb.InsertAsync(b, ctl);
 
     var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL") ?? "info@solutionconcept.org";
-    var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? "Sass@123456";
+    var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? "StarTalk@123456";
     var adminName = Environment.GetEnvironmentVariable("ADMIN_NAME") ?? "Star Talk Sessions";
     var existingAdmin = await userDb.QueryOneAsync(u => u.Email == adminEmail && u.IsAdmin, ctl);
     if (existingAdmin == null)

@@ -6,337 +6,188 @@
     var here = (Context.Request.Path.Value ?? "/").TrimEnd('/').ToLowerInvariant();
     if (here.Length == 0) { here = "/"; }
     Func<string, bool> isCurrent = href => href == "/" ? here == "/" : (here + "/").StartsWith(href + "/");
-    var navLinks = new[]
+
+    var primaryLinks = new[]
     {
+        new { Href = "/", Label = "Home" },
         new { Href = "/media", Label = "Media" },
         new { Href = "/programmes", Label = "Programmes" },
-        new { Href = "/humanity", Label = "Humanity" },
-        new { Href = "/impact", Label = "Impact" },
-        new { Href = "/events", Label = "Events" },
-        new { Href = "/partner", Label = "Partner with us" },
+        new { Href = "/events", Label = "Schedule" },
+        new { Href = "/media", Label = "Topics" },
+        new { Href = "/humanity", Label = "Live" },
         new { Href = "/about", Label = "About" },
         new { Href = "/contact", Label = "Contact" }
     };
+
+    var subLinks = new[]
+    {
+        new { Href = "/", Label = "Featured" },
+        new { Href = "/media", Label = "History" },
+        new { Href = "/media", Label = "Global News" },
+        new { Href = "/programmes", Label = "Culture" },
+        new { Href = "/impact", Label = "Climate" },
+        new { Href = "/humanity", Label = "Community" },
+        new { Href = "/events", Label = "Events" },
+        new { Href = "/partner", Label = "Partner with us" }
+    };
 }
 
-<a href="#main" class="fs-skip">Skip to content</a>
+<a href="#main" class="ed-skip">Skip to content</a>
 
-<header class="fs-nav" data-header>
-    @* ---------- Masthead: centered brand lockup ---------- *@
-    <div class="fs-nav__mast">
-        <a href="/" class="fs-nav__brand" aria-label="@storeName home">
-            <img src="/images/logo.png" alt="" class="fs-nav__mark" />
-            <span class="fs-nav__wordmark">@storeName</span>
-        </a>
-    </div>
+<header class="ed-header" data-header>
+    @* ---------- Top utility bar ---------- *@
+    <div class="ed-util">
+        <div class="ed-shell ed-util__inner">
+            <div class="ed-util__side">
+                <button class="ed-burger" type="button" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="ed-mobile-nav">
+                    <span></span><span></span>
+                </button>
+                <button type="button" class="ed-icon-btn" data-trigger-search aria-label="Search">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                </button>
+                <button type="button" class="ed-icon-btn" data-trigger-wishlist aria-label="Saved episodes">
+                    <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.6-9.2-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.2 11C19 15.4 12 20 12 20z"/></svg>
+                    <span class="ed-count" data-wishlist-count hidden>0</span>
+                </button>
+                <button type="button" class="ed-icon-btn" data-trigger-cart aria-label="Listen queue">
+                    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+                    <span class="ed-count" data-cart-count hidden>0</span>
+                </button>
+            </div>
 
-    @* ---------- Navigation row ---------- *@
-    <div class="fs-nav__bar" data-header-bar>
-        <div class="fs-nav__row">
-            <nav class="fs-nav__links" aria-label="Primary">
-                @foreach (var link in navLinks)
-                {
-                    var current = isCurrent(link.Href);
-                    <a href="@link.Href" class="fs-nav__link @(current ? "is-current" : "")" aria-current="@(current ? "page" : "false")">@link.Label</a>
-                }
-            </nav>
+            <a href="/" class="ed-wordmark" aria-label="@storeName home">
+                <span class="ed-wordmark__block">S</span>
+                <span class="ed-wordmark__block">T</span>
+                <span class="ed-wordmark__block">A</span>
+                <span class="ed-wordmark__block">R</span>
+                <span class="ed-wordmark__block ed-wordmark__block--dot">·</span>
+                <span class="ed-wordmark__block ed-wordmark__block--wide">TALK</span>
+                <span class="ed-wordmark__sub">Sessions</span>
+            </a>
 
-            <div class="fs-nav__actions">
-                @* ---------- Region & currency ---------- *@
-                <div class="fs-nav__region" data-region>
-                    <button type="button" class="fs-nav__region-btn" data-region-toggle aria-expanded="false" aria-haspopup="true" aria-controls="fs-region-panel">
-                        <svg class="fs-nav__globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
+            <div class="ed-util__side ed-util__side--right">
+                <div class="ed-region" data-region>
+                    <button type="button" class="ed-region__toggle" data-region-toggle aria-expanded="false" aria-haspopup="true" aria-controls="ed-region-panel">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
                         <span data-region-code>NGN</span>
                     </button>
-                    <div class="fs-nav__panel" id="fs-region-panel" data-region-panel>
-                        <p class="fs-nav__panel-label">Region</p>
-                        <select aria-label="Region" class="fs-nav__select" onchange="this.value==='EN — Nigeria'&&localStorage.setItem('sass_currency','NGN')">
+                    <div class="ed-region__panel" id="ed-region-panel" data-region-panel>
+                        <p class="ed-region__label">Region</p>
+                        <select aria-label="Region" onchange="this.value==='EN — Nigeria'&&localStorage.setItem('sts_currency','NGN')">
                             <option selected>EN — Nigeria</option>
                             <option>EN — United States</option>
                             <option>EN — United Kingdom</option>
                             <option>EN — Europe</option>
                             <option>EN — UAE</option>
                         </select>
-                        <p class="fs-nav__panel-label fs-nav__panel-label--gap">Currency</p>
+                        <p class="ed-region__label">Currency</p>
                         @await Component.InvokeAsync("CurrencySelector")
                     </div>
                 </div>
 
-                <button type="button" class="fs-nav__icon" data-trigger-search aria-label="Search">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                </button>
-                <button type="button" class="fs-nav__icon" data-trigger-wishlist aria-label="Wishlist">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.6-9.2-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.2 11C19 15.4 12 20 12 20z"/></svg>
-                    <span class="badge-dot fs-nav__count" data-wishlist-count hidden>0</span>
-                </button>
-                <button type="button" class="fs-nav__icon" data-trigger-cart aria-label="Cart">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg>
-                    <span class="badge-dot fs-nav__count" data-cart-count hidden>0</span>
-                </button>
-
                 @if (isAuthed)
                 {
                     <div class="group/account relative">
-                        <button type="button" class="fs-nav__avatar" aria-label="Account">
+                        <button type="button" class="ed-btn" aria-label="Account">
                             @(userName.Length >= 1 ? userName[..1].ToUpperInvariant() : "A")
                         </button>
                         <div class="absolute right-0 top-full z-30 hidden w-56 pt-3 group-hover/account:block group-focus-within/account:block">
-                            <div class="overflow-hidden border border-neutral-300 bg-white">
-                                <div class="border-b border-neutral-200 px-3 py-2 text-xs text-neutral-500">Signed in as <strong class="block truncate text-sm text-black">@userName</strong></div>
-                                <a href="/@(isAdmin ? "Admin" : "account")" class="block px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100">@(isAdmin ? "Admin console" : "Dashboard")</a>
+                            <div class="overflow-hidden border border-black bg-white">
+                                <div class="border-b border-[#DCDCDC] px-3 py-2 text-xs text-neutral-500">Signed in as <strong class="block truncate text-sm text-black">@userName</strong></div>
+                                <a href="/@(isAdmin ? "Admin" : "account")" class="block px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-100">@(isAdmin ? "Admin console" : "Dashboard")</a>
                                 @if (!isAdmin)
                                 {
-                                    <a href="/account/Orders" class="block px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100">Orders &amp; tracking</a>
-                                    <a href="/account/Quotes" class="block px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100">Custom quotes</a>
+                                    <a href="/account/Orders" class="block px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-100">Your activity</a>
+                                    <a href="/account/Quotes" class="block px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-100">Pitches</a>
                                 }
-                                <a asp-controller="Auth" asp-action="Logout" class="block px-3 py-2 text-sm text-red-600 transition hover:bg-red-50">Sign out</a>
+                                <a asp-controller="Auth" asp-action="Logout" class="block px-3 py-2 text-sm text-red-700 hover:bg-red-50">Sign out</a>
                             </div>
                         </div>
                     </div>
                 }
                 else
                 {
-                    <a href="/auth/login" class="fs-nav__signin">Sign in</a>
+                    <a href="/auth/register" class="ed-util__cta ed-btn">Register</a>
+                    <a href="/auth/login" class="ed-text-btn">Sign in</a>
                 }
             </div>
-
-            <button class="fs-nav__burger" data-nav-toggle aria-label="Open menu" aria-expanded="false">
-                <span></span><span></span>
-            </button>
         </div>
-
-        <div class="fs-nav__progress" data-header-progress aria-hidden="true"></div>
     </div>
 
-    @* ---------- Mobile menu ---------- *@
-    <div class="fs-nav__sheet" data-nav>
-        <div class="fs-nav__sheet-in">
-            <nav class="fs-nav__sheet-nav" aria-label="Mobile navigation">
-                @foreach (var link in navLinks)
-                {
-                    <a href="@link.Href" class="fs-nav__sheet-link @(isCurrent(link.Href) ? "is-current" : "")">@link.Label</a>
-                }
-                <a href="/support" class="fs-nav__sheet-link">Support</a>
-            </nav>
-            <div class="fs-nav__sheet-foot">
+    @* ---------- Primary category navigation ---------- *@
+    <nav class="ed-primary-nav" aria-label="Primary">
+        <div class="ed-shell ed-primary-nav__inner">
+            @foreach (var link in primaryLinks)
+            {
+                <a href="@link.Href" class="ed-primary-nav__link @(isCurrent(link.Href) ? "is-active" : "")" aria-current="@(isCurrent(link.Href) ? "page" : "false")">@link.Label</a>
+            }
+        </div>
+    </nav>
+
+    @* ---------- Sub navigation ---------- *@
+    <nav class="ed-subnav" aria-label="Sections">
+        <div class="ed-shell ed-subnav__inner">
+            @foreach (var link in subLinks)
+            {
+                <a href="@link.Href" class="ed-subnav__link @(isCurrent(link.Href) ? "is-active" : "")">@link.Label</a>
+            }
+        </div>
+    </nav>
+
+    @* ---------- Mobile navigation ---------- *@
+    <div class="ed-mobile-nav" id="ed-mobile-nav" data-nav>
+        <nav class="ed-mobile-nav__inner" aria-label="Mobile navigation">
+            @foreach (var link in primaryLinks)
+            {
+                <a href="@link.Href" class="ed-mobile-nav__link @(isCurrent(link.Href) ? "is-active" : "")">@link.Label</a>
+            }
+            <a href="/support" class="ed-mobile-nav__link">Support</a>
+            <div class="mt-6 flex flex-wrap gap-3">
                 @if (!isAuthed)
                 {
-                    <a href="/auth/login" class="fs-btn">Sign in</a>
+                    <a href="/auth/register" class="ed-btn">Register</a>
+                    <a href="/auth/login" class="ed-btn ed-btn--outline">Sign in</a>
                 }
                 else
                 {
-                    <a href="/@(isAdmin ? "Admin" : "account")" class="fs-btn">@(isAdmin ? "Admin console" : "Your dashboard")</a>
+                    <a href="/@(isAdmin ? "Admin" : "account")" class="ed-btn">@(isAdmin ? "Admin console" : "Your dashboard")</a>
                 }
-                <p class="fs-nav__sheet-note">Insured white-glove delivery on every order, worldwide.</p>
             </div>
-        </div>
+        </nav>
     </div>
 </header>
 
-<style>
-    /* ---------- Header ---------- */
-    .fs-skip {
-        position: absolute; left: -9999px; top: 0; z-index: 100;
-        background: #000; color: #fff; padding: 10px 18px;
-        font-size: 14px; font-weight: 600;
-    }
-    .fs-skip:focus { left: 0; }
-
-    .fs-nav { position: sticky; top: 0; z-index: 50; background: #fff; }
-
-    /* ---------- Masthead ---------- */
-    .fs-nav__mast {
-        display: flex; align-items: center; justify-content: center;
-        padding: 1.25rem 1rem .9rem;
-    }
-    .fs-nav__brand {
-        display: flex; align-items: center; gap: .75rem; color: inherit;
-    }
-    .fs-nav__mark {
-        display: block; height: 44px; width: auto; flex: none;
-        transition: height .35s cubic-bezier(.16, 1, .3, 1);
-    }
-    .fs-nav__wordmark {
-        color: #D8A33E; font-weight: 800; letter-spacing: -.025em;
-        font-size: clamp(1.25rem, 2.6vw, 1.875rem); line-height: 1;
-        text-transform: uppercase; white-space: nowrap;
-    }
-    .fs-nav.is-stuck .fs-nav__mark { height: 34px; }
-
-    /* ---------- Nav row ---------- */
-    .fs-nav__bar { position: relative; border-top: 1px solid #E5E5E5; border-bottom: 1px solid #E5E5E5; background: #fff; }
-    .fs-nav__row {
-        display: flex; align-items: center; gap: 1rem;
-        max-width: 80rem; margin: 0 auto; min-height: 54px; padding: 0 1rem;
-    }
-
-    .fs-nav__links { display: none; align-items: center; gap: 1.75rem; margin: 0 auto; }
-    .fs-nav__link {
-        position: relative; display: block; padding: .35rem 0;
-        color: #0A0A0A; font-size: .75rem; font-weight: 700;
-        letter-spacing: .18em; text-transform: uppercase;
-        transition: color .2s ease;
-    }
-    .fs-nav__link::after {
-        content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px;
-        background: currentColor; transform: scaleX(0); transform-origin: 0 50%;
-        transition: transform .28s cubic-bezier(.16, 1, .3, 1);
-    }
-    .fs-nav__link:hover, .fs-nav__link:focus-visible { color: #D8A33E; }
-    .fs-nav__link:hover::after, .fs-nav__link:focus-visible::after { transform: scaleX(1); }
-    .fs-nav__link.is-current { color: #D8A33E; }
-    .fs-nav__link.is-current::after { transform: scaleX(1); }
-
-    .fs-nav__actions { display: flex; align-items: center; gap: .25rem; margin-left: auto; }
-    .fs-nav__icon {
-        position: relative; display: flex; align-items: center; justify-content: center;
-        width: 36px; height: 36px; color: #0A0A0A;
-        transition: color .2s ease;
-    }
-    .fs-nav__icon svg { width: 19px; height: 19px; }
-    .fs-nav__icon:hover, .fs-nav__icon:focus-visible { color: #D8A33E; }
-    .fs-nav__count {
-        position: absolute; top: 1px; right: 0;
-        min-width: 16px; height: 16px; padding: 0 4px;
-        background: #D8A33E; color: #fff; font-size: 10px; font-weight: 700; line-height: 16px;
-        text-align: center;
-    }
-    .fs-nav__region { position: relative; }
-    .fs-nav__region-btn {
-        display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 8px;
-        color: #0A0A0A; font-size: .6875rem; font-weight: 700; letter-spacing: .14em;
-        transition: color .2s ease;
-    }
-    .fs-nav__region-btn:hover, .fs-nav__region-btn:focus-visible { color: #D8A33E; }
-    .fs-nav__globe { width: 15px; height: 15px; }
-    .fs-nav__panel {
-        position: absolute; right: 0; top: calc(100% + 14px); display: none;
-        width: 234px; padding: 14px; border: 1px solid #0A0A0A; background: #fff; z-index: 40;
-    }
-    .fs-nav__panel.open { display: block; }
-    .fs-nav__panel-label {
-        margin-bottom: 5px; font-size: 10px; font-weight: 700;
-        letter-spacing: .18em; text-transform: uppercase; color: #737373;
-    }
-    .fs-nav__panel-label--gap { margin-top: 18px; }
-    .fs-nav__panel .fs-nav__select, .fs-nav__panel [data-currency] select {
-        width: 100%; border: 1px solid #D4D4D4; border-radius: 0; background: #fff;
-        padding: 7px 9px; font-size: 13px; color: #0A0A0A;
-    }
-    .fs-nav__avatar {
-        display: flex; align-items: center; justify-content: center;
-        width: 32px; height: 32px; margin-left: 4px;
-        background: #0A0A0A; color: #fff; font-size: 13px; font-weight: 700;
-        transition: background-color .2s ease;
-    }
-    .fs-nav__avatar:hover { background: #D8A33E; }
-    .fs-nav__signin {
-        display: flex; align-items: center; justify-content: center;
-        height: 34px; margin-left: 6px; padding: 0 18px;
-        background: #000; color: #fff;
-        font-size: .6875rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
-        transition: background-color .2s ease;
-    }
-    .fs-nav__signin:hover, .fs-nav__signin:focus-visible { background: #D8A33E; }
-
-    .fs-nav__burger {
-        display: flex; flex: none; flex-direction: column; align-items: center; justify-content: center;
-        gap: 6px; width: 40px; height: 40px;
-    }
-    .fs-nav__burger span {
-        display: block; width: 22px; height: 2px; background: #0A0A0A;
-        transition: transform .35s cubic-bezier(.16, 1, .3, 1);
-    }
-    .fs-nav__burger[aria-expanded="true"] span:first-child { transform: translateY(4px) rotate(45deg); }
-    .fs-nav__burger[aria-expanded="true"] span:last-child { transform: translateY(-4px) rotate(-45deg); }
-
-    .fs-nav__progress {
-        position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%;
-        background: #D8A33E; transform: scaleX(var(--fs-scroll, 0)); transform-origin: 0 50%;
-        pointer-events: none;
-    }
-
-    /* ---------- Mobile menu ---------- */
-    .fs-nav__sheet {
-        position: fixed; inset: 0; z-index: 1; display: none;
-        padding: 152px 1.5rem 2rem; overflow-y: auto; background: #fff;
-    }
-    .fs-nav__sheet.open { display: block; }
-    .fs-nav__sheet-nav { display: flex; flex-direction: column; align-items: flex-start; }
-    .fs-nav__sheet-link {
-        display: block; padding: .3rem 0; color: #0A0A0A;
-        font-size: clamp(1.75rem, 8vw, 2.5rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.2;
-    }
-    .fs-nav__sheet-link.is-current { color: #D8A33E; }
-    .fs-nav__sheet-foot { margin-top: 34px; padding-top: 24px; border-top: 1px solid #E5E5E5; }
-    .fs-nav__sheet-note { margin: 16px 0 0; font-size: 13px; color: #737373; max-width: 34ch; }
-
-    @@media (min-width: 640px) { .fs-nav__row { padding: 0 1.5rem; } }
-    @@media (min-width: 1024px) {
-        .fs-nav__links { display: flex; }
-        .fs-nav__sheet { display: none !important; }
-        .fs-nav__burger { display: none; }
-    }
-    @@media (prefers-reduced-motion: reduce) {
-        .fs-nav__mark, .fs-nav__link::after, .fs-nav__burger span { transition-duration: .01ms !important; }
-    }
-</style>
-
 <script>
     (function () {
-        var header = document.querySelector('[data-header]');
-        if (!header) return;
-
-        /* ---------- Scroll state + reading progress ---------- */
-        var progress = document.querySelector('[data-header-progress]');
-        var ticking = false;
-        function onScroll() {
-            var y = window.pageYOffset || document.documentElement.scrollTop;
-            header.classList.toggle('is-stuck', y > 24);
-            if (progress) {
-                var max = document.documentElement.scrollHeight - window.innerHeight;
-                progress.style.setProperty('--fs-scroll', max > 0 ? Math.min(y / max, 1) : 0);
-            }
-            ticking = false;
-        }
-        window.addEventListener('scroll', function () {
-            if (ticking) return;
-            ticking = true;
-            window.requestAnimationFrame(onScroll);
-        }, { passive: true });
-        onScroll();
-
-        /* ---------- Mobile menu ---------- */
         var toggle = document.querySelector('[data-nav-toggle]');
         var sheet = document.querySelector('[data-nav]');
         if (toggle && sheet) {
             function setOpen(open) {
-                sheet.classList.toggle('open', open);
+                sheet.classList.toggle('is-open', open);
                 toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
                 toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
                 document.body.style.overflow = open ? 'hidden' : '';
             }
-            toggle.addEventListener('click', function () { setOpen(!sheet.classList.contains('open')); });
+            toggle.addEventListener('click', function () { setOpen(!sheet.classList.contains('is-open')); });
             sheet.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
             window.addEventListener('resize', function () { if (window.innerWidth >= 1024) setOpen(false); });
             document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && sheet.classList.contains('open')) { setOpen(false); toggle.focus(); }
+                if (e.key === 'Escape' && sheet.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
             });
         }
 
-        /* ---------- Region & currency popover ---------- */
         var region = document.querySelector('[data-region]');
         var regionToggle = document.querySelector('[data-region-toggle]');
         var regionPanel = document.querySelector('[data-region-panel]');
         if (region && regionToggle && regionPanel) {
             var code = region.querySelector('[data-region-code]');
-            var saved = localStorage.getItem('sass_currency');
+            var saved = localStorage.getItem('sts_currency');
             if (code && saved) code.textContent = saved;
             function setRegion(open) {
-                regionPanel.classList.toggle('open', open);
+                regionPanel.classList.toggle('is-open', open);
                 regionToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             }
-            regionToggle.addEventListener('click', function () { setRegion(!regionPanel.classList.contains('open')); });
+            regionToggle.addEventListener('click', function () { setRegion(!regionPanel.classList.contains('is-open')); });
             document.addEventListener('click', function (e) { if (!region.contains(e.target)) setRegion(false); });
             document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setRegion(false); });
             var sel = regionPanel.querySelector('[data-currency] select');

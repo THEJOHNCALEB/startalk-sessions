@@ -4,34 +4,35 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@(ViewData["Title"] != null ? ViewData["Title"] + " — " + ViewBag.StoreName : ViewBag.StoreName + " — " + ViewBag.StoreTagline)</title>
-    <meta name="description" content="@ViewBag.StoreName — @ViewBag.StoreTagline. Media, culture and impact from Africa to the world." />
-    <meta name="theme-color" content="#17120d" />
+    <meta name="description" content="@ViewBag.StoreName — @ViewBag.StoreTagline. Talk, audio and broadcast journalism from Africa to the world." />
+    <meta name="theme-color" content="#141414" />
     <link rel="icon" type="image/png" href="/images/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700;6..72,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/editorial.css" asp-append-version="true" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        serif: ['"Instrument Serif"', 'ui-serif', 'Georgia', 'serif']
+                        sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['Newsreader', 'Georgia', 'serif']
                     },
                     colors: {
                         brand: {
-                                '50': '#fbf7f0',
-                                '100': '#f3e8d2',
-                                '200': '#e6d0a4',
-                                '300': '#d6ad66',
-                                '400': '#c58a2a',
-                                '500': '#a96713',
-                                '600': '#85500d',
-                                '700': '#5f370b',
-                                '800': '#3b230c',
-                                '900': '#24170d',
-                                '950': '#120c08'
+                            '50': '#FFFFFF',
+                            '100': '#F5F5F5',
+                            '200': '#DCDCDC',
+                            '300': '#B8B8B8',
+                            '400': '#8A8A8A',
+                            '500': '#545658',
+                            '600': '#3A3B3C',
+                            '700': '#141414',
+                            '800': '#141414',
+                            '900': '#141414',
+                            '950': '#121212'
                         }
                     },
                     maxWidth: { 'app': '80rem' }
@@ -49,11 +50,9 @@
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=@adsenseClient" crossorigin="anonymous"></script>
     }
     <style>
-        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-        ::selection { background: #d6ad66; color: #17120d; }
         [data-overlay] { display: none; }
         [data-overlay].open { display: flex; }
-        [data-nav].open { display: flex; }
+        [data-nav].open { display: block; }
         .builder-step { display: none; }
         .builder-step.active { display: block; }
         .acc-body { display: none; }
@@ -61,35 +60,38 @@
         .acc-item.open .acc-head span { transform: rotate(45deg); }
         .acc-head span { transition: transform .2s ease; }
         .ba-after { clip-path: inset(0 0 0 calc(100% - var(--ba, 50%))); -webkit-clip-path: inset(0 0 0 calc(100% - var(--ba, 50%))); }
-        [data-wishlist-toggle].active { color: #2E674C; }
-        .thumb.active { border-color: #2E674C; }
-        input[type="range"] { accent-color: #2E674C; }
-        .stepper li { color: #a3a3a3; }
-        .stepper li.active { color: #2A1B3D; font-weight: 600; }
-        .stepper li .step-num { flex: none; display: flex; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border-radius: 9999px; border: 1px solid #e5e5e5; font-size: .8rem; font-weight: 700; background: #fff; }
-        .stepper li.active .step-num { background: #2A1B3D; border-color: #2A1B3D; color: #fff; }
-        .stepper li.done .step-num { border-color: #2E674C; color: #2E674C; }
+        [data-wishlist-toggle].active { color: #141414; }
+        .thumb.active { border-color: #141414; }
+        input[type="range"] { accent-color: #141414; }
+        .stepper li { color: #545658; }
+        .stepper li.active { color: #141414; font-weight: 700; }
+        .stepper li .step-num { flex: none; display: flex; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border: 1px solid #DCDCDC; font-size: .8rem; font-weight: 700; background: #fff; }
+        .stepper li.active .step-num { background: #141414; border-color: #141414; color: #fff; }
+        .stepper li.done .step-num { border-color: #141414; color: #141414; }
         .stepper li.done .step-num span { display: none; }
         .stepper li.done .step-num::after { content: '✓'; font-size: .8rem; }
-        .unit-toggle button.active { background: #2A1B3D; border-color: #2A1B3D; color: #fff; }
-        .drop-zone.drag { border-color: #2E674C; background: #F0F6F1; }
-        .ref-chip { display: inline-flex; align-items: center; border: 1px solid #e5e5e5; border-radius: 9999px; padding: .3rem .75rem; font-size: .75rem; background: #fff; color: #404040; }
-        [data-config] [data-opt].active { border-color: #2E674C; color: #16362C; }
-
-        /* ---------- Editorial CTA primitive: stark black rectangle, no radius ---------- */
-        .fs-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            background: #000; color: #fff; border: 1px solid #000; border-radius: 0;
-            padding: .9rem 2rem; font-size: .8125rem; font-weight: 700;
-            letter-spacing: .18em; line-height: 1.4; text-transform: uppercase; text-align: center;
-            transition: background-color .2s ease, border-color .2s ease;
-        }
-        .fs-btn:hover, .fs-btn:focus-visible { background: #d6ad66; border-color: #d6ad66; color: #17120d; }
+        .unit-toggle button.active { background: #141414; border-color: #141414; color: #fff; }
+        .drop-zone.drag { border-color: #141414; background: #F5F5F5; }
+        .ref-chip { display: inline-flex; align-items: center; border: 1px solid #DCDCDC; padding: .3rem .75rem; font-size: .75rem; background: #fff; color: #545658; }
+        [data-config] [data-opt].active { border-color: #141414; color: #141414; }
     </style>
 </head>
 <body class="font-sans bg-white text-brand-900 antialiased">
     @await Html.PartialAsync("_Header")
     @await Component.InvokeAsync("BannerAds", new { placement = "header" })
+
+    @if (ViewBag.PageTitle != null)
+    {
+        <div class="ed-page-title">
+            <div class="ed-shell ed-page-title__inner">
+                <h1>@ViewBag.PageTitle</h1>
+                @if (ViewBag.PageSubtitle != null)
+                {
+                    <p>@ViewBag.PageSubtitle</p>
+                }
+            </div>
+        </div>
+    }
 
     <main id="main">
         @RenderBody()
@@ -97,28 +99,28 @@
 
     @await Html.PartialAsync("_Footer")
 
-    @* ---------- Command-K global search modal ---------- *@
-    <div class="overlay fixed inset-0 z-[80] items-start justify-center bg-brand-700/40 p-4 backdrop-blur-sm sm:p-6" data-overlay="search" aria-hidden="true">
-        <div class="mt-8 w-full max-w-2xl overflow-hidden border border-neutral-300 bg-white" role="dialog" aria-modal="true" aria-label="Search">
-            <div class="flex items-center gap-3 border-b border-brand-100 px-4 py-3">
+    @* ---------- Global search ---------- *@
+    <div class="overlay fixed inset-0 z-[80] items-start justify-center bg-black/60 p-4 sm:p-6" data-overlay="search" aria-hidden="true">
+        <div class="mt-8 w-full max-w-2xl overflow-hidden border border-black bg-white" role="dialog" aria-modal="true" aria-label="Search">
+            <div class="flex items-center gap-3 border-b border-[#DCDCDC] px-4 py-3">
                 <form class="flex flex-1 items-center gap-2" data-search-form>
-                    <svg class="h-5 w-5 shrink-0 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                    <input type="search" placeholder="Search products, materials, guides…" aria-label="Search" data-search-input autocomplete="off" class="w-full bg-transparent py-1 text-base outline-none placeholder:text-neutral-400" />
+                    <svg class="h-5 w-5 shrink-0 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                    <input type="search" placeholder="Search programmes, episodes, topics…" aria-label="Search" data-search-input autocomplete="off" class="w-full bg-transparent py-1 text-base outline-none placeholder:text-neutral-400" />
                     <kbd class="hidden border border-neutral-300 px-1.5 py-0.5 text-[10px] font-medium text-neutral-400 sm:inline">ESC</kbd>
                 </form>
-                <button type="button" class="icon-btn flex h-8 w-8 items-center justify-center text-neutral-500 transition hover:bg-black hover:text-white" data-close-overlay="search" aria-label="Close search">
-                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                <button type="button" class="ed-icon-btn" data-close-overlay="search" aria-label="Close search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6L6 18"/></svg>
                 </button>
             </div>
             <div class="max-h-[60vh] overflow-y-auto p-4">
                 <div class="search-hints" data-search-hints>
-                    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">Popular right now</p>
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">Popular right now</p>
                     <div class="flex flex-wrap gap-2">
-                        <button type="button" class="chip border border-neutral-400 px-3 py-1 text-xs font-bold uppercase tracking-widest transition hover:border-black hover:bg-black hover:text-white" data-search-chip>Sectional</button>
-                        <button type="button" class="chip border border-neutral-400 px-3 py-1 text-xs font-bold uppercase tracking-widest transition hover:border-black hover:bg-black hover:text-white" data-search-chip>Walnut</button>
-                        <button type="button" class="chip border border-neutral-400 px-3 py-1 text-xs font-bold uppercase tracking-widest transition hover:border-black hover:bg-black hover:text-white" data-search-chip>Bouclé</button>
-                        <button type="button" class="chip border border-neutral-400 px-3 py-1 text-xs font-bold uppercase tracking-widest transition hover:border-black hover:bg-black hover:text-white" data-search-chip>Office</button>
-                        <button type="button" class="chip border border-neutral-400 px-3 py-1 text-xs font-bold uppercase tracking-widest transition hover:border-black hover:bg-black hover:text-white" data-search-chip>Teak</button>
+                        <button type="button" class="ed-btn ed-btn--outline" data-search-chip>Global News</button>
+                        <button type="button" class="ed-btn ed-btn--outline" data-search-chip>History</button>
+                        <button type="button" class="ed-btn ed-btn--outline" data-search-chip>Climate</button>
+                        <button type="button" class="ed-btn ed-btn--outline" data-search-chip>Culture</button>
+                        <button type="button" class="ed-btn ed-btn--outline" data-search-chip>Live</button>
                     </div>
                 </div>
                 <div class="search-results mt-2" data-search-results></div>
@@ -126,68 +128,69 @@
         </div>
     </div>
 
-    @* ---------- Cart drawer ---------- *@
-    <div class="overlay fixed inset-0 z-[80] justify-end bg-brand-700/40 backdrop-blur-sm" data-overlay="cart" aria-hidden="true">
-        <aside class="flex h-full w-full max-w-md flex-col border-l border-neutral-300 bg-white" role="dialog" aria-modal="true" aria-label="Shopping cart">
-            <div class="flex items-center justify-between border-b border-brand-100 px-5 py-4">
-                <h3 class="text-lg font-semibold tracking-tight">Your cart</h3>
-                <button type="button" class="flex h-8 w-8 items-center justify-center text-neutral-500 transition hover:bg-black hover:text-white" data-close-overlay="cart" aria-label="Close cart">
-                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    @* ---------- Listen queue drawer ---------- *@
+    <div class="overlay fixed inset-0 z-[80] justify-end bg-black/60" data-overlay="cart" aria-hidden="true">
+        <aside class="flex h-full w-full max-w-md flex-col border-l border-black bg-white" role="dialog" aria-modal="true" aria-label="Listen queue">
+            <div class="flex items-center justify-between border-b border-[#DCDCDC] px-5 py-4">
+                <h3 class="ed-serif text-lg font-bold">Your queue</h3>
+                <button type="button" class="ed-icon-btn" data-close-overlay="cart" aria-label="Close queue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6L6 18"/></svg>
                 </button>
             </div>
-            <div class="border-b border-brand-100 px-5 py-3" data-cart-progress hidden>
-                <span class="text-xs text-neutral-500" data-cart-progress-label>You're qualifying for free white-glove delivery</span>
-                <div class="mt-2 h-1 w-full overflow-hidden rounded-full bg-brand-100"><i class="block h-full bg-brand-700 transition-all duration-300" style="width:0%" data-cart-progress-bar></i></div>
+            <div class="border-b border-[#DCDCDC] px-5 py-3" data-cart-progress hidden>
+                <span class="text-xs text-neutral-500" data-cart-progress-label>Keep listening — your queue is growing</span>
+                <div class="mt-2 h-1 w-full overflow-hidden bg-neutral-200"><i class="block h-full bg-black transition-all duration-300" style="width:0%" data-cart-progress-bar></i></div>
             </div>
             <div class="flex-1 overflow-y-auto px-5 py-4" data-cart-body>
-                <p class="py-8 text-center text-sm text-neutral-500" data-cart-empty>Your cart is empty. Let's find something beautiful.</p>
+                <p class="py-8 text-center text-sm text-neutral-500" data-cart-empty>Your queue is empty. Save an episode to listen later.</p>
                 <div class="cart-items space-y-4" data-cart-items></div>
             </div>
-            <div class="border-t border-brand-100 px-5 py-4" data-cart-foot hidden>
+            <div class="border-t border-[#DCDCDC] px-5 py-4" data-cart-foot hidden>
                 <div class="mb-3 flex items-center justify-between text-sm">
-                    <span class="text-neutral-500">Subtotal</span>
-                    <strong data-cart-subtotal class="text-base">$0.00</strong>
+                    <span class="text-neutral-500">Total</span>
+                    <strong data-cart-subtotal class="text-base">0</strong>
                 </div>
-                <a href="/shop" class="fs-btn flex w-full items-center justify-center" data-checkout-btn>Checkout securely</a>
-                <p class="mt-2 text-center text-xs text-neutral-400">Taxes and shipping calculated at checkout.</p>
+                <a href="/media" class="ed-btn flex w-full items-center justify-center" data-checkout-btn>Explore the media room</a>
+                <p class="mt-2 text-center text-xs text-neutral-400">Your queue is saved on this device.</p>
             </div>
         </aside>
     </div>
 
-    @* ---------- Wishlist drawer ---------- *@
-    <div class="overlay fixed inset-0 z-[80] justify-end bg-brand-700/40 backdrop-blur-sm" data-overlay="wishlist" aria-hidden="true">
-        <aside class="flex h-full w-full max-w-md flex-col border-l border-neutral-300 bg-white" role="dialog" aria-modal="true" aria-label="Wishlist">
-            <div class="flex items-center justify-between border-b border-brand-100 px-5 py-4">
-                <h3 class="text-lg font-semibold tracking-tight">Wishlist</h3>
-                <button type="button" class="flex h-8 w-8 items-center justify-center text-neutral-500 transition hover:bg-black hover:text-white" data-close-overlay="wishlist" aria-label="Close wishlist">
-                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    @* ---------- Saved episodes drawer ---------- *@
+    <div class="overlay fixed inset-0 z-[80] justify-end bg-black/60" data-overlay="wishlist" aria-hidden="true">
+        <aside class="flex h-full w-full max-w-md flex-col border-l border-black bg-white" role="dialog" aria-modal="true" aria-label="Saved episodes">
+            <div class="flex items-center justify-between border-b border-[#DCDCDC] px-5 py-4">
+                <h3 class="ed-serif text-lg font-bold">Saved episodes</h3>
+                <button type="button" class="ed-icon-btn" data-close-overlay="wishlist" aria-label="Close saved episodes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6L6 18"/></svg>
                 </button>
             </div>
             <div class="flex-1 overflow-y-auto px-5 py-4">
-                <p class="py-8 text-center text-sm text-neutral-500" data-wishlist-empty>No saved pieces yet. Tap the heart on any product.</p>
+                <p class="py-8 text-center text-sm text-neutral-500" data-wishlist-empty>Nothing saved yet. Tap the bookmark on any episode.</p>
                 <div class="wishlist-items space-y-3" data-wishlist-items></div>
             </div>
         </aside>
     </div>
 
-@* ---------- Quick view modal ---------- *@
-    <div class="overlay fixed inset-0 z-[80] items-center justify-center bg-brand-900/40 p-4 backdrop-blur-sm" data-overlay="quickview" aria-hidden="true">
-        <div class="w-full max-w-3xl overflow-hidden border border-neutral-300 bg-white" role="dialog" aria-modal="true" aria-label="Quick view" data-quickview-root></div>
+    @* ---------- Quick view modal ---------- *@
+    <div class="overlay fixed inset-0 z-[80] items-center justify-center bg-black/60 p-4" data-overlay="quickview" aria-hidden="true">
+        <div class="w-full max-w-3xl overflow-hidden border border-black bg-white" role="dialog" aria-modal="true" aria-label="Quick view" data-quickview-root></div>
     </div>
 
     @* ---------- Full-resolution media lightbox ---------- *@
-    <div class="overlay fixed inset-0 z-[90] items-center justify-center bg-brand-950/95 p-4 backdrop-blur" data-overlay="lightbox" aria-hidden="true" data-lightbox>
-        <button type="button" class="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20" data-close-lightbox aria-label="Close full-size view">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    <div class="overlay fixed inset-0 z-[90] items-center justify-center bg-black p-4" data-overlay="lightbox" aria-hidden="true" data-lightbox>
+        <button type="button" class="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center border border-white/40 text-white" data-close-lightbox aria-label="Close full-size view">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
         <div class="flex max-h-full max-w-5xl items-center justify-center" data-lightbox-content></div>
     </div>
 
-    @* ---------- Support floating action ---------------------------------- *@
+    @* ---------- Support floating action ---------- *@
     <a href="/support"
-       aria-label="Get support from the studio"
-       class="fixed bottom-5 right-5 z-[70] flex h-14 w-14 items-center justify-center border border-black bg-black text-white transition hover:bg-brand-700">
-        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M9 9.5a2.5 2.5 0 0 1 3.5 2.3c0 1-.6 1.5-1 2s-.6 1-1 1.3c.3.9 1.2 1.8 2.1 2.1.3-.4.3-1 1-1.3s1-.9 2-1c1 0 2.2.7 2.3 1.6"/></svg>
+       aria-label="Get support from the team"
+       class="ed-audio-play ed-audio-play--dark fixed bottom-5 right-5 z-[70]"
+       style="width:48px;height:48px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M9 9.5a2.5 2.5 0 0 1 3.5 2.3c0 1-.6 1.5-1 2s-.6 1-1 1.3c.3.9 1.2 1.8 2.1 2.1.3-.4.3-1 1-1.3s1-.9 2-1c1 0 2.2.7 2.3 1.6"/></svg>
     </a>
 
     <script src="/js/main.js" asp-append-version="true"></script>

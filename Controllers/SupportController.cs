@@ -10,7 +10,7 @@ namespace StarTalkSessions.Controllers
     [AllowAnonymous]
     public class SupportController : Controller
     {
-        private const string TicketCookieName = "furn_support";
+        private const string TicketCookieName = "sts_support";
 
         private readonly SupportTicketDatabaseAccess _ticketDb;
         private readonly AiSupportService _ai;

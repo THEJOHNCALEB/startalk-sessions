@@ -1,120 +1,90 @@
 @{
     ViewData["Title"] = "About Us";
+    ViewBag.PageTitle = "About Star Talk Sessions";
+    ViewBag.PageSubtitle = "Independent broadcasting, built on honest conversation.";
 }
 
-<section class="bg-brand-700 text-white">
-    <div class="mx-auto max-w-app px-4 py-16 sm:px-6 lg:py-24">
-        <nav class="text-xs text-neutral-400" aria-label="Breadcrumb">
-            <a href="/" class="hover:text-white">Home</a><span class="mx-1">/</span><span class="text-neutral-400">About Us</span>
-        </nav>
-        <span class="mt-6 block text-xs font-semibold uppercase tracking-widest text-neutral-400">Since 2009</span>
-        <h1 class="mt-3 max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Crafted slow.<br><em class="text-[1.15em] font-normal">Made to outlast.</em></h1>
-        <p class="mt-4 max-w-2xl text-lg leading-relaxed text-neutral-300">We are a Media studio and architectural workshop — built on sustainable community, honest producery and the conviction that good Media only gets better with age.</p>
+<section class="ed-spotlight">
+    <svg class="ed-spotlight__wave" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 160 Q 18 96 36 160 T 72 160 T 108 160 T 144 160 T 180 160 T 216 160 T 252 160 T 288 160 T 324 160 T 360 160 T 396 160 T 432 160 T 468 160 T 504 160 T 540 160 T 576 160 T 612 160 T 648 160 T 684 160 T 720 160 T 756 160 T 792 160 T 828 160 T 864 160 T 900 160 T 936 160 T 972 160 T 1008 160 T 1044 160 T 1080 160 T 1116 160 T 1152 160 T 1188 160 T 1224 160 T 1260 160 T 1296 160 T 1332 160 T 1368 160 T 1404 160 T 1440 160"
+              fill="none" stroke="#FFFFFF" stroke-width="1" />
+    </svg>
+    <div class="ed-shell ed-spotlight__inner" style="grid-template-columns:1fr;min-height:260px">
+        <div>
+            <p class="ed-spotlight__kicker">Our story</p>
+            <h2 class="ed-spotlight__title" style="max-width:32ch">Made to be heard. Built to last.</h2>
+            <p class="ed-spotlight__desc">We are an independent broadcast studio — built on careful reporting, honest production and the conviction that a good story only gets better with time.</p>
+        </div>
     </div>
 </section>
 
-<section class="mx-auto max-w-app px-4 py-12 sm:px-6 lg:py-16">
-    <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+<section class="ed-section" style="margin-top:32px">
+    <div class="ed-shell" style="padding-top:32px;padding-bottom:40px;display:grid;gap:32px">
         <div>
-            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">The Brand Story</span>
-            <p class="mt-4 leading-relaxed text-neutral-700">Star Talk Sessions began in a two-person workshop in Abuja, making dining tables for friends of friends. Seventeen years later, our pieces furnish private homes, boutique hotels and boardrooms across West Africa and beyond — yet every piece still passes through the hands of a human producer before it ships.</p>
-            <p class="mt-4 leading-relaxed text-neutral-700">Our ethos is simple: buy the construction, not the logo. We use kiln-dried community storiess and FSC-certified community, water-based low-VOC finishes, and producery engineered so pieces can be repaired, re-upholstered and inherited — never discarded.</p>
-            <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div><strong class="block text-3xl font-black tracking-tight text-brand-900">2009</strong><span class="text-xs text-neutral-400">Established</span></div>
-                <div><strong class="block text-3xl font-black tracking-tight text-brand-900">Abuja</strong><span class="text-xs text-neutral-400">Atelier &amp; studio</span></div>
-                <div><strong class="block text-3xl font-black tracking-tight text-brand-900">40k+</strong><span class="text-xs text-neutral-400">Pieces delivered</span></div>
-                <div><strong class="block text-3xl font-black tracking-tight text-brand-900">15yr</strong><span class="text-xs text-neutral-400">Structural guarantee</span></div>
+            <p class="ed-kicker">The story</p>
+            <p style="margin-top:16px;max-width:70ch;line-height:1.75;color:#545658">Star Talk Sessions began with two people and a microphone in Minna, recording conversations for friends of friends. Today our programmes reach audiences across West Africa and beyond — yet every episode still passes through the hands of a human editor before it airs.</p>
+            <p style="margin-top:12px;max-width:70ch;line-height:1.75;color:#545658">Our ethos is simple: substance over spectacle. We report carefully, edit honestly and build every series to be listened to long after the news cycle moves on.</p>
+            <div style="margin-top:28px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
+                <div><strong class="ed-serif" style="display:block;font-size:2rem;font-weight:700">2009</strong><span class="ed-kicker">Established</span></div>
+                <div><strong class="ed-serif" style="display:block;font-size:2rem;font-weight:700">Minna</strong><span class="ed-kicker">Studio &amp; newsroom</span></div>
+                <div><strong class="ed-serif" style="display:block;font-size:2rem;font-weight:700">40k+</strong><span class="ed-kicker">Listeners reached</span></div>
+                <div><strong class="ed-serif" style="display:block;font-size:2rem;font-weight:700">15yr</strong><span class="ed-kicker">Of independent broadcasting</span></div>
             </div>
         </div>
-        <div class="overflow-hidden rounded-2xl border border-brand-200">
-            <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=1400&auto=format&fit=crop" alt="Star Talk Sessions studio workshop" loading="lazy" class="h-[26rem] w-full object-cover" />
+        <div style="border:1px solid #DCDCDC">
+            <img src="https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=1400&auto=format&fit=crop" alt="Star Talk Sessions broadcast studio" loading="lazy" style="display:block;width:100%;height:100%;min-height:320px;object-fit:cover" />
         </div>
     </div>
 </section>
 
-<section class="bg-brand-50">
-    <div class="mx-auto max-w-app px-4 py-14 sm:px-6 lg:py-16">
-        <div class="text-center">
-            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">The Process</span>
-            <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">From design to doorstep</h2>
+<section class="ed-section" style="margin-top:32px">
+    <div class="ed-shell" style="padding-top:28px;padding-bottom:36px">
+        <div style="text-align:center">
+            <p class="ed-kicker">The process</p>
+            <h2 class="ed-serif" style="margin-top:8px;font-size:clamp(1.5rem,3.4vw,2.25rem);font-weight:700">From question to broadcast</h2>
         </div>
-        <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach (var s in new[]
+        <div class="ed-category-grid" style="padding-top:24px;padding-bottom:0">
+            @foreach (var step in new[]
             {
-                ("01", "Design", "Sketch, CAD or a discarded napkin — we lock proportions and material with you first."),
-                ("02", "Timber Selection", "Kiln-dried, FSC-certified community storiess selected board-by-board for grain and stability."),
-                ("03", "Joinery & Carving", "Tenons, dowels and dovetails cut and fitted by hand. No staples, no shortcuts."),
-                ("04", "Finishing", "Hand-rubbed oils and low-VOC lacquers applied in controlled-dust chambers."),
-                ("05", "QC Inspection", "Every joint, seam and shade checked against our ±1mm tolerance standard."),
-                ("06", "White-Glove Delivery", "Cratered, insured and installed by our crew — packaging removed, promise kept.")
+                ("01", "The Question", "Every series begins with a question worth asking, not a format to fill."),
+                ("02", "Reporting", "Voices from the field, with sources and context carefully documented."),
+                ("03", "Production", "Editors shape the conversation. No shortcuts, no manufactured drama."),
+                ("04", "Sound & Picture", "Mixed and mastered for the way people actually listen and watch."),
+                ("05", "Editorial Review", "Every episode checked against our standards before it airs."),
+                ("06", "On Air", "Published across podcast, radio, television and live broadcast."),
+                ("07", "The Conversation", "Listeners respond, and the next question comes from them."),
+                ("08", "The Archive", "Work that still matters stays available, in full, for free.")
             })
             {
-                <div class="rounded-2xl border border-brand-200 bg-white p-6">
-                    <span class="text-xs font-black tracking-widest text-brand-900">@s.Item1</span>
-                    <h3 class="mt-2 font-bold text-brand-900">@s.Item2</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-neutral-500">@s.Item3</p>
-                </div>
+                <article class="ed-category-tile" style="aspect-ratio:auto;min-height:170px;flex-direction:column;align-items:flex-start;justify-content:space-between">
+                    <span class="ed-kicker" style="color:#B8B8B8">@step.Item1</span>
+                    <div>
+                        <h3 class="ed-category-tile__title">@step.Item2</h3>
+                        <p style="margin-top:8px;color:#B8B8B8;font-size:12px;line-height:1.5">@step.Item3</p>
+                    </div>
+                </article>
             }
         </div>
     </div>
 </section>
 
-<section class="mx-auto max-w-app px-4 py-14 sm:px-6 lg:py-16">
-    <div class="text-center">
-        <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">Materials &amp; Certifications</span>
-        <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Proof in the community</h2>
-    </div>
-    <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
-            <span class="text-2xl font-black text-brand-900">FSC</span>
-            <h3 class="mt-2 font-semibold text-brand-900">FSC-Certified Timber</h3>
-            <p class="mt-2 text-sm leading-relaxed text-neutral-500">Responsibly sourced community storiess from managed forests, chain-of-custody documented.</p>
+<section class="ed-section" style="margin-top:32px">
+    <div class="ed-shell" style="padding-top:28px;padding-bottom:36px">
+        <div style="text-align:center">
+            <p class="ed-kicker">The people</p>
+            <h2 class="ed-serif" style="margin-top:8px;font-size:clamp(1.5rem,3.4vw,2.25rem);font-weight:700">Producers, editors, storytellers</h2>
         </div>
-        <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
-            <span class="text-2xl font-black text-brand-900">A+</span>
-            <h3 class="mt-2 font-semibold text-brand-900">Low-VOC Finishes</h3>
-            <p class="mt-2 text-sm leading-relaxed text-neutral-500">Water-based, indoor-air-certified coatings safe for nurseries and pets alike.</p>
-        </div>
-        <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
-            <span class="text-2xl font-black text-brand-900">15yr</span>
-            <h3 class="mt-2 font-semibold text-brand-900">Structural Warranty</h3>
-            <p class="mt-2 text-sm leading-relaxed text-neutral-500">Frames and producery guaranteed for fifteen years against structural defect.</p>
-        </div>
-        <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
-            <span class="text-2xl font-black text-brand-900">24/7</span>
-            <h3 class="mt-2 font-semibold text-brand-900">Repair Over Replace</h3>
-            <p class="mt-2 text-sm leading-relaxed text-neutral-500">We publish parts, finishes and re-upholstery pricing — forever.</p>
-        </div>
-    </div>
-</section>
-
-<section class="bg-brand-50">
-    <div class="mx-auto max-w-app px-4 py-14 sm:px-6 lg:py-16">
-        <div class="text-center">
-            <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">The Team</span>
-            <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Joiners, upholsterers, perfectionists</h2>
-        </div>
-        <div class="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
-            <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
-                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-brand-900" style="background:#D7C7B4">AB</span>
-                <h3 class="mt-3 font-semibold text-brand-900">Alberto Bianchi</h3>
-                <span class="text-xs text-neutral-400">Founder &amp; Master Joiner</span>
-            </div>
-            <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
-                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-brand-900" style="background:#C4D0D4">MS</span>
-                <h3 class="mt-3 font-semibold text-brand-900">Mara Sorensen</h3>
-                <span class="text-xs text-neutral-400">Head of Design</span>
-            </div>
-            <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
-                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-brand-900" style="background:#CFC4D6">TN</span>
-                <h3 class="mt-3 font-semibold text-brand-900">Theo Nakamura</h3>
-                <span class="text-xs text-neutral-400">Master Upholsterer</span>
-            </div>
-            <div class="rounded-2xl border border-brand-200 bg-white p-6 text-center">
-                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-brand-900" style="background:#D4C9B8">EK</span>
-                <h3 class="mt-3 font-semibold text-brand-900">Emeka Okafor</h3>
-                <span class="text-xs text-neutral-400">Director of Logistics</span>
-            </div>
+        <div class="ed-category-grid" style="padding-top:24px;padding-bottom:0">
+            @foreach (var person in new[] { ("AO", "Amina Okafor", "Founder & Editor-in-Chief"), ("MS", "Musa Suleiman", "Head of Programmes"), ("TN", "Tara Nwosu", "Senior Producer"), ("EK", "Emeka Kolawole", "Director of Partnerships") })
+            {
+                <article class="ed-category-tile" style="aspect-ratio:auto;min-height:170px;flex-direction:column;align-items:flex-start;justify-content:flex-end">
+                    <span class="ed-serif" style="font-size:2rem;font-weight:700">@person.Item1</span>
+                    <div>
+                        <h3 class="ed-category-tile__title">@person.Item2</h3>
+                        <p style="margin-top:6px;color:#B8B8B8;font-size:12px">@person.Item3</p>
+                    </div>
+                </article>
+            }
         </div>
     </div>
 </section>

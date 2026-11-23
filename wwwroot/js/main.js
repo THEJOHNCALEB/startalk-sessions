@@ -4,7 +4,7 @@
   var CURRENCIES = { USD: { s: '$', r: 1 }, EUR: { s: '€', r: 0.92 }, GBP: { s: '£', r: 0.79 }, NGN: { s: '₦', r: 1550 }, AED: { s: 'د.إ', r: 3.67 } };
   var FREE_SHIP = 1500;
 
-  var activeCurrency = localStorage.getItem('sass_currency') || 'NGN';
+  var activeCurrency = localStorage.getItem('sts_currency') || 'NGN';
 
   function money(usd) {
     var cur = CURRENCIES[activeCurrency] || CURRENCIES.USD;
@@ -23,7 +23,7 @@
 
   function setCurrency(code) {
     activeCurrency = code;
-    localStorage.setItem('sass_currency', code);
+    localStorage.setItem('sts_currency', code);
     var sel = document.querySelector('[data-currency] select');
     if (sel) sel.value = code;
     renderPrices();
@@ -37,13 +37,13 @@
     try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { return []; }
   }
 
-  var cart = load('sass_cart');
-  var wishlist = load('sass_wishlist');
+  var cart = load('sts_cart');
+  var wishlist = load('sts_wishlist');
 
   function uniqueId() { return Math.random().toString(36).slice(2, 10); }
 
-  function saveCart() { store('sass_cart', cart); renderCart(); }
-  function saveWishlist() { store('sass_wishlist', wishlist); renderWishlist(); }
+  function saveCart() { store('sts_cart', cart); renderCart(); }
+  function saveWishlist() { store('sts_wishlist', wishlist); renderWishlist(); }
 
   function addToCart(item, variants) {
     var qty = parseInt(item.qty, 10) || 1;
@@ -257,7 +257,7 @@
     var cta = payload.price
       ? '<button type="button" class="flex-1 rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-500" data-add-to-cart=\'' + escapeJson(payload) + '\'>Add to Cart</button>' +
         '<button type="button" class="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-200 text-neutral-700" data-wishlist-toggle="' + payload.slug + '" aria-label="Wishlist"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.6-9.2-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.2 11C19 15.4 12 20 12 20z"/></svg></button>'
-      : '<a href="/custom-furniture" class="flex-1 rounded-lg bg-brand-700 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-brand-500">Request a Quote</a>';
+      : '<a href="/custom-session" class="flex-1 rounded-lg bg-brand-700 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-brand-500">Request a Quote</a>';
     root.innerHTML =
       '<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">' +
       '<div class="overflow-hidden rounded-xl border border-brand-100"><img src="' + payload.image + '" alt="' + escapeHtml(payload.name) + '" class="h-full w-full object-cover"></div>' +
@@ -766,11 +766,11 @@
       var list = document.querySelector('[data-recent-viewed]');
       if (!meta) return;
       var item = JSON.parse(meta.getAttribute('data-pdp-meta'));
-      var recent = load('sass_recent');
+      var recent = load('sts_recent');
       recent = recent.filter(function (r) { return r.slug !== item.slug; });
       recent.unshift(item);
       recent = recent.slice(0, 4);
-      store('sass_recent', recent);
+      store('sts_recent', recent);
       if (list) {
         list.innerHTML = recent.map(function (r) {
           return '<a class="product-card recent-card group flex flex-col overflow-hidden rounded-2xl border border-brand-200 bg-white transition hover:border-brand-300 hover:shadow-lg" href="' + r.url + '">' +
@@ -786,7 +786,7 @@
     pushRecent();
 
     window.addEventListener('storage', function () {
-      if (event.key === 'sass_currency') setCurrency(localStorage.getItem('sass_currency') || 'NGN');
+      if (event.key === 'sts_currency') setCurrency(localStorage.getItem('sts_currency') || 'NGN');
     });
   });
 

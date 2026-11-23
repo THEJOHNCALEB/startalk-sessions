@@ -29,7 +29,7 @@ jobs:
           push: true
           no-cache: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/furniture-sass:latest
+            ${{ secrets.DOCKER_USERNAME }}/startalk-sessions:latest
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
@@ -44,7 +44,7 @@ jobs:
           script: |
             set -e
 
-            cd ~/apps/furniture
+            cd ~/apps/startalk-sessions
 
             echo "Pulling latest image"
             docker compose pull

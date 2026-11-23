@@ -123,7 +123,7 @@ namespace StarTalkSessions.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync("FURN_COOKIE");
+            await HttpContext.SignOutAsync("STS_COOKIE");
             return RedirectToAction("Index", "Home");
         }
 
@@ -235,7 +235,7 @@ namespace StarTalkSessions.Controllers
                 $"Your {StarTalkSessions.Utils.Store.Name} password was changed",
                 _notifications.PasswordChangedHtml(user.FullName));
 
-            await HttpContext.SignOutAsync("FURN_COOKIE");
+            await HttpContext.SignOutAsync("STS_COOKIE");
             TempData["PasswordChanged"] = true;
             return RedirectToAction(nameof(Login));
         }
@@ -270,10 +270,10 @@ namespace StarTalkSessions.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             }
 
-            var identity = new ClaimsIdentity(claims, "FURN_COOKIE");
+            var identity = new ClaimsIdentity(claims, "STS_COOKIE");
             var principal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync("FURN_COOKIE", principal,
+            await HttpContext.SignInAsync("STS_COOKIE", principal,
                 new AuthenticationProperties { IsPersistent = true });
         }
     }

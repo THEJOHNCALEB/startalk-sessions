@@ -4,16 +4,16 @@ EXPOSE 6200
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["FurnitureSass.csproj", "."]
-RUN dotnet restore "./FurnitureSass.csproj"
+COPY ["StarTalkSessions.csproj", "."]
+RUN dotnet restore "./StarTalkSessions.csproj"
 
 COPY . .
 WORKDIR "/src"
-RUN dotnet build "FurnitureSass.csproj" -c Release -o /app/build
+RUN dotnet build "StarTalkSessions.csproj" -c Release -o /app/build
 
 # Publish the application
 FROM build AS publish
-RUN dotnet publish "FurnitureSass.csproj" -c Release -o /app/publish
+RUN dotnet publish "StarTalkSessions.csproj" -c Release -o /app/publish
 
 # Final image using the runtime
 FROM base AS final
@@ -23,4 +23,4 @@ ENV DOTNET_USE_POLLING_FILE_WATCHER=true
 COPY --from=publish /app/publish .
 
 # Start the application
-ENTRYPOINT ["dotnet", "FurnitureSass.dll"]
+ENTRYPOINT ["dotnet", "StarTalkSessions.dll"]
