@@ -98,8 +98,8 @@ namespace StarTalkSessions.Services
         {
             var store = Store.Name;
             var tagline = Store.Tagline;
-            return $"You are a friendly, concise customer-support assistant for {store}, a media platform ('{tagline}'). " +
-                   "Help the customer with questions about products, materials, sizing, delivery, lead times, warranty, returns, custom media and studios. " +
+            return $"You are a friendly, concise support assistant for {store}, a talk-show studio ('{tagline}'). " +
+                   "Help the customer with questions about shows, episodes, the live schedule, guest applications, partnerships, merchandise and studio visits. " +
                    "Keep replies under 160 words, warm in tone, never invent specific prices, discounts or delivery dates. " +
                    "For order-status or billing specifics, say a specialist from the team will follow up personally. " +
                    $"Customer: {ticket.Name} <{ticket.Email}>. Subject: {ticket.Subject}.";
@@ -112,15 +112,15 @@ namespace StarTalkSessions.Services
             if (q.Contains("order") || q.Contains("track") || q.Contains("ship") || q.Contains("delivery"))
                 return "Thanks! To check the status of an order, your tracked delivery is linked from your account or order confirmation email. If you tell us your order reference, our team will confirm the latest status personally.";
             if (q.Contains("custom") || q.Contains("bespoke") || q.Contains("commission"))
-                return "Wonderful — bespoke pieces are our specialty. Share a rough size, material and budget on the Custom Star Talk Sessions page and our studio will come back with a concept and quote.";
+                return "Wonderful — custom projects are our specialty. Share a few details on the Custom Projects page and our studio will come back with a concept and quote.";
             if (q.Contains("warranty") || q.Contains("return") || q.Contains("refund"))
-                return "Every piece carries our lifetime guarantee against joinery and community defects. Return requests are handled within 14 days of delivery — our team will guide you through it.";
+                return "If something in an order isn't right, our team will guide you through the return or refund process. Share your order reference and we'll take it from there.";
             if (q.Contains("price") || q.Contains("cost") || q.Contains("much") || q.Contains("discount"))
                 return "Our current catalogue pricing is on the product pages. For bulk or trade pricing, drop us a note and a specialist will share the best offer for your project.";
             if (q.Contains("studio") || q.Contains("visit") || q.Contains("location") || q.Contains("abuja") || q.Contains("where are you"))
-                return $"Our flagship studio is at {Store.AddressFormatted}, open Mon–Sat 09:00–18:00 WAT. You're welcome to come and sit in everything.";
-            if (q.Contains("media kit") || q.Contains("material") || q.Contains("fabric") || q.Contains("oak") || q.Contains("walnut"))
-                return "We build in kiln-dried hardmedia kits like walnut and oak, with fabrics from bouclé to velvet. Each product page lists materials and swatches — happy to help you compare.";
+                return $"Our studio is at {Store.AddressFormatted}, open Mon–Sat 09:00–18:00 WAT. You're welcome to sit in on a recording.";
+            if (q.Contains("show") || q.Contains("episode") || q.Contains("schedule") || q.Contains("guest"))
+                return "You can browse every show and episode in the library, and the schedule lists upcoming live recordings. If you'd like to join as a guest, send a short application and our producers will review it.";
             return $"Thanks for reaching out to {store}. A member of our team has been notified and will follow up personally — usually within one business day. In the meantime, is there anything more we can help with?";
         }
 

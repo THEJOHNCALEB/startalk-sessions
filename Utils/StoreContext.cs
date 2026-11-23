@@ -5,7 +5,7 @@ namespace StarTalkSessions.Utils
     public static class Store
     {
         public static string Name =>
-            Environment.GetEnvironmentVariable("STORE_NAME") ?? "Star Talk Sessions";
+            Environment.GetEnvironmentVariable("STORE_NAME") ?? "StarTalk";
 
     public static string Tagline =>
         Environment.GetEnvironmentVariable("STORE_TAGLINE") ?? "Conversations worth staying for.";

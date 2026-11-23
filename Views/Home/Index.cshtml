@@ -1,6 +1,7 @@
 @using StarTalkSessions.Models
 @{
     ViewData["Title"] = "Shows and episodes";
+    ViewBag.MetaDescription = "Listen to long-form talk shows, interviews and live conversations from the studio — new episodes, featured shows and the full archive.";
 
     var categories = (List<Category>)ViewBag.Categories ?? new();
     var content = ViewBag.HomeContent as Dictionary<string, List<HomeContent>> ?? new();

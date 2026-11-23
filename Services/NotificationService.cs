@@ -159,7 +159,7 @@ namespace StarTalkSessions.Services
             sb.Append("</tbody></table>");
             sb.Append($"<p><strong>Order:</strong> {order.OrderNumber}<br/><strong>Tracking:</strong> {order.TrackingRef}<br/><strong>Status:</strong> {order.Status}</p>");
             sb.Append($"<p>Estimated delivery: {order.EstimatedDelivery?.ToString("MMM d, yyyy") ?? "TBC"}.</p>");
-            sb.Append("<p style=\"margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;\">Star Talk Sessions studio — kiln-dried hardmedia kits, precision joinery, lifetime endurance.</p>");
+            sb.Append("<p style=\"margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;\">StarTalk studio — conversations worth staying for.</p>");
             sb.Append("</div>");
             return sb.ToString();
         }
@@ -171,7 +171,7 @@ namespace StarTalkSessions.Services
 <p>Hi <strong>{System.Net.WebUtility.HtmlEncode(quote.Name)}</strong>, thank you for trusting us with your project.</p>
 <p><strong>Reference:</strong> {quote.RefNumber}<br/><strong>Category:</strong> {System.Net.WebUtility.HtmlEncode(quote.Category ?? "-")}<br/><strong>Style:</strong> {System.Net.WebUtility.HtmlEncode(quote.Style ?? "-")}</p>
 <p>Our studio reviews every brief personally and responds within one business day with a concept and quote.</p>
-<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">Star Talk Sessions studio — bespoke media and interiors crafted to last.</p></div>";
+<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">StarTalk studio — shows and series made to last.</p></div>";
         }
 
         public string InquiryConfirmationHtml(Inquiry inquiry)
@@ -180,15 +180,15 @@ namespace StarTalkSessions.Services
 <h2 style=""color:#2A1B3D;"">Thanks — we got your message</h2>
 <p>Hi <strong>{System.Net.WebUtility.HtmlEncode(inquiry.Name)}</strong>, your inquiry (<strong>{System.Net.WebUtility.HtmlEncode(inquiry.Type ?? "General Inquiry")}</strong>) is in.</p>
 <p>Our studio responds within one business day. We'll only use your email for this conversation.</p>
-<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">Star Talk Sessions studio — questions, commissions and trade partnerships welcome.</p></div>";
+<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">StarTalk studio — questions, guests and partnerships welcome.</p></div>";
         }
 
         public string NewsletterWelcomeHtml(string email)
         {
             return $@"<div style=""font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;color:#16362C;"">
 <h2 style=""color:#2A1B3D;"">Welcome aboard</h2>
-<p>You're subscribed at <strong>{System.Net.WebUtility.HtmlEncode(email)}</strong>. Expect monthly design notes, care guides and exclusive drops — never spam.</p>
-<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">Star Talk Sessions studio — designed for living, built to last.</p></div>";
+<p>You're subscribed at <strong>{System.Net.WebUtility.HtmlEncode(email)}</strong>. Expect new episodes, live show alerts and occasional studio notes — never spam.</p>
+<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">StarTalk studio — made to be heard, built to last.</p></div>";
         }
 
         public string SupportTicketAckHtml(Models.SupportTicket ticket)
@@ -203,7 +203,7 @@ namespace StarTalkSessions.Services
 <p>We're already on it. Here's a quick update:</p>
 <p style=""background:#F0F6F1;border-left:4px solid #2A1B3D;padding:12px 16px;border-radius:8px;font-size:14px;white-space:pre-wrap;"">{System.Net.WebUtility.HtmlEncode(previewShort)}</p>
 <p>Replies appear live on <a href=""{threadUrl}"" style=""color:#2A1B3D;"">your support thread</a>. A specialist will take over personally if a human touch is needed.</p>
-<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">Star Talk Sessions studio — designed for living, built to last.</p></div>";
+<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">StarTalk studio — made to be heard, built to last.</p></div>";
         }
 
         public string SupportAdminReplyHtml(string customerName, string reply)
@@ -213,7 +213,7 @@ namespace StarTalkSessions.Services
 <p>Hi <strong>{System.Net.WebUtility.HtmlEncode(customerName)}</strong>,</p>
 <p style=""background:#F0F6F1;border-left:4px solid #2A1B3D;padding:12px 16px;border-radius:8px;font-size:14px;white-space:pre-wrap;"">{System.Net.WebUtility.HtmlEncode(reply)}</p>
 <p>You can continue the conversation on <a href=""{Store.SiteUrl}/support"" style=""color:#2A1B3D;"">your support thread</a>.</p>
-<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">Star Talk Sessions studio — designed for living, built to last.</p></div>";
+<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">StarTalk studio — made to be heard, built to last.</p></div>";
         }
 
         public string WelcomeEmailHtml(Models.UserModel user)
@@ -237,7 +237,7 @@ namespace StarTalkSessions.Services
 {(eta == null ? "" : $"<tr><td style=\"padding:8px 0;color:#5e6b66;\">Estimated delivery</td><td style=\"padding:8px 0;font-weight:600;\">{eta}</td></tr>")}
 </tbody></table>
 <p>You can see the latest details any time from <a href=""{Store.SiteUrl}/account"" style=""color:#2A1B3D;"">your account</a>.</p>
-<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">Star Talk Sessions studio — kiln-dried hardmedia kits, precision joinery, lifetime endurance.</p></div>";
+<p style=""margin-top:32px;padding-top:16px;border-top:1px solid #DCEAE0;color:#5e6b66;font-size:12px;"">StarTalk studio — conversations worth staying for.</p></div>";
         }
 
         public string PasswordResetHtml(string fullName, string resetUrl, int validMinutes)

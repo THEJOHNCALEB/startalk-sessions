@@ -1,12 +1,71 @@
+@using StarTalkSessions.Utils
+@using System.Text.Json
+@{
+    var siteName = (ViewBag.StoreName as string) ?? Store.Name;
+    var pageTitle = ViewData["Title"]?.ToString();
+    var metaTitle = string.IsNullOrWhiteSpace(pageTitle) || pageTitle == siteName
+        ? $"{siteName} — Conversations worth staying for"
+        : $"{pageTitle} — {siteName}";
+    var metaDescription = (ViewBag.MetaDescription as string)
+        ?? (ViewBag.PageSubtitle as string)
+        ?? (ViewBag.StoreTagline as string)
+        ?? Store.Tagline;
+    if (string.IsNullOrWhiteSpace(metaDescription))
+    {
+        metaDescription = "Long-form talk shows, live conversations and episodes from the studio.";
+    }
+    var siteUrl = Store.SiteUrl.TrimEnd('/');
+    var requestPath = Context.Request.Path.Value ?? "/";
+    if (!requestPath.StartsWith("/")) { requestPath = "/" + requestPath; }
+    var canonicalUrl = siteUrl + requestPath;
+    var ogImageUrl = siteUrl + "/images/logo.png";
+    var privateArea = Context.Request.Path.StartsWithSegments("/Admin")
+        || Context.Request.Path.StartsWithSegments("/Account")
+        || Context.Request.Path.StartsWithSegments("/Auth")
+        || Context.Request.Path.StartsWithSegments("/Checkout")
+        || Context.Request.Path.StartsWithSegments("/Quote")
+        || (pageTitle?.StartsWith("Admin —", StringComparison.OrdinalIgnoreCase) ?? false);
+    var robots = privateArea ? "noindex, nofollow" : "index, follow, max-image-preview:large";
+    var schema = JsonSerializer.Serialize(new
+    {
+        context = "https://schema.org",
+        type = "Organization",
+        name = siteName,
+        url = siteUrl,
+        logo = ogImageUrl,
+        description = metaDescription,
+        email = ViewBag.SupportEmail as string
+    });
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@(ViewData["Title"]?.ToString() ?? "Shows and episodes")</title>
-    <meta name="description" content="@ViewBag.StoreTagline Long-form talk shows, live conversations and episodes from the studio." />
+    <title>@metaTitle</title>
+    <meta name="description" content="@metaDescription" />
+    <meta name="robots" content="@robots" />
+    <meta name="application-name" content="@siteName" />
+    <meta name="color-scheme" content="light" />
+    <meta name="format-detection" content="telephone=no" />
     <meta name="theme-color" content="#141414" />
+    <link rel="canonical" href="@canonicalUrl" />
+    <link rel="alternate" hreflang="en" href="@canonicalUrl" />
+    <link rel="alternate" hreflang="x-default" href="@canonicalUrl" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_NG" />
+    <meta property="og:site_name" content="@siteName" />
+    <meta property="og:title" content="@metaTitle" />
+    <meta property="og:description" content="@metaDescription" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:image" content="@ogImageUrl" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@metaTitle" />
+    <meta name="twitter:description" content="@metaDescription" />
+    <meta name="twitter:image" content="@ogImageUrl" />
     <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="apple-touch-icon" href="/images/logo.png" />
+    <script type="application/ld+json">@Html.Raw(schema.Replace("\"context\"", "\"@context\"").Replace("\"type\"", "\"@type\""))</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700;6..72,800&display=swap" rel="stylesheet">
@@ -105,7 +164,7 @@
             <div class="flex items-center gap-3 border-b border-[#DCDCDC] px-4 py-3">
                 <form class="flex flex-1 items-center gap-2" data-search-form>
                     <svg class="h-5 w-5 shrink-0 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                    <input type="search" placeholder="Search programmes, episodes, topics…" aria-label="Search" data-search-input autocomplete="off" class="w-full bg-transparent py-1 text-base outline-none placeholder:text-neutral-400" />
+                    <input type="search" placeholder="Search shows, episodes, topics…" aria-label="Search" data-search-input autocomplete="off" class="w-full bg-transparent py-1 text-base outline-none placeholder:text-neutral-400" />
                     <kbd class="hidden border border-neutral-300 px-1.5 py-0.5 text-[10px] font-medium text-neutral-400 sm:inline">ESC</kbd>
                 </form>
                 <button type="button" class="ed-icon-btn" data-close-overlay="search" aria-label="Close search">

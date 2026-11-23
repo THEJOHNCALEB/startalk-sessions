@@ -37,7 +37,7 @@ namespace StarTalkSessions.Controllers
                 var html = await RenderViewToStringAsync("QuotePdf");
                 await page.SetContentAsync(html, new NavigationOptions { WaitUntil = new[] { WaitUntilNavigation.Networkidle0 } });
                 var pdf = await page.PdfDataAsync(new PdfOptions { Format = PuppeteerSharp.Media.PaperFormat.A4 });
-                return File(pdf, "application/pdf", $"Star Talk Sessions-Quote-{quote.RefNumber}.pdf");
+                return File(pdf, "application/pdf", $"Quote-{quote.RefNumber}.pdf");
             }
             catch (Exception ex)
             {

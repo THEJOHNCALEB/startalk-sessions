@@ -27,7 +27,7 @@
     <div class="ed-util">
         <div class="ed-shell ed-util__inner">
             <div class="ed-util__side">
-                <button class="ed-burger" type="button" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="ed-mobile-nav">
+                <button class="ed-burger" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false" aria-controls="ed-primary-nav">
                     <span></span><span></span>
                 </button>
                 <button type="button" class="ed-icon-btn" data-trigger-search aria-label="Search">
@@ -105,37 +105,43 @@
         </div>
     </div>
 
-    @* ---------- Primary category navigation ---------- *@
-    <nav class="ed-primary-nav" aria-label="Primary">
+    @* ---------- One navigation, adapted for small screens ---------- *@
+    <nav class="ed-primary-nav" id="ed-primary-nav" data-nav aria-label="Primary">
         <div class="ed-shell ed-primary-nav__inner">
             @foreach (var link in primaryLinks)
             {
                 <a href="@link.Href" class="ed-primary-nav__link @(isCurrent(link.Href) ? "is-active" : "")" aria-current="@(isCurrent(link.Href) ? "page" : "false")">@link.Label</a>
             }
+
+            <div class="ed-nav-extra">
+                <p class="ed-nav-extra__label">Quick links</p>
+                <a class="ed-nav-extra__link" href="/humanity">
+                    <span>Listen live</span>
+                    <small>On air now</small>
+                </a>
+                <a class="ed-nav-extra__link" href="/guest">
+                    <span>Be a guest</span>
+                    <small>Send an application</small>
+                </a>
+                <a class="ed-nav-extra__link" href="/support">
+                    <span>Get support</span>
+                    <small>We're here to help</small>
+                </a>
+                <div class="ed-nav-extra__actions">
+                    @if (!isAuthed)
+                    {
+                        <a href="/auth/register" class="ed-btn">Register</a>
+                        <a href="/auth/login" class="ed-btn ed-btn--outline">Sign in</a>
+                    }
+                    else
+                    {
+                        <a href="/@(isAdmin ? "Admin" : "account")" class="ed-btn">@(isAdmin ? "Admin console" : "Your dashboard")</a>
+                    }
+                </div>
+                <p class="ed-nav-extra__note">Conversations worth staying for — wherever you listen.</p>
+            </div>
         </div>
     </nav>
-
-    @* ---------- Single navigation drawer for small screens ---------- *@
-    <div class="ed-mobile-nav" id="ed-mobile-nav" data-nav>
-        <nav class="ed-mobile-nav__inner" aria-label="Mobile navigation">
-            @foreach (var link in primaryLinks)
-            {
-                <a href="@link.Href" class="ed-mobile-nav__link @(isCurrent(link.Href) ? "is-active" : "")">@link.Label</a>
-            }
-            <a href="/support" class="ed-mobile-nav__link">Support</a>
-            <div class="mt-6 flex flex-wrap gap-3">
-                @if (!isAuthed)
-                {
-                    <a href="/auth/register" class="ed-btn">Register</a>
-                    <a href="/auth/login" class="ed-btn ed-btn--outline">Sign in</a>
-                }
-                else
-                {
-                    <a href="/@(isAdmin ? "Admin" : "account")" class="ed-btn">@(isAdmin ? "Admin console" : "Your dashboard")</a>
-                }
-            </div>
-        </nav>
-    </div>
 </header>
 
 <script>
@@ -146,11 +152,14 @@
             function setOpen(open) {
                 sheet.classList.toggle('is-open', open);
                 toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-                toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                toggle.setAttribute('aria-label', open ? 'Hide navigation' : 'Show navigation');
                 document.body.style.overflow = open ? 'hidden' : '';
             }
             toggle.addEventListener('click', function () { setOpen(!sheet.classList.contains('is-open')); });
             sheet.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+            sheet.addEventListener('click', function (e) {
+                if (e.target === sheet || e.target.classList.contains('ed-primary-nav__inner')) setOpen(false);
+            });
             window.addEventListener('resize', function () { if (window.innerWidth >= 768) setOpen(false); });
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && sheet.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
