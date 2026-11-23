@@ -1,6 +1,6 @@
 @{
     ViewData["Title"] = "About Us";
-    ViewBag.PageTitle = "About Star Talk Sessions";
+    ViewBag.PageTitle = "About Us";
     ViewBag.PageSubtitle = "Independent broadcasting, built on honest conversation.";
 }
 
@@ -13,7 +13,7 @@
         <div>
             <p class="ed-spotlight__kicker">Our story</p>
             <h2 class="ed-spotlight__title" style="max-width:32ch">Made to be heard. Built to last.</h2>
-            <p class="ed-spotlight__desc">We are an independent broadcast studio — built on careful reporting, honest production and the conviction that a good story only gets better with time.</p>
+            <p class="ed-spotlight__desc">We are an independent talk studio — built on careful production, generous listening and the conviction that a good conversation only gets better with time.</p>
         </div>
     </div>
 </section>
@@ -22,17 +22,11 @@
     <div class="ed-shell" style="padding-top:32px;padding-bottom:40px;display:grid;gap:32px">
         <div>
             <p class="ed-kicker">The story</p>
-            <p style="margin-top:16px;max-width:70ch;line-height:1.75;color:#545658">Star Talk Sessions began with two people and a microphone in Minna, recording conversations for friends of friends. Today our programmes reach audiences across West Africa and beyond — yet every episode still passes through the hands of a human editor before it airs.</p>
-            <p style="margin-top:12px;max-width:70ch;line-height:1.75;color:#545658">Our ethos is simple: substance over spectacle. We report carefully, edit honestly and build every series to be listened to long after the news cycle moves on.</p>
-            <div style="margin-top:28px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
-                <div><strong class="ed-serif" style="display:block;font-size:2rem;font-weight:700">2009</strong><span class="ed-kicker">Established</span></div>
-                <div><strong class="ed-serif" style="display:block;font-size:2rem;font-weight:700">Minna</strong><span class="ed-kicker">Studio &amp; newsroom</span></div>
-                <div><strong class="ed-serif" style="display:block;font-size:2rem;font-weight:700">40k+</strong><span class="ed-kicker">Listeners reached</span></div>
-                <div><strong class="ed-serif" style="display:block;font-size:2rem;font-weight:700">15yr</strong><span class="ed-kicker">Of independent broadcasting</span></div>
-            </div>
+            <p style="margin-top:16px;max-width:70ch;line-height:1.75;color:#545658">The studio began with two people and a microphone in Minna, recording conversations for friends of friends. Today our shows reach audiences across West Africa and beyond — yet every episode still passes through the hands of a human editor before it airs.</p>
+            <p style="margin-top:12px;max-width:70ch;line-height:1.75;color:#545658">Our ethos is simple: substance over spectacle. We listen carefully, edit honestly and build every series to be heard long after the moment has passed.</p>
         </div>
         <div style="border:1px solid #DCDCDC">
-            <img src="https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=1400&auto=format&fit=crop" alt="Star Talk Sessions broadcast studio" loading="lazy" style="display:block;width:100%;height:100%;min-height:320px;object-fit:cover" />
+            <img src="https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=1400&auto=format&fit=crop" alt="Talk studio" loading="lazy" style="display:block;width:100%;height:100%;min-height:320px;object-fit:cover" />
         </div>
     </div>
 </section>
@@ -47,7 +41,7 @@
             @foreach (var step in new[]
             {
                 ("01", "The Question", "Every series begins with a question worth asking, not a format to fill."),
-                ("02", "Reporting", "Voices from the field, with sources and context carefully documented."),
+                ("02", "Conversation", "Guests in the room, with ideas and context carefully explored."),
                 ("03", "Production", "Editors shape the conversation. No shortcuts, no manufactured drama."),
                 ("04", "Sound & Picture", "Mixed and mastered for the way people actually listen and watch."),
                 ("05", "Editorial Review", "Every episode checked against our standards before it airs."),
@@ -61,27 +55,6 @@
                     <div>
                         <h3 class="ed-category-tile__title">@step.Item2</h3>
                         <p style="margin-top:8px;color:#B8B8B8;font-size:12px;line-height:1.5">@step.Item3</p>
-                    </div>
-                </article>
-            }
-        </div>
-    </div>
-</section>
-
-<section class="ed-section" style="margin-top:32px">
-    <div class="ed-shell" style="padding-top:28px;padding-bottom:36px">
-        <div style="text-align:center">
-            <p class="ed-kicker">The people</p>
-            <h2 class="ed-serif" style="margin-top:8px;font-size:clamp(1.5rem,3.4vw,2.25rem);font-weight:700">Producers, editors, storytellers</h2>
-        </div>
-        <div class="ed-category-grid" style="padding-top:24px;padding-bottom:0">
-            @foreach (var person in new[] { ("AO", "Amina Okafor", "Founder & Editor-in-Chief"), ("MS", "Musa Suleiman", "Head of Programmes"), ("TN", "Tara Nwosu", "Senior Producer"), ("EK", "Emeka Kolawole", "Director of Partnerships") })
-            {
-                <article class="ed-category-tile" style="aspect-ratio:auto;min-height:170px;flex-direction:column;align-items:flex-start;justify-content:flex-end">
-                    <span class="ed-serif" style="font-size:2rem;font-weight:700">@person.Item1</span>
-                    <div>
-                        <h3 class="ed-category-tile__title">@person.Item2</h3>
-                        <p style="margin-top:6px;color:#B8B8B8;font-size:12px">@person.Item3</p>
                     </div>
                 </article>
             }

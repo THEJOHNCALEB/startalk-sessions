@@ -1,5 +1,7 @@
+@using StarTalkSessions.Models
 @{
     var pageData = ((string, string, string))ViewBag.Page;
+    var channels = (List<HomeContent>)ViewBag.SiteChannels ?? new();
     ViewData["Title"] = pageData.Item1;
     ViewBag.PageTitle = pageData.Item1;
     ViewBag.PageSubtitle = pageData.Item2;
@@ -9,11 +11,11 @@
 <section class="ed-spotlight">
     <div class="ed-shell ed-spotlight__inner" style="grid-template-columns:1fr;min-height:240px">
         <div>
-            <p class="ed-spotlight__kicker">Star Talk Sessions · @pageData.Item1</p>
+            <p class="ed-spotlight__kicker">On air · @pageData.Item1</p>
             <h2 class="ed-spotlight__title" style="max-width:36ch">@pageData.Item3</h2>
             <div class="ed-spotlight__actions">
                 <a href="/contact" class="ed-btn ed-btn--light">Get involved</a>
-                <a href="/programmes" class="ed-text-btn" style="color:#FFFFFF">Browse programmes &gt;</a>
+                <a href="/programmes" class="ed-text-btn" style="color:#FFFFFF">Browse episodes &gt;</a>
             </div>
         </div>
     </div>
@@ -43,10 +45,10 @@
         else
         {
             <div class="ed-category-grid" style="padding-top:0">
-                @foreach (var card in new[] { ("Podcast", "Long-form conversations with people worth listening to."), ("Radio", "A live pulse of ideas, music and community."), ("TV & video", "Visual stories built for the big screen and the small one."), ("Youth programmes", "A louder platform for the next generation."), ("Public forums", "Questions in the open. Answers with consequences."), ("Community action", "Storytelling that helps people move."), ("Live coverage", "The moment, as it happens, with context."), ("Archive", "The reporting that still matters.") })
+                @foreach (var channel in channels)
                 {
-                    <a class="ed-category-tile" href="/contact">
-                        <h3 class="ed-category-tile__title">@card.Item1</h3>
+                    <a class="ed-category-tile" href="@channel.TargetUrl">
+                        <h3 class="ed-category-tile__title">@channel.Title</h3>
                     </a>
                 }
             </div>
