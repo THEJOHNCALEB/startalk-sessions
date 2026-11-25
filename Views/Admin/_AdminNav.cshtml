@@ -5,6 +5,8 @@
     <div class="mx-auto flex max-w-app flex-wrap items-center gap-1 overflow-x-auto px-4 py-3 sm:px-6">
         <a href="/Admin" class="@(ctrl == "Index" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Overview</a>
         <a href="/Admin/HomeContent" class="@(ctrl == "HomeContent" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Homepage</a>
+        <a href="/Admin/SiteSettings" class="@(ctrl is "SiteSettings" or "SiteSettingsSave" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Landing text</a>
+        <a href="/Admin/LiveStreams" class="@(ctrl is "LiveStreams" or "LiveStreamSave" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Live streams</a>
         <a href="/Admin/Blogs" class="@(ctrl == "Blogs" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Blogs</a>
         <a href="/Admin/Support" class="@(ctrl is "Support" or "SupportDetail" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Support</a>
         <a href="/Admin/Inquiries" class="@(ctrl == "Inquiries" ? "bg-brand-700 text-white" : "text-neutral-600 hover:bg-brand-100") rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap">Contact</a>

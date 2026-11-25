@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Admin — Site settings";
+    var fields = ViewBag.TextFields as IEnumerable<dynamic> ?? new List<dynamic>();
+}
+
+@await Html.PartialAsync("_AdminNav")
+
+<section class="mx-auto max-w-app px-4 py-8 sm:px-6">
+    <div>
+        <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">Editorial</span>
+        <h1 class="mt-1 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Landing page text</h1>
+        <p class="mt-1 text-sm text-neutral-500">Edit the headline copy shown on the landing page. Cards, episodes and media families are managed in Homepage content.</p>
+    </div>
+
+    @if (TempData["AdminSuccess"] != null)
+    {
+        <div class="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">@TempData["AdminSuccess"]</div>
+    }
+    @if (TempData["AdminError"] != null)
+    {
+        <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">@TempData["AdminError"]</div>
+    }
+
+    <form method="post" action="/Admin/SiteSettingsSave" class="mt-6 grid grid-cols-1 gap-4 rounded-2xl border border-brand-200 bg-white p-6 sm:grid-cols-2" data-loading>
+        @foreach (var field in fields)
+        {
+            var key = (string)field.Key;
+            var label = (string)field.Label;
+            var multiline = (bool)field.Multiline;
+            var value = (string)field.Value;
+            <div class="@(multiline ? "sm:col-span-2" : "")">
+                <label for="setting-@key" class="mb-1 block text-xs font-semibold text-neutral-500">@label</label>
+                @if (multiline)
+                {
+                    <textarea id="setting-@key" name="@key" rows="3" class="w-full rounded-lg border border-brand-200 px-3 py-2 text-sm text-brand-900">@value</textarea>
+                }
+                else
+                {
+                    <input id="setting-@key" name="@key" value="@value" class="w-full rounded-lg border border-brand-200 px-3 py-2 text-sm text-brand-900" />
+                }
+            </div>
+        }
+        <div class="flex items-center justify-end gap-3 border-t border-brand-100 pt-4 sm:col-span-2">
+            <a href="/" class="text-sm text-neutral-500 hover:text-brand-900">View live page</a>
+            <button type="submit" class="rounded-lg bg-brand-700 px-5 py-2 text-sm font-semibold text-white" data-loading-label="Saving…">Save landing text</button>
+        </div>
+    </form>
+</section>

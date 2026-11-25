@@ -38,11 +38,11 @@
                     </div>
                     <div class="flex shrink-0 items-center gap-2">
                         <span class="text-xs text-neutral-400">@i.CreatedAt.ToString("MMM d, yyyy · h:mm tt")</span>
-                        <form method="post" action="/Admin/InquiryToggle">
+                        <form method="post" action="/Admin/InquiryToggle" data-loading>
                             <input type="hidden" name="id" value="@i.Id" />
                             <button type="submit" class="rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:border-brand-600">@(i.Status == "Done" ? "Reopen" : "Mark done")</button>
                         </form>
-                        <form method="post" action="/Admin/InquiryDelete" onsubmit="return confirm('Delete this inquiry?')">
+                        <form method="post" action="/Admin/InquiryDelete" data-confirm="Delete this inquiry?" data-loading>
                             <input type="hidden" name="id" value="@i.Id" />
                             <button type="submit" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50">Delete</button>
                         </form>

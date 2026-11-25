@@ -3,6 +3,9 @@
     var ticket = (StarTalkSessions.Models.SupportTicket?)ViewBag.Ticket;
     var prefillName = ViewBag.PrefillName?.ToString() ?? "";
     var prefillEmail = ViewBag.PrefillEmail?.ToString() ?? "";
+    var accountNumber = ViewBag.SupportAccountNumber?.ToString() ?? "1311403887";
+    var accountName = ViewBag.SupportAccountName?.ToString() ?? "STAR TALK SESSIONS LTD";
+    var bankName = ViewBag.SupportBankName?.ToString() ?? "PROVIDUSUNITYBANK";
 }
 
 <section class="border-b border-brand-100">
@@ -26,6 +29,25 @@
         <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">@TempData["Error"]</div>
     }
 
+    <section id="support-details" class="mb-8 scroll-mt-24 rounded-2xl border border-brand-200 bg-white p-6 sm:p-8">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <span class="ed-kicker">Support</span>
+                <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-900">Support our mission</h2>
+                <p class="mt-2 max-w-xl text-sm text-neutral-500">Support our humanitarian programmes and help us build a better society. Every contribution keeps the conversation going.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <a href="tel:@accountNumber" class="ed-btn">Call @accountNumber</a>
+                <button type="button" class="ed-btn ed-btn--outline" data-copy="@accountNumber" data-loading-label="Copying…">Copy account number</button>
+            </div>
+        </div>
+        <dl class="mt-6 grid grid-cols-1 gap-4 border-t border-brand-100 pt-6 sm:grid-cols-3">
+            <div><dt class="text-xs font-semibold uppercase tracking-wider text-neutral-400">Account name</dt><dd class="mt-1 font-semibold text-brand-900">@accountName</dd></div>
+            <div><dt class="text-xs font-semibold uppercase tracking-wider text-neutral-400">Account number</dt><dd class="mt-1 font-semibold text-brand-900">@accountNumber</dd></div>
+            <div><dt class="text-xs font-semibold uppercase tracking-wider text-neutral-400">Bank</dt><dd class="mt-1 font-semibold text-brand-900">@bankName</dd></div>
+        </dl>
+    </section>
+
     @if (ticket == null)
     {
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.3fr]">
@@ -42,7 +64,7 @@
             <div class="rounded-2xl border border-brand-200 bg-white p-6 sm:p-8">
                 <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">New conversation</span>
                 <h2 class="mt-1 text-2xl font-bold tracking-tight text-brand-900">Tell us what you need</h2>
-                <form method="post" action="/support/start" class="mt-6 space-y-5">
+                <form method="post" action="/support/start" class="mt-6 space-y-5" data-loading>
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <div>
                             <label for="s-name" class="mb-1.5 block text-sm font-medium text-neutral-700">Name</label>
@@ -63,7 +85,7 @@
                     </div>
                     <div class="flex items-center justify-between gap-4">
                         <p class="text-xs text-neutral-400">Our team will respond as soon as they can.</p>
-                        <button type="submit" class="shrink-0 rounded-lg bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-500">Start chat</button>
+                        <button type="submit" class="shrink-0 rounded-lg bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-500" data-loading-label="Starting…">Start chat</button>
                     </div>
                 </form>
             </div>
@@ -80,9 +102,9 @@
                         <h3 class="font-semibold text-brand-900">@ticket.Subject</h3>
                         @if (!resolved)
                         {
-                            <form method="post" action="/support/close" onsubmit="return confirm('Close this conversation?')">
+                            <form method="post" action="/support/close" data-confirm="Close this conversation?" data-loading>
                                 <input type="hidden" name="ticketId" value="@ticket.Id" />
-                                <button type="submit" class="rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-red-200 hover:text-red-600">Close</button>
+                                <button type="submit" class="rounded-lg border border-brand-200 px-3 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-red-200 hover:text-red-600" data-loading-label="Closing…">Close</button>
                             </form>
                         }
                     </div>
@@ -148,10 +170,10 @@
 
                 @if (!resolved)
                 {
-                    <form method="post" action="/support/send" class="flex items-end gap-2 border-t border-brand-100 p-4">
+                    <form method="post" action="/support/send" class="flex items-end gap-2 border-t border-brand-100 p-4" data-loading>
                         <input type="hidden" name="ticketId" value="@ticket.Id" />
                         <textarea name="message" rows="2" required placeholder="Type your reply…" class="w-full resize-none rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none focus:border-brand-600"></textarea>
-                        <button type="submit" class="shrink-0 rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-500">Send</button>
+                        <button type="submit" class="shrink-0 rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-500" data-loading-label="Sending…">Send</button>
                     </form>
                      <p class="border-t border-brand-100 px-4 py-2 text-center text-[11px] text-neutral-400">
                          @(mode == "human" && !resolved ? "A studio specialist is handling this conversation." : (!resolved ? "We're on it." : ""))

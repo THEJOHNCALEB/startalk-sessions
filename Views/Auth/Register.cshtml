@@ -13,7 +13,7 @@
             <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">@ViewBag.Error</div>
         }
 
-        <form asp-controller="Auth" asp-action="Register" method="post" class="mt-8 space-y-5">
+        <form asp-controller="Auth" asp-action="Register" method="post" class="mt-8 space-y-5" data-loading>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label for="firstName" class="mb-1.5 block text-sm font-medium text-neutral-700">First name</label>

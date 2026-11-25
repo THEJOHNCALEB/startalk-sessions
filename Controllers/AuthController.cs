@@ -50,74 +50,25 @@ namespace StarTalkSessions.Controllers
                 return View();
             }
 
+            if (!user.IsAdmin)
+            {
+                ViewBag.Error = "Sign in is for studio administrators only. To hear from us, subscribe to the listening list below.";
+                return View();
+            }
+
             await SignInUserAsync(user);
             user.LastLogin = DateTime.Now;
             await _userDb.UpdateAsync(user, ctl);
 
-            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl) && !returnUrl.StartsWith("/Account", StringComparison.OrdinalIgnoreCase))
                 return Redirect(returnUrl);
-            if (user.IsAdmin)
-                return RedirectToAction("Index", "Admin");
-            return RedirectToAction("Dashboard", "Account");
+            return RedirectToAction("Index", "Admin");
         }
 
-        [HttpGet]
+        [AcceptVerbs("GET", "POST")]
         public IActionResult Register()
         {
-            this.SetStore();
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(string firstName, string lastName, string email,
-            string phone, string password, string confirmPassword, CancellationToken ctl)
-        {
-            this.SetStore();
-            if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
-            {
-                ViewBag.Error = "Please provide your first and last name.";
-                return View();
-            }
-            if (!Functions.IsEmailValid(email))
-            {
-                ViewBag.Error = "Invalid email address.";
-                return View();
-            }
-            if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
-            {
-                ViewBag.Error = "Password must be at least 6 characters.";
-                return View();
-            }
-            if (password != confirmPassword)
-            {
-                ViewBag.Error = "Passwords do not match.";
-                return View();
-            }
-
-            var normalized = email!.Trim().ToLowerInvariant();
-            var existing = await _userDb.QueryOneAsync(u => u.Email == normalized, ctl);
-            if (existing != null)
-            {
-                ViewBag.Error = "An account with this email already exists. Please sign in.";
-                return View();
-            }
-
-            var user = new UserModel
-            {
-                Email = normalized,
-                PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password),
-                FirstName = firstName.Trim(),
-                LastName = lastName.Trim(),
-                Phone = phone?.Trim() ?? "",
-                IsActive = true,
-                CreatedAt = DateTime.Now
-            };
-            await _userDb.InsertAsync(user, ctl);
-            await SignInUserAsync(user);
-
-            _ = _notifications.SendEmailAsync(normalized, $"Welcome to {StarTalkSessions.Utils.Store.Name}", _notifications.WelcomeEmailHtml(user));
-
-            return RedirectToAction("Dashboard", "Account");
+            return Redirect("/#newsletter");
         }
 
         [HttpGet]
@@ -261,6 +212,7 @@ namespace StarTalkSessions.Controllers
             {
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Name, user.FullName),
+                new("Email", user.Email),
                 new("Name", user.FullName),
                 new("UserId", user.Id.ToString())
             };

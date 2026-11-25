@@ -1,13 +1,13 @@
 @{
-    ViewData["Title"] = "Sign in";
+    ViewData["Title"] = "Admin sign in";
     var returnUrl = ViewBag.ReturnUrl?.ToString() ?? "";
 }
 
 <section class="flex min-h-[70vh] items-center justify-center px-4 py-16">
     <div class="w-full max-w-md">
         <a href="/" class="text-xl font-black tracking-tight text-brand-900">@ViewBag.StoreName</a>
-        <h1 class="mt-6 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Welcome back</h1>
-        <p class="mt-2 text-sm text-neutral-500">Sign in to your account to continue.</p>
+        <h1 class="mt-6 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl">Admin sign in</h1>
+        <p class="mt-2 text-sm text-neutral-500">Studio access only. Visitors and listeners can subscribe to the listening list instead.</p>
 
         @if (ViewBag.Error != null)
         {
@@ -18,22 +18,22 @@
             <div class="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">Your password has been changed. Sign in with your new password.</div>
         }
 
-        <form asp-controller="Auth" asp-action="Login" method="post" class="mt-8 space-y-5">
+        <form asp-controller="Auth" asp-action="Login" method="post" class="mt-8 space-y-5" data-loading>
             <input type="hidden" name="returnUrl" value="@returnUrl" />
             <div>
                 <label for="email" class="mb-1.5 block text-sm font-medium text-neutral-700">Email</label>
-                <input type="email" id="email" name="email" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-neutral-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" placeholder="you@example.com" required autofocus />
+                <input type="email" id="email" name="email" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-neutral-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" placeholder="admin@example.com" required autofocus />
             </div>
             <div>
                 <label for="password" class="mb-1.5 block text-sm font-medium text-neutral-700">Password</label>
                 <input type="password" id="password" name="password" class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-neutral-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/10" placeholder="••••••••" required />
             </div>
-            <button type="submit" class="w-full rounded-lg bg-brand-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-500">Sign in</button>
+            <button type="submit" class="w-full rounded-lg bg-brand-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-500" data-loading-label="Signing in…">Sign in</button>
         </form>
 
         <div class="mt-6 space-y-2 text-center text-sm">
-            <a asp-controller="Auth" asp-action="Register" class="font-medium text-brand-900 underline underline-offset-2">New here? Create an account</a>
-            <p class="text-neutral-400">Forgot password? <a asp-controller="Auth" asp-action="ForgotPassword" class="text-brand-900 underline underline-offset-2">Reset it here</a></p>
+            <a href="/#newsletter" class="font-medium text-brand-900 underline underline-offset-2">Not staff? Subscribe to the listening list</a>
+            <p class="text-neutral-400">Forgot your password? <a asp-controller="Auth" asp-action="ForgotPassword" class="text-brand-900 underline underline-offset-2">Reset it here</a></p>
         </div>
     </div>
 </section>

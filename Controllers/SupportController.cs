@@ -2,6 +2,7 @@ using StarTalkSessions.Data;
 using StarTalkSessions.Models;
 using StarTalkSessions.Services;
 using StarTalkSessions.Utils;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +14,15 @@ namespace StarTalkSessions.Controllers
         private const string TicketCookieName = "sts_support";
 
         private readonly SupportTicketDatabaseAccess _ticketDb;
+        private readonly SiteSettingDatabaseAccess _settingsDb;
         private readonly AiSupportService _ai;
         private readonly NotificationService _notifications;
 
-        public SupportController(SupportTicketDatabaseAccess ticketDb, AiSupportService ai, NotificationService notifications)
+        public SupportController(SupportTicketDatabaseAccess ticketDb, SiteSettingDatabaseAccess settingsDb,
+            AiSupportService ai, NotificationService notifications)
         {
             _ticketDb = ticketDb;
+            _settingsDb = settingsDb;
             _ai = ai;
             _notifications = notifications;
         }
@@ -28,6 +32,11 @@ namespace StarTalkSessions.Controllers
         {
             this.SetStore();
             ViewBag.AiRemoteEnabled = _ai.RemoteEnabled;
+
+            var settings = await _settingsDb.QueryAllAsync(ctl);
+            ViewBag.SupportAccountNumber = SettingOrFallback(settings, "supportAccountNumber", Store.SupportAccountNumber);
+            ViewBag.SupportAccountName = SettingOrFallback(settings, "supportAccountName", Store.SupportAccountName);
+            ViewBag.SupportBankName = SettingOrFallback(settings, "supportBankName", Store.SupportBankName);
 
             var ticket = await ResolveTicketAsync(t, ctl);
             if (ticket != null)
@@ -41,7 +50,7 @@ namespace StarTalkSessions.Controllers
                 if (User.Identity?.IsAuthenticated == true)
                 {
                     ViewBag.PrefillName = User.FindFirst("Name")?.Value ?? "";
-                    ViewBag.PrefillEmail = User.Identity.Name ?? "";
+                    ViewBag.PrefillEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity.Name ?? "";
                     ViewBag.CustomerId = User.FindFirst("UserId")?.Value ?? "";
                 }
             }
@@ -193,6 +202,9 @@ namespace StarTalkSessions.Controllers
                 Path = "/"
             });
         }
+
+        private static string SettingOrFallback(Dictionary<string, string> settings, string key, string fallback) =>
+            settings.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
 
         private static string ShortRef(Guid id) => id.ToString("N")[..8].ToUpperInvariant();
     }

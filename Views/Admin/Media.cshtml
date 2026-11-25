@@ -120,15 +120,18 @@
         b.addEventListener('click', function () {
             var url = b.getAttribute('data-delete-media');
             if (!url) return;
-            if (!confirm('Delete this media file permanently?')) return;
-            fetch('/Admin/MediaDelete', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: url })
-            })
-                .then(function (r) { return r.json(); })
-                .then(function (d) { if (d.ok) location.reload(); })
-                .catch(function () {});
+            window.showConfirm('Delete this media file permanently?', function () {
+                withButtonLoading(b, function () {
+                    return fetch('/Admin/MediaDelete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: url })
+                    })
+                        .then(function (r) { return r.json(); })
+                        .then(function (d) { if (d.ok) location.reload(); })
+                        .catch(function () {});
+                });
+            });
         });
     });
 })();

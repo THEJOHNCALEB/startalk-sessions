@@ -23,6 +23,18 @@ namespace StarTalkSessions.Utils
         public static string SupportPhone =>
             Environment.GetEnvironmentVariable("SUPPORT_PHONE") ?? "+234 800 000 0000";
 
+        /// <summary>Account shown on the support and donation pages.</summary>
+        public static string SupportAccountNumber =>
+            Environment.GetEnvironmentVariable("SUPPORT_ACCOUNT_NUMBER") ?? "1311403887";
+
+        public static string SupportAccountName =>
+            Environment.GetEnvironmentVariable("SUPPORT_ACCOUNT_NAME") ?? "STAR TALK SESSIONS LTD";
+
+        public static string SupportBankName =>
+            Environment.GetEnvironmentVariable("SUPPORT_BANK_NAME") ?? "PROVIDUSUNITYBANK";
+
+        public static string SupportDetailsUrl => "/support#support-details";
+
         /// <summary>Studio address shown in the footer, contact page and quotes.</summary>
         public static string AddressLine1 =>
             Environment.GetEnvironmentVariable("STUDIO_ADDRESS_1") ?? "Federal University of Technology, Minna";
@@ -56,6 +68,10 @@ namespace StarTalkSessions.Utils
             c.ViewBag.WhatsappNumber = WhatsappNumber;
             c.ViewBag.SupportEmail = SupportEmail;
             c.ViewBag.SupportPhone = SupportPhone;
+            c.ViewBag.SupportAccountNumber = SupportAccountNumber;
+            c.ViewBag.SupportAccountName = SupportAccountName;
+            c.ViewBag.SupportBankName = SupportBankName;
+            c.ViewBag.SupportDetailsUrl = SupportDetailsUrl;
             c.ViewBag.AddressLine1 = AddressLine1;
             c.ViewBag.AddressLine2 = AddressLine2;
         }

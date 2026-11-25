@@ -95,8 +95,9 @@
                 }
                 else
                 {
-                    <a href="/auth/register" class="ed-util__cta ed-btn">Register</a>
-                    <a href="/auth/login" class="ed-text-btn">Sign in</a>
+                    <a href="/support#support-details" class="ed-util__support" title="Support STAR TALK SESSIONS LTD — 1311403887, PROVIDUSUNITYBANK">Support</a>
+                    <a href="/#newsletter" class="ed-util__cta ed-btn">Subscribe</a>
+                    <a href="/auth/login" class="ed-text-btn" title="Studio staff only">Admin</a>
                 }
                 <a href="@profileHref" class="ed-icon-btn ed-util__profile" aria-label="@(isAuthed ? "Account" : "Sign in")">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
@@ -127,11 +128,15 @@
                     <span>Get support</span>
                     <small>We're here to help</small>
                 </a>
+                <a class="ed-nav-extra__link" href="/support#support-details">
+                    <span>Support our mission</span>
+                    <small>1311403887 · PROVIDUSUNITYBANK</small>
+                </a>
                 <div class="ed-nav-extra__actions">
                     @if (!isAuthed)
                     {
-                        <a href="/auth/register" class="ed-btn">Register</a>
-                        <a href="/auth/login" class="ed-btn ed-btn--outline">Sign in</a>
+                        <a href="/#newsletter" class="ed-btn">Subscribe</a>
+                        <a href="/auth/login" class="ed-btn ed-btn--outline">Admin sign in</a>
                     }
                     else
                     {

@@ -4,7 +4,7 @@
 
 <footer class="ed-footer">
     @* ---------- Newsletter ---------- *@
-    <div class="ed-newsletter">
+    <div class="ed-newsletter" id="newsletter">
         <div class="ed-shell ed-newsletter__inner">
             <div>
                 <span class="ed-kicker">The listening list, by email</span>
@@ -71,6 +71,9 @@
     <div class="ed-shell ed-footer__bottom">
         <span>© @DateTime.Now.Year. All rights reserved.</span>
         <div class="flex flex-wrap items-center gap-x-5 gap-y-1">
+            <a href="/support#support-details" title="Support account details">
+                Support: @(ViewBag.SupportAccountNumber ?? "1311403887") · @(ViewBag.SupportAccountName ?? "STAR TALK SESSIONS LTD"), @(ViewBag.SupportBankName ?? "PROVIDUSUNITYBANK")
+            </a>
             <span>@ViewBag.AddressLine1, @ViewBag.AddressLine2</span>
             <a href="mailto:@ViewBag.SupportEmail">@ViewBag.SupportEmail</a>
             <a href="/contact">Privacy</a>

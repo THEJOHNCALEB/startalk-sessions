@@ -244,6 +244,18 @@
         <div class="flex max-h-full max-w-5xl items-center justify-center" data-lightbox-content></div>
     </div>
 
+    @* ---------- Confirmation dialog ---------- *@
+    <div class="overlay fixed inset-0 z-[100] items-center justify-center bg-black/60 p-4" data-overlay="confirm" aria-hidden="true">
+        <div class="ed-confirm__box" role="alertdialog" aria-modal="true" aria-labelledby="ed-confirm-title" aria-describedby="ed-confirm-message">
+            <h2 class="ed-confirm__title" id="ed-confirm-title">Are you sure?</h2>
+            <p class="ed-confirm__message" data-confirm-message></p>
+            <div class="ed-confirm__actions">
+                <button type="button" class="ed-btn ed-btn--outline" data-confirm-cancel data-loading-label="Working…">Cancel</button>
+                <button type="button" class="ed-btn" data-confirm-accept data-loading-label="Working…">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     @* ---------- Support floating action ---------- *@
     <a href="/support"
        aria-label="Get support from the team"

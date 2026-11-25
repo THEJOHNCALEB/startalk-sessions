@@ -57,6 +57,8 @@ builder.Services.AddTransient<NewsletterDatabaseAccess>();
 builder.Services.AddTransient<BannerAdDatabaseAccess>();
 builder.Services.AddTransient<HomeContentDatabaseAccess>();
 builder.Services.AddTransient<SupportTicketDatabaseAccess>();
+builder.Services.AddTransient<LiveStreamDatabaseAccess>();
+builder.Services.AddTransient<SiteSettingDatabaseAccess>();
 
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<StarTalkSessions.Services.NotificationService>();
@@ -94,7 +96,9 @@ app.MapControllerRoute(
 );
 
 await SeedDatabaseAsync(app.Services);
+await SeedAdminAsync(app.Services);
 await SeedHomeContentAsync(app.Services);
+await SeedSiteSettingsAsync(app.Services);
 
 app.Run();
 
@@ -584,28 +588,35 @@ async Task SeedDatabaseAsync(IServiceProvider services)
     };
     foreach (var b in posts) await blogDb.InsertAsync(b, ctl);
 
-    var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL") ?? "info@solutionconcept.org";
+    logger.LogInformation("StarTalk seed complete: {ProductCount} products, {ProjectCount} projects.", products.Count, projects.Count);
+}
+
+async Task SeedAdminAsync(IServiceProvider services)
+{
+    using var scope = services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var userDb = scope.ServiceProvider.GetRequiredService<UserDatabaseAccess>();
+    var ctl = CancellationToken.None;
+
+    var adminEmail = (Environment.GetEnvironmentVariable("ADMIN_EMAIL") ?? "info@startalksessions.org").Trim().ToLowerInvariant();
+    var existingAdmin = await userDb.QueryOneAsync(u => u.Email == adminEmail && u.IsAdmin, ctl);
+    if (existingAdmin != null) return;
+
     var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? "StarTalk@123456";
     var adminName = Environment.GetEnvironmentVariable("ADMIN_NAME") ?? "StarTalk";
-    var existingAdmin = await userDb.QueryOneAsync(u => u.Email == adminEmail && u.IsAdmin, ctl);
-    if (existingAdmin == null)
+    var admin = new UserModel
     {
-        var admin = new UserModel
-        {
-            Email = adminEmail.ToLowerInvariant(),
-            PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(adminPassword),
-            FirstName = adminName.Split(' ').FirstOrDefault() ?? adminName,
-            LastName = adminName.Split(' ').Skip(1).FirstOrDefault() ?? "",
-            Phone = "0000000000",
-            IsActive = true,
-            IsAdmin = true,
-            CreatedAt = DateTime.Now
-        };
-        await userDb.InsertAsync(admin, ctl);
-        logger.LogInformation("Default admin seeded: {Email}", adminEmail);
-    }
-
-    logger.LogInformation("StarTalk seed complete: {ProductCount} products, {ProjectCount} projects.", products.Count, projects.Count);
+        Email = adminEmail,
+        PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(adminPassword),
+        FirstName = adminName.Split(' ').FirstOrDefault() ?? adminName,
+        LastName = adminName.Split(' ').Skip(1).FirstOrDefault() ?? "",
+        Phone = "0000000000",
+        IsActive = true,
+        IsAdmin = true,
+        CreatedAt = DateTime.Now
+    };
+    await userDb.InsertAsync(admin, ctl);
+    logger.LogInformation("Default admin seeded: {Email}", adminEmail);
 }
 
 async Task SeedHomeContentAsync(IServiceProvider services)
@@ -615,7 +626,7 @@ async Task SeedHomeContentAsync(IServiceProvider services)
     var db = scope.ServiceProvider.GetRequiredService<HomeContentDatabaseAccess>();
     var ctl = CancellationToken.None;
 
-    if ((await db.QueryManyAsync(x => true, ctl)).Count > 0) return;
+    var existing = await db.QueryManyAsync(x => true, ctl);
 
     var items = new List<HomeContent>
     {
@@ -634,9 +645,61 @@ async Task SeedHomeContentAsync(IServiceProvider services)
         new() { Section = "archive", Kicker = "Culture Desk", Title = "How a song becomes an anthem", Duration = "31 mins", ImageUrl = "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 5 },
         new() { Section = "archive", Kicker = "Studio Sessions", Title = "Inside the cutting room", Duration = "22 mins", ImageUrl = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 6 },
         new() { Section = "channel", Badge = "CV", Tone = "conversation", Title = "The Conversation", Summary = "Long-form talks with the people shaping culture, ideas and everyday life.", Schedule = "Weekdays · 18:00", TargetUrl = "/media", SortOrder = 1 },
-        new() { Section = "channel", Badge = "LV", Tone = "live", Title = "StarTalk Live", Summary = "Unscripted conversations with the audience in the room and online.", Schedule = "Fridays · 20:00", TargetUrl = "/events", SortOrder = 2 }
+        new() { Section = "channel", Badge = "LV", Tone = "live", Title = "StarTalk Live", Summary = "Unscripted conversations with the audience in the room and online.", Schedule = "Fridays · 20:00", TargetUrl = "/events", SortOrder = 2 },
+        new() { Section = "explore", Badge = "01", Title = "StarTalk Cares", Summary = "Humanity and support", TargetUrl = "/humanity", SortOrder = 1 },
+        new() { Section = "explore", Badge = "02", Title = "Celebrity & Awards", Summary = "Recognition and entertainment", TargetUrl = "/awards", SortOrder = 2 },
+        new() { Section = "explore", Badge = "03", Title = "Politics", Summary = "The political desk and the ideas shaping tomorrow", TargetUrl = "/media", SortOrder = 3 },
+        new() { Section = "explore", Badge = "04", Title = "Talk Juie", Summary = "Conversations with the next generation", TargetUrl = "/programmes", SortOrder = 4 },
+        new() { Section = "brand", Badge = "TV", Title = "STAR TALK TV", Summary = "Media & broadcasting", TargetUrl = "/media", SortOrder = 1 },
+        new() { Section = "brand", Badge = "CA", Title = "STAR TALK CARES", Summary = "Humanitarian services", TargetUrl = "/humanity", SortOrder = 2 },
+        new() { Section = "brand", Badge = "AW", Title = "STAR TALK AWARDS", Summary = "Celebrity & entertainment", TargetUrl = "/awards", SortOrder = 3 },
+        new() { Section = "brand", Badge = "PD", Title = "STAR TALK POLITICAL DESK", Summary = "Politics & manifestos", TargetUrl = "/media", SortOrder = 4 },
+        new() { Section = "brand", Badge = "JR", Title = "STAR TALK JUNIOR", Summary = "Children's programming", TargetUrl = "/programmes", SortOrder = 5 },
+        new() { Section = "brand", Badge = "DG", Title = "STAR TALK DIGITAL", Summary = "Technology & digital media", TargetUrl = "/events", SortOrder = 6 }
     };
 
-    foreach (var item in items) await db.InsertAsync(item, ctl);
-    logger.LogInformation("Homepage content seeded: {Count} items.", items.Count);
+    var inserted = 0;
+    foreach (var item in items)
+    {
+        if (existing.Any(x => x.Section == item.Section && x.Title == item.Title)) continue;
+        await db.InsertAsync(item, ctl);
+        inserted++;
+    }
+    logger.LogInformation("Homepage content seeded: {Count} new items.", inserted);
+}
+
+async Task SeedSiteSettingsAsync(IServiceProvider services)
+{
+    using var scope = services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<SiteSettingDatabaseAccess>();
+    var ctl = CancellationToken.None;
+    var defaults = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["brand"] = "STAR TALK SESSIONS LTD",
+        ["heroTagline"] = "YOUR VOICE. YOUR STORY. YOUR IMPACT.",
+        ["heroHeading"] = "Beyond Entertainment. Creating Impact.",
+        ["heroDescription"] = "A platform for entertainment, leadership, humanity, creativity and the next generation.",
+        ["heroPrimaryLabel"] = "Explore Our Platform",
+        ["heroSecondaryLabel"] = "Support Our Mission",
+        ["heroPartner"] = "okayafrica",
+        ["exploreTitle"] = "EXPLORE STAR TALK",
+        ["exploreDescription"] = "Four ways into the conversation.",
+        ["latestTitle"] = "LATEST FROM STAR TALK",
+        ["latestSubtitle"] = "News, interviews and exclusive stories",
+        ["latestDescription"] = "Discover the latest updates from our media team.",
+        ["supportTitle"] = "Be Part of the Change",
+        ["supportDescription"] = "Support our humanitarian programmes and help us build a better society.",
+        ["supportCta"] = "DONATE TO STAR TALK CARES",
+        ["supportAccountNumber"] = StarTalkSessions.Utils.Store.SupportAccountNumber,
+        ["supportAccountName"] = StarTalkSessions.Utils.Store.SupportAccountName,
+        ["supportBankName"] = StarTalkSessions.Utils.Store.SupportBankName,
+        ["brandsTitle"] = "PARENT MEDIA BRAND",
+        ["brandsDescription"] = "One house, many voices.",
+        ["liveTitle"] = "ON AIR · STAR TALK LIVE"
+    };
+
+    foreach (var pair in defaults)
+    {
+        await db.SetIfMissingAsync(pair.Key, pair.Value, ctl);
+    }
 }

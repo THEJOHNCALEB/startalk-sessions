@@ -209,6 +209,60 @@
   window.openOverlay = openOverlay;
   window.closeOverlay = closeOverlay;
 
+  var pendingConfirm = null;
+
+  function showConfirm(message, onAccept) {
+    var overlay = document.querySelector('[data-overlay="confirm"]');
+    if (!overlay) { if (onAccept) onAccept(); return; }
+    var messageEl = overlay.querySelector('[data-confirm-message]');
+    if (messageEl) messageEl.textContent = message || 'Are you sure?';
+    pendingConfirm = onAccept;
+    openOverlay('confirm');
+    var accept = overlay.querySelector('[data-confirm-accept]');
+    if (accept) accept.focus();
+  }
+  window.showConfirm = showConfirm;
+
+  function clearConfirm() {
+    pendingConfirm = null;
+  }
+
+  function setButtonLoading(btn, label) {
+    if (!btn || btn.disabled || btn.dataset.edLoading === 'true') return;
+    btn.dataset.edOriginalHtml = btn.innerHTML;
+    btn.dataset.edLoading = 'true';
+    btn.disabled = true;
+    btn.classList.add('is-loading');
+    var text = label || btn.getAttribute('data-loading-label') || 'Working…';
+    btn.innerHTML = '<span class="ed-spinner" aria-hidden="true"></span> ' + escapeHtml(text);
+    btn.setAttribute('aria-busy', 'true');
+  }
+
+  function restoreButton(btn) {
+    if (!btn || btn.dataset.edLoading !== 'true') return;
+    btn.innerHTML = btn.dataset.edOriginalHtml || btn.textContent;
+    delete btn.dataset.edOriginalHtml;
+    delete btn.dataset.edLoading;
+    btn.disabled = false;
+    btn.classList.remove('is-loading');
+    btn.removeAttribute('aria-busy');
+  }
+
+  function withButtonLoading(btn, task) {
+    if (!btn) { task(); return; }
+    setButtonLoading(btn);
+    var done = function () { restoreButton(btn); };
+    try {
+      var result = task();
+      if (result && typeof result.finally === 'function') result.finally(done);
+      else done();
+    } catch (err) { done(); throw err; }
+  }
+
+  window.withButtonLoading = withButtonLoading;
+  window.setButtonLoading = setButtonLoading;
+  window.restoreButton = restoreButton;
+
   function showSearchHints() {
     var hints = document.querySelector('[data-search-hints]');
     var results = document.querySelector('[data-search-results]');
@@ -285,6 +339,35 @@
 
   document.addEventListener('DOMContentLoaded', function () {
 
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      if (!form || form.tagName !== 'FORM') return;
+      if (form.dataset.confirmed === 'true') {
+        delete form.dataset.confirmed;
+        if (form.hasAttribute('data-loading')) submitWithLoading(form);
+        return;
+      }
+      if (e.defaultPrevented) return;
+      var message = form.getAttribute('data-confirm');
+      if (message) {
+        e.preventDefault();
+        showConfirm(message, function () {
+          form.dataset.confirmed = 'true';
+          var button = form.querySelector('button[type="submit"]');
+          if (button && button.form === form) button.click();
+          else if (form.requestSubmit) form.requestSubmit();
+          setTimeout(function () { delete form.dataset.confirmed; }, 0);
+        });
+        return;
+      }
+      if (form.hasAttribute('data-loading')) submitWithLoading(form);
+    });
+
+    function submitWithLoading(form) {
+      var button = form.querySelector('button[type="submit"]');
+      if (button) setButtonLoading(button);
+    }
+
     var curSel = document.querySelector('[data-currency] select');
     if (curSel) {
       curSel.value = activeCurrency;
@@ -297,6 +380,45 @@
     syncHearts();
 
     document.addEventListener('click', function (e) {
+      var copyBtn = e.target.closest('[data-copy]');
+      if (copyBtn) {
+        e.preventDefault();
+        var copyValue = copyBtn.getAttribute('data-copy') || '';
+        (navigator.clipboard ? navigator.clipboard.writeText(copyValue) : Promise.reject())
+          .catch(function () {
+            var ta = document.createElement('textarea');
+            ta.value = copyValue;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (err) {}
+            document.body.removeChild(ta);
+          })
+          .then(function () {
+            var original = copyBtn.textContent;
+            copyBtn.textContent = 'Copied';
+            setTimeout(function () { copyBtn.textContent = original; }, 1600);
+          });
+        return;
+      }
+
+      var confirmAccept = e.target.closest('[data-confirm-accept]');
+      if (confirmAccept) {
+        var callback = pendingConfirm;
+        clearConfirm();
+        var confirmBox = confirmAccept.closest('[data-overlay="confirm"]');
+        if (confirmBox) closeOverlay(confirmBox);
+        if (callback) callback();
+        return;
+      }
+
+      var confirmCancel = e.target.closest('[data-confirm-cancel]');
+      if (confirmCancel) {
+        clearConfirm();
+        var cancelBox = confirmCancel.closest('[data-overlay="confirm"]');
+        if (cancelBox) closeOverlay(cancelBox);
+        return;
+      }
+
       var openBtn = e.target.closest('[data-trigger-search]');
       if (openBtn) { e.preventDefault(); openOverlay('search'); return; }
 
@@ -313,7 +435,11 @@
         if (ovEl) closeOverlay(ovEl);
         return;
       }
-      if (e.target.classList.contains('overlay')) { closeOverlay(e.target); return; }
+      if (e.target.classList.contains('overlay')) {
+        if (e.target.getAttribute('data-overlay') === 'confirm') clearConfirm();
+        closeOverlay(e.target);
+        return;
+      }
 
       var atc = e.target.closest('[data-add-to-cart]');
       if (atc) {
@@ -383,7 +509,7 @@
         e.preventDefault();
         if (cart.length === 0) { openOverlay('cart'); return; }
         var btn = checkout;
-        btn.textContent = 'Placing order…';
+        setButtonLoading(btn, 'Placing order…');
         var payload = {
           customerName: '',
           customerPhone: '',
@@ -406,13 +532,16 @@
           if (data.ok) {
             cart = [];
             saveCart();
+            restoreButton(checkout);
             checkout.textContent = 'Order placed ✓';
             var foot = document.querySelector('[data-cart-foot]');
             if (foot) foot.innerHTML = '<div class="flex items-center justify-between"><span class="text-sm text-neutral-600">Order confirmed</span><strong class="text-sm font-bold text-brand-900">' + data.orderNumber + '</strong></div><p class="mt-2 text-xs text-neutral-400">Tracking: <strong class="text-neutral-700">' + data.trackingRef + '</strong>. See <a href="/account/Orders" class="underline underline-offset-2">Orders</a> for updates.</p>';
           } else {
+            restoreButton(checkout);
             checkout.textContent = 'Checkout securely';
           }
         }).catch(function () {
+          restoreButton(checkout);
           checkout.textContent = 'Checkout securely';
         });
       });
@@ -438,6 +567,7 @@
         return;
       }
       if (e.key === 'Escape') {
+        clearConfirm();
         document.querySelectorAll('.overlay.open').forEach(closeOverlay);
         var res = document.querySelector('[data-search-results]');
         if (res) res.innerHTML = '';
@@ -727,18 +857,21 @@
           if (fb) fb.textContent = 'Please enter a valid email address.';
           return;
         }
-        fetch('/Newsletter/Subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: 'email=' + encodeURIComponent(val)
-        }).then(function (r) { return r.json(); }).then(function (data) {
-          if (fb) {
-            fb.textContent = data.message || 'Thank you for subscribing!';
-            if (data.ok) input.value = '';
-          }
-        }).catch(function () {
-          if (fb) fb.textContent = 'Something went wrong — try again shortly.';
+        withButtonLoading(newsletter.querySelector('button[type="submit"]'), function () {
+          return fetch('/Newsletter/Subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'email=' + encodeURIComponent(val)
+          }).then(function (r) { return r.json(); }).then(function (data) {
+            if (fb) {
+              fb.textContent = data.message || 'Thank you for subscribing!';
+              if (data.ok) input.value = '';
+            }
+          }).catch(function () {
+            if (fb) fb.textContent = 'Something went wrong — try again shortly.';
+          });
         });
+
       });
     }
 
