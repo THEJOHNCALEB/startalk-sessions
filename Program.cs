@@ -628,44 +628,56 @@ async Task SeedHomeContentAsync(IServiceProvider services)
 
     var existing = await db.QueryManyAsync(x => true, ctl);
 
+    foreach (var extra in existing.Where(x => x.Section is "explore" or "brand"))
+    {
+        await db.DeleteAsync(extra.Id, ctl);
+    }
+
+    if (existing.Any(x => x.Section == "hero" && x.Title == "Beyond Entertainment. Creating Impact."))
+    {
+        logger.LogInformation("Homepage copy already updated.");
+        return;
+    }
+
     var items = new List<HomeContent>
     {
-        new() { Section = "hero", Kicker = "The Long View · New episode", Title = "What happens when a city never sleeps?", Summary = "A conversation with the people who keep the night alive — the workers, artists and makers behind the hours most of us never see.", Duration = "33 mins", ImageUrl = "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 1 },
-        new() { Section = "spotlight", Kicker = "StarTalk Live · Tonight", Title = "The room is open: an hour with the people in it", Summary = "Join the conversation as it happens. Send a question, hear the answer, and stay for the discussion that follows.", Duration = "Live · 60 mins", ImageUrl = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop", TargetUrl = "/events", SortOrder = 1 },
-        new() { Section = "recommended", Kicker = "The Long View", Title = "Who gets to tell the story of a city?", Duration = "33 mins", ImageUrl = "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 1 },
-        new() { Section = "recommended", Kicker = "The Listening Room", Title = "What we lose when we stop listening", Duration = "27 mins", ImageUrl = "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 2 },
-        new() { Section = "recommended", Kicker = "Field Notes", Title = "On the road with the people who build our roads", Duration = "41 mins", ImageUrl = "https://images.unsplash.com/photo-1500534623283-312aade485b7?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 3 },
-        new() { Section = "recommended", Kicker = "The Room", Title = "A conversation with the next generation", Duration = "24 mins", ImageUrl = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 4 },
-        new() { Section = "recommended", Kicker = "Culture Desk", Title = "The sound of a new African city", Duration = "38 mins", ImageUrl = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 5 },
-        new() { Section = "recommended", Kicker = "The Climate File", Title = "What the rain is telling us", Duration = "29 mins", ImageUrl = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 6 },
-        new() { Section = "archive", Kicker = "History", Title = "The stories the maps left out", Duration = "46 mins", ImageUrl = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 1 },
-        new() { Section = "archive", Kicker = "The Long View", Title = "Letters from the independence years", Duration = "32 mins", ImageUrl = "https://images.unsplash.com/photo-1490604001847-b712b0c2f967?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 2 },
-        new() { Section = "archive", Kicker = "Humanity", Title = "The teachers who stayed", Duration = "28 mins", ImageUrl = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 3 },
-        new() { Section = "archive", Kicker = "Impact", Title = "After the cameras leave", Duration = "35 mins", ImageUrl = "https://images.unsplash.com/photo-1504159506876-f8338247a14a?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 4 },
-        new() { Section = "archive", Kicker = "Culture Desk", Title = "How a song becomes an anthem", Duration = "31 mins", ImageUrl = "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 5 },
-        new() { Section = "archive", Kicker = "Studio Sessions", Title = "Inside the cutting room", Duration = "22 mins", ImageUrl = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 6 },
-        new() { Section = "channel", Badge = "CV", Tone = "conversation", Title = "The Conversation", Summary = "Long-form talks with the people shaping culture, ideas and everyday life.", Schedule = "Weekdays · 18:00", TargetUrl = "/media", SortOrder = 1 },
-        new() { Section = "channel", Badge = "LV", Tone = "live", Title = "StarTalk Live", Summary = "Unscripted conversations with the audience in the room and online.", Schedule = "Fridays · 20:00", TargetUrl = "/events", SortOrder = 2 },
-        new() { Section = "explore", Badge = "01", Title = "StarTalk Cares", Summary = "Humanity and support", TargetUrl = "/humanity", SortOrder = 1 },
-        new() { Section = "explore", Badge = "02", Title = "Celebrity & Awards", Summary = "Recognition and entertainment", TargetUrl = "/awards", SortOrder = 2 },
-        new() { Section = "explore", Badge = "03", Title = "Politics", Summary = "The political desk and the ideas shaping tomorrow", TargetUrl = "/media", SortOrder = 3 },
-        new() { Section = "explore", Badge = "04", Title = "Talk Juie", Summary = "Conversations with the next generation", TargetUrl = "/programmes", SortOrder = 4 },
-        new() { Section = "brand", Badge = "TV", Title = "STAR TALK TV", Summary = "Media & broadcasting", TargetUrl = "/media", SortOrder = 1 },
-        new() { Section = "brand", Badge = "CA", Title = "STAR TALK CARES", Summary = "Humanitarian services", TargetUrl = "/humanity", SortOrder = 2 },
-        new() { Section = "brand", Badge = "AW", Title = "STAR TALK AWARDS", Summary = "Celebrity & entertainment", TargetUrl = "/awards", SortOrder = 3 },
-        new() { Section = "brand", Badge = "PD", Title = "STAR TALK POLITICAL DESK", Summary = "Politics & manifestos", TargetUrl = "/media", SortOrder = 4 },
-        new() { Section = "brand", Badge = "JR", Title = "STAR TALK JUNIOR", Summary = "Children's programming", TargetUrl = "/programmes", SortOrder = 5 },
-        new() { Section = "brand", Badge = "DG", Title = "STAR TALK DIGITAL", Summary = "Technology & digital media", TargetUrl = "/events", SortOrder = 6 }
+        new() { Section = "hero", Kicker = "YOUR VOICE. YOUR STORY. YOUR IMPACT.", Title = "Beyond Entertainment. Creating Impact.", Summary = "A platform for entertainment, leadership, humanity, creativity and the next generation.", Duration = "Explore Our Platform", ImageUrl = "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 1 },
+        new() { Section = "spotlight", Kicker = "EXPLORE STAR TALK", Title = "Be Part of the Change", Summary = "Support our humanitarian programmes and help us build a better society.", Duration = "DONATE TO STAR TALK CARES", ImageUrl = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop", TargetUrl = "/support#support-details", SortOrder = 1 },
+        new() { Section = "recommended", Kicker = "Star Talk Cares", Title = "Humanity and support", Duration = "Explore", ImageUrl = "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 1 },
+        new() { Section = "recommended", Kicker = "Celebrity & Awards", Title = "Recognition and entertainment", Duration = "Explore", ImageUrl = "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 2 },
+        new() { Section = "recommended", Kicker = "Politics", Title = "The political desk", Duration = "Explore", ImageUrl = "https://images.unsplash.com/photo-1500534623283-312aade485b7?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 3 },
+        new() { Section = "recommended", Kicker = "Talk Juie", Title = "Conversations with the next generation", Duration = "Explore", ImageUrl = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 4 },
+        new() { Section = "recommended", Kicker = "LATEST FROM STAR TALK", Title = "News, interviews and exclusive stories", Duration = "Read more", ImageUrl = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop", TargetUrl = "/media", SortOrder = 5 },
+        new() { Section = "recommended", Kicker = "Be Part of the Change", Title = "DONATE TO STAR TALK CARES", Duration = "Support", ImageUrl = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop", TargetUrl = "/support#support-details", SortOrder = 6 },
+        new() { Section = "archive", Kicker = "PARENT MEDIA BRAND", Title = "STAR TALK TV", Duration = "Media & broadcasting", ImageUrl = "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 1 },
+        new() { Section = "archive", Kicker = "STAR TALK CARES", Title = "Humanitarian services", Duration = "Support", ImageUrl = "https://images.unsplash.com/photo-1490604001847-b712b0c2f967?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 2 },
+        new() { Section = "archive", Kicker = "STAR TALK AWARDS", Title = "Celebrity & entertainment", Duration = "Explore", ImageUrl = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 3 },
+        new() { Section = "archive", Kicker = "STAR TALK POLITICAL DESK", Title = "Politics & manifestos", Duration = "Explore", ImageUrl = "https://images.unsplash.com/photo-1504159506876-f8338247a14a?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 4 },
+        new() { Section = "archive", Kicker = "STAR TALK JUNIOR", Title = "Children's programming", Duration = "Explore", ImageUrl = "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 5 },
+        new() { Section = "archive", Kicker = "STAR TALK DIGITAL", Title = "Technology & digital media", Duration = "Explore", ImageUrl = "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?q=80&w=800&auto=format&fit=crop", TargetUrl = "/programmes", SortOrder = 6 },
+        new() { Section = "channel", Badge = "TV", Tone = "live", Title = "STAR TALK TV", Summary = "Media & broadcasting", Schedule = "Explore Our Platform", TargetUrl = "/media", SortOrder = 1 },
+        new() { Section = "channel", Badge = "CA", Tone = "culture", Title = "STAR TALK CARES", Summary = "Humanitarian services", Schedule = "Support Our Mission", TargetUrl = "/support#support-details", SortOrder = 2 }
     };
 
+    var updated = 0;
     var inserted = 0;
     foreach (var item in items)
     {
-        if (existing.Any(x => x.Section == item.Section && x.Title == item.Title)) continue;
+        var match = existing.FirstOrDefault(x => x.Section == item.Section && x.SortOrder == item.SortOrder);
+        if (match != null)
+        {
+            item.Id = match.Id;
+            item.CreatedAt = match.CreatedAt;
+            item.IsActive = match.IsActive;
+            await db.UpdateAsync(item, ctl);
+            updated++;
+            continue;
+        }
         await db.InsertAsync(item, ctl);
         inserted++;
     }
-    logger.LogInformation("Homepage content seeded: {Count} new items.", inserted);
+    logger.LogInformation("Homepage copy updated: {Updated} existing items, {Inserted} new items.", updated, inserted);
+
 }
 
 async Task SeedSiteSettingsAsync(IServiceProvider services)
